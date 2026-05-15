@@ -1,0 +1,140 @@
+:host {
+  display: contents;
+}
+
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 10;
+  display: flex;
+  width: 13rem;
+  min-height: 100dvh;
+  flex-direction: column;
+  background: #0b1b32;
+  color: #f8fbff;
+  padding: 1.125rem 0.75rem 0.875rem;
+}
+
+.brand {
+  display: grid;
+  gap: 0.125rem;
+  padding: 0 0.25rem 1.375rem;
+
+  strong {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+  }
+
+  span {
+    color: #7f91ad;
+    font-size: 0.625rem;
+    font-weight: var(--font-weight-medium);
+  }
+}
+
+.menu,
+.footer-menu {
+  display: grid;
+  gap: 0.625rem;
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 2rem;
+    border-right: 0.25rem solid transparent;
+    border-radius: var(--radius-sm);
+    color: #71829f;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    padding: 0 0.5rem 0 0.75rem;
+    transition:
+      background-color 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease;
+
+    &:hover {
+      background: rgb(255 255 255 / 0.06);
+      color: #dbe6f7;
+    }
+
+    &.active {
+      background: #3b4960;
+      border-color: #00845f;
+      color: #ffffff;
+    }
+  }
+
+  mat-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    font-size: 1.125rem;
+  }
+}
+
+.sidebar-footer {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: auto;
+  border-top: 1px solid rgb(160 174 199 / 0.22);
+  padding-top: 0.75rem;
+}
+
+.pro-button {
+  display: grid;
+  min-height: 1.75rem;
+  place-items: center;
+  border-radius: var(--radius-sm);
+  background: #07845f;
+  color: #ffffff;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  transition: background-color 160ms ease;
+
+  &:hover {
+    background: #06966b;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 4.5rem;
+    align-items: center;
+    padding-inline: 0.5rem;
+  }
+
+  .brand {
+    padding-inline: 0;
+    text-align: center;
+
+    strong {
+      font-size: var(--font-size-sm);
+    }
+
+    span {
+      display: none;
+    }
+  }
+
+  .menu,
+  .footer-menu {
+    a {
+      justify-content: center;
+      width: 2.75rem;
+      padding: 0;
+
+      span {
+        display: none;
+      }
+    }
+  }
+
+  .sidebar-footer {
+    width: 100%;
+  }
+
+  .pro-button {
+    display: none;
+  }
+}

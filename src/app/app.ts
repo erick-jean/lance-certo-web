@@ -6,7 +6,7 @@ import { Sidebar } from './shared/components/sidebar/sidebar';
   selector: 'app-root',
   imports: [RouterOutlet, Sidebar],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.scss'
 })
 export class App {
   protected readonly title = signal('lance-certo-web');

@@ -1,44 +1,59 @@
-<aside class="sidebar">
-  <div class="logo">
-    <img src="assets/logo-lance-certo.svg" alt="Lance Certo Logo" />
-  </div>
+<aside class="sidebar" aria-label="Menu principal">
+  <header class="brand">
+    <strong>Lance Certo</strong>
+    <span>Leilão Inteligente</span>
+  </header>
 
-  <nav class="menu">
-    <a routerLink="/dashboard" routerLinkActive="active">
-      <mat-icon>dashboard</mat-icon>
+  <nav class="menu" aria-label="Navegação principal">
+    <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <mat-icon aria-hidden="true">dashboard</mat-icon>
       <span>Dashboard</span>
     </a>
 
     <a routerLink="/veiculos" routerLinkActive="active">
-      <mat-icon>directions_car</mat-icon>
+      <mat-icon aria-hidden="true">directions_car</mat-icon>
       <span>Veículos</span>
     </a>
 
     <a routerLink="/avaliacoes" routerLinkActive="active">
-      <mat-icon>rate_review</mat-icon>
+      <mat-icon aria-hidden="true">rate_review</mat-icon>
       <span>Avaliações</span>
     </a>
 
     <a routerLink="/financeiro" routerLinkActive="active">
-      <mat-icon>payments</mat-icon>
+      <mat-icon aria-hidden="true">payments</mat-icon>
       <span>Financeiro</span>
     </a>
 
     <a routerLink="/relatorios" routerLinkActive="active">
-      <mat-icon>bar_chart</mat-icon>
+      <mat-icon aria-hidden="true">bar_chart</mat-icon>
       <span>Relatórios</span>
+    </a>
+
+    <a routerLink="/assinatura" routerLinkActive="active">
+      <mat-icon aria-hidden="true">desktop_windows</mat-icon>
+      <span>Assinatura</span>
+    </a>
+
+    <a routerLink="/perfil" routerLinkActive="active">
+      <mat-icon aria-hidden="true">person</mat-icon>
+      <span>Perfil</span>
     </a>
   </nav>
 
-  <div class="footer-menu">
-    <a routerLink="/configuracoes">
-      <mat-icon>settings</mat-icon>
-      <span>Configurações</span>
-    </a>
+  <footer class="sidebar-footer">
+    <a class="pro-button" routerLink="/assinatura">Assine Pro</a>
 
-    <a routerLink="/login">
-      <mat-icon>logout</mat-icon>
-      <span>Sair</span>
-    </a>
-  </div>
+    <nav class="footer-menu" aria-label="Navegação secundária">
+      <a routerLink="/configuracoes" routerLinkActive="active">
+        <mat-icon aria-hidden="true">settings</mat-icon>
+        <span>Configurações</span>
+      </a>
+
+      <a routerLink="/login">
+        <mat-icon aria-hidden="true">logout</mat-icon>
+        <span>Sair</span>
+      </a>
+    </nav>
+  </footer>
 </aside>

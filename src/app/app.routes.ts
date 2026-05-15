@@ -3,7 +3,12 @@ import { Home } from './pages/home/home';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: 'dashboard',
     component: Home,
+  },
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'dashboard',
   },
 ];
