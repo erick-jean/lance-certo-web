@@ -1,0 +1,287 @@
+.dashboard-page {
+  display: grid;
+  gap: 1.5rem;
+  max-width: 86rem;
+  margin: 0 auto;
+}
+
+.plan-alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3.625rem;
+  border: 1px solid #f5a13f;
+  border-radius: var(--radius-md);
+  background: #ffdbad;
+  color: #1f1305;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  padding: 0.75rem 1rem;
+
+  a {
+    color: #1f1305;
+    text-decoration: underline;
+    white-space: nowrap;
+  }
+}
+
+.alert-message {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+
+  mat-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 999px;
+    background: #14100c;
+    color: #ffb85c;
+    font-size: 1.25rem;
+  }
+}
+
+.page-heading {
+  display: grid;
+  gap: 0.35rem;
+
+  h1 {
+    color: #080d16;
+    font-size: 2rem;
+    font-weight: var(--font-weight-bold);
+    line-height: 1.15;
+  }
+
+  p {
+    color: #1f2937;
+    font-size: var(--font-size-md);
+  }
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.summary-card,
+.vehicles-panel {
+  border: 1px solid #d8dde6;
+  border-radius: var(--radius-lg);
+  background: #ffffff;
+  box-shadow: 0 0.5rem 1.25rem rgb(15 23 42 / 0.06);
+}
+
+.summary-card {
+  display: grid;
+  min-height: 10.75rem;
+  align-content: space-between;
+  padding: 1.5rem;
+
+  strong {
+    color: #07101d;
+    font-size: 3rem;
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+  }
+
+  small {
+    color: #101828;
+    font-size: var(--font-size-xs);
+  }
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  span {
+    color: #1d2939;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  mat-icon {
+    color: #667085;
+    font-size: 1.375rem;
+  }
+
+  .warning-icon {
+    color: #f6a440;
+  }
+
+  .success-icon {
+    color: #007a58;
+  }
+
+  .dark-icon {
+    color: #07101d;
+  }
+}
+
+.status-pill {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  min-height: 1.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.7rem;
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  padding: 0 0.5rem;
+
+  &.warning {
+    background: #fff2d8;
+    color: #b65700;
+  }
+
+  &.success {
+    background: #dff8ec;
+    color: #007a58;
+  }
+}
+
+.vehicles-panel {
+  overflow: hidden;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 5rem;
+  padding: 0 1.5rem;
+
+  h2 {
+    color: #07101d;
+    font-size: 1.5rem;
+    font-weight: var(--font-weight-bold);
+  }
+
+  a {
+    color: #07101d;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+  }
+}
+
+.vehicles-table {
+  display: grid;
+  border-top: 1px solid #d8dde6;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: minmax(18rem, 2fr) minmax(7rem, 1fr) minmax(8rem, 1fr) minmax(7rem, 1fr) 4rem;
+  align-items: center;
+  min-height: 4.5rem;
+  border-bottom: 1px solid #d8dde6;
+  color: #172033;
+  font-size: var(--font-size-sm);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  > * {
+    padding: 0 1rem;
+  }
+}
+
+.table-head {
+  min-height: 3rem;
+  background: #f8fafc;
+  color: #172033;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.vehicle-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  strong,
+  small {
+    display: block;
+  }
+
+  strong {
+    color: #07101d;
+    font-weight: var(--font-weight-bold);
+  }
+
+  small {
+    color: #344054;
+  }
+}
+
+.vehicle-icon {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: var(--radius-sm);
+  background: #e3e7ec;
+
+  mat-icon {
+    color: #647084;
+    font-size: 1.25rem;
+  }
+}
+
+.action-cell {
+  justify-self: end;
+
+  button {
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    place-items: center;
+    border: 0;
+    background: transparent;
+    color: #07101d;
+    cursor: pointer;
+    padding: 0;
+
+    mat-icon {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vehicles-table {
+    overflow-x: auto;
+  }
+
+  .table-row {
+    min-width: 58rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-page {
+    gap: 1rem;
+  }
+
+  .plan-alert {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+}

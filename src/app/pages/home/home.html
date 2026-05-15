@@ -1,1 +1,224 @@
-<p>home works!</p>
+<section class="dashboard-page">
+  <div class="plan-alert">
+    <div class="alert-message">
+      <mat-icon aria-hidden="true">stars</mat-icon>
+      <span>Você está no plano grátis. Cadastre até 3 veículos e desbloqueie recursos avançados no Premium.</span>
+    </div>
+
+    <a href="#" aria-label="Fazer upgrade para o plano premium">Fazer Upgrade</a>
+  </div>
+
+  <header class="page-heading">
+    <h1>Visão Geral</h1>
+    <p>Resumo das suas atividades recentes e status dos veículos.</p>
+  </header>
+
+  <section class="summary-grid" aria-label="Resumo dos veículos">
+    <article class="summary-card">
+      <div class="card-header">
+        <span>Total de veículos</span>
+        <mat-icon aria-hidden="true">directions_car</mat-icon>
+      </div>
+      <strong>2</strong>
+      <small>Atualizado agora</small>
+    </article>
+
+    <article class="summary-card">
+      <div class="card-header">
+        <span>Em análise</span>
+        <mat-icon class="warning-icon" aria-hidden="true">pending_actions</mat-icon>
+      </div>
+      <strong>1</strong>
+      <small class="status-pill warning">Aguardando</small>
+    </article>
+
+    <article class="summary-card">
+      <div class="card-header">
+        <span>Arrematados</span>
+        <mat-icon class="success-icon" aria-hidden="true">gavel</mat-icon>
+      </div>
+      <strong>1</strong>
+      <small class="status-pill success">Sucesso</small>
+    </article>
+
+    <article class="summary-card">
+      <div class="card-header">
+        <span>Vendidos</span>
+        <mat-icon class="dark-icon" aria-hidden="true">sell</mat-icon>
+      </div>
+      <strong>0</strong>
+      <small>Nenhum este mês</small>
+    </article>
+  </section>
+
+  <section class="vehicles-panel" aria-labelledby="recent-vehicles-title">
+    <header class="panel-header">
+      <h2 id="recent-vehicles-title">Últimos veículos cadastrados</h2>
+      <a href="#">Ver todos</a>
+    </header>
+
+    <div class="vehicles-table" role="table" aria-label="Últimos veículos cadastrados">
+      <div class="table-row table-head" role="row">
+        <span role="columnheader">Veículo</span>
+        <span role="columnheader">Placa</span>
+        <span role="columnheader">Status</span>
+        <span role="columnheader">Data</span>
+        <span role="columnheader">Ação</span>
+      </div>
+
+      <div class="table-row" role="row">
+        <div class="vehicle-cell" role="cell">
+          <span class="vehicle-icon">
+            <mat-icon aria-hidden="true">directions_car</mat-icon>
+          </span>
+          <div>
+            <strong>Honda Civic EXL</strong>
+            <small>2020/2020</small>
+          </div>
+        </div>
+        <span role="cell">ABC-1234</span>
+        <span role="cell"><span class="status-pill warning">Em análise</span></span>
+        <span role="cell">15/05/2024</span>
+        <span class="action-cell" role="cell">
+          <button type="button" aria-label="Ver Honda Civic EXL">
+            <mat-icon aria-hidden="true">chevron_right</mat-icon>
+          </button>
+        </span>
+      </div>
+
+      <div class="table-row" role="row">
+        <div class="vehicle-cell" role="cell">
+          <span class="vehicle-icon">
+            <mat-icon aria-hidden="true">directions_car</mat-icon>
+          </span>
+          <div>
+            <strong>Toyota Corolla XEI</strong>
+            <small>2019/2020</small>
+          </div>
+        </div>
+        <span role="cell">XYZ-9876</span>
+        <span role="cell"><span class="status-pill success">Arrematado</span></span>
+        <span role="cell">10/05/2024</span>
+        <span class="action-cell" role="cell">
+          <button type="button" aria-label="Ver Toyota Corolla XEI">
+            <mat-icon aria-hidden="true">chevron_right</mat-icon>
+          </button>
+        </span>
+      </div>
+            <div class="table-row" role="row">
+        <div class="vehicle-cell" role="cell">
+          <span class="vehicle-icon">
+            <mat-icon aria-hidden="true">directions_car</mat-icon>
+          </span>
+          <div>
+            <strong>Toyota Corolla XEI</strong>
+            <small>2019/2020</small>
+          </div>
+        </div>
+        <span role="cell">XYZ-9876</span>
+        <span role="cell"><span class="status-pill success">Arrematado</span></span>
+        <span role="cell">10/05/2024</span>
+        <span class="action-cell" role="cell">
+          <button type="button" aria-label="Ver Toyota Corolla XEI">
+            <mat-icon aria-hidden="true">chevron_right</mat-icon>
+          </button>
+        </span>
+      </div>
+            <div class="table-row" role="row">
+        <div class="vehicle-cell" role="cell">
+          <span class="vehicle-icon">
+            <mat-icon aria-hidden="true">directions_car</mat-icon>
+          </span>
+          <div>
+            <strong>Toyota Corolla XEI</strong>
+            <small>2019/2020</small>
+          </div>
+        </div>
+        <span role="cell">XYZ-9876</span>
+        <span role="cell"><span class="status-pill success">Arrematado</span></span>
+        <span role="cell">10/05/2024</span>
+        <span class="action-cell" role="cell">
+          <button type="button" aria-label="Ver Toyota Corolla XEI">
+            <mat-icon aria-hidden="true">chevron_right</mat-icon>
+          </button>
+        </span>
+      </div>
+            <div class="table-row" role="row">
+        <div class="vehicle-cell" role="cell">
+          <span class="vehicle-icon">
+            <mat-icon aria-hidden="true">directions_car</mat-icon>
+          </span>
+          <div>
+            <strong>Toyota Corolla XEI</strong>
+            <small>2019/2020</small>
+          </div>
+        </div>
+        <span role="cell">XYZ-9876</span>
+        <span role="cell"><span class="status-pill success">Arrematado</span></span>
+        <span role="cell">10/05/2024</span>
+        <span class="action-cell" role="cell">
+          <button type="button" aria-label="Ver Toyota Corolla XEI">
+            <mat-icon aria-hidden="true">chevron_right</mat-icon>
+          </button>
+        </span>
+      </div>
+            <div class="table-row" role="row">
+        <div class="vehicle-cell" role="cell">
+          <span class="vehicle-icon">
+            <mat-icon aria-hidden="true">directions_car</mat-icon>
+          </span>
+          <div>
+            <strong>Toyota Corolla XEI</strong>
+            <small>2019/2020</small>
+          </div>
+        </div>
+        <span role="cell">XYZ-9876</span>
+        <span role="cell"><span class="status-pill success">Arrematado</span></span>
+        <span role="cell">10/05/2024</span>
+        <span class="action-cell" role="cell">
+          <button type="button" aria-label="Ver Toyota Corolla XEI">
+            <mat-icon aria-hidden="true">chevron_right</mat-icon>
+          </button>
+        </span>
+      </div>
+            <div class="table-row" role="row">
+        <div class="vehicle-cell" role="cell">
+          <span class="vehicle-icon">
+            <mat-icon aria-hidden="true">directions_car</mat-icon>
+          </span>
+          <div>
+            <strong>Toyota Corolla XEI</strong>
+            <small>2019/2020</small>
+          </div>
+        </div>
+        <span role="cell">XYZ-9876</span>
+        <span role="cell"><span class="status-pill success">Arrematado</span></span>
+        <span role="cell">10/05/2024</span>
+        <span class="action-cell" role="cell">
+          <button type="button" aria-label="Ver Toyota Corolla XEI">
+            <mat-icon aria-hidden="true">chevron_right</mat-icon>
+          </button>
+        </span>
+      </div>
+            <div class="table-row" role="row">
+        <div class="vehicle-cell" role="cell">
+          <span class="vehicle-icon">
+            <mat-icon aria-hidden="true">directions_car</mat-icon>
+          </span>
+          <div>
+            <strong>Toyota Corolla XEI</strong>
+            <small>2019/2020</small>
+          </div>
+        </div>
+        <span role="cell">XYZ-9876</span>
+        <span role="cell"><span class="status-pill success">Arrematado</span></span>
+        <span role="cell">10/05/2024</span>
+        <span class="action-cell" role="cell">
+          <button type="button" aria-label="Ver Toyota Corolla XEI">
+            <mat-icon aria-hidden="true">chevron_right</mat-icon>
+          </button>
+        </span>
+      </div>
+    </div>
+  </section>
+</section>
