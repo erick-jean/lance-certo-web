@@ -1,0 +1,82 @@
+<section class="vehicles-page">
+  <header class="page-heading">
+    <div>
+      <h1>Meus veículos</h1>
+      <p>Gerencie e acompanhe o status dos seus veículos em leilão.</p>
+    </div>
+
+    <button class="create-button" type="button">
+      <mat-icon aria-hidden="true">add</mat-icon>
+      <span>Cadastrar veículo</span>
+    </button>
+  </header>
+
+  <section class="filters-bar" aria-label="Filtros dos veículos">
+    <label class="search-field" aria-label="Buscar veículo">
+      <mat-icon aria-hidden="true">search</mat-icon>
+      <input type="search" placeholder="Buscar por modelo, placa ou chassi..." />
+    </label>
+
+    <button class="filter-select" type="button">
+      <span>Status</span>
+      <mat-icon aria-hidden="true">expand_more</mat-icon>
+    </button>
+
+    <button class="filter-select" type="button">
+      <span>Tipo</span>
+      <mat-icon aria-hidden="true">expand_more</mat-icon>
+    </button>
+
+    <button class="filter-select" type="button">
+      <span>Localização</span>
+      <mat-icon aria-hidden="true">expand_more</mat-icon>
+    </button>
+
+    <div class="view-actions" aria-label="Modo de visualização">
+      <button class="view-button active" type="button" aria-label="Visualizar em grade">
+        <mat-icon aria-hidden="true">grid_view</mat-icon>
+      </button>
+
+      <button class="view-button" type="button" aria-label="Visualizar em lista">
+        <mat-icon aria-hidden="true">table_rows</mat-icon>
+      </button>
+    </div>
+  </section>
+
+  <section class="vehicles-grid" aria-label="Lista de veículos">
+    @for (vehicle of vehicles; track vehicle.id) {
+      <a class="vehicle-card" [routerLink]="['/veiculos', vehicle.id]">
+        <div class="vehicle-photo">
+          <img [src]="vehicle.imageUrl" [alt]="vehicle.imageAlt" />
+          <div class="badges">
+            <span class="badge" [class.warning]="vehicle.status === 'Em análise'" [class.success]="vehicle.status === 'Arrematado'">
+              {{ vehicle.status }}
+            </span>
+            <span class="badge" [class.risk-low]="vehicle.risk === 'Risco Baixo'" [class.risk-medium]="vehicle.risk === 'Risco Médio'">
+              <i></i>{{ vehicle.risk }}
+            </span>
+          </div>
+        </div>
+
+        <div class="vehicle-body">
+          <div>
+            <h2>{{ vehicle.model }}</h2>
+            <p>{{ vehicle.year }} • {{ vehicle.location }}</p>
+          </div>
+
+          <div class="vehicle-values">
+            <div>
+              <span>FIPE</span>
+              <strong>{{ vehicle.fipe }}</strong>
+            </div>
+
+            <div class="highlight-value" [class.success-value]="vehicle.targetLabel === 'Lucro Estimado'">
+              <span>{{ vehicle.targetLabel }}</span>
+              <strong>{{ vehicle.targetValue }}</strong>
+            </div>
+          </div>
+        </div>
+      </a>
+    }
+  </section>
+</section>

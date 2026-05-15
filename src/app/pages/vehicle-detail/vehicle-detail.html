@@ -1,0 +1,100 @@
+<section class="vehicle-detail-page">
+  <a class="back-link" routerLink="/veiculos">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    <span>Voltar para veículos</span>
+  </a>
+
+  <article class="detail-card">
+    <div class="vehicle-gallery">
+      <div class="vehicle-photo">
+        <img [src]="activeImage()" [alt]="vehicle().imageAlt" />
+        <button class="gallery-control previous" type="button" aria-label="Imagem anterior" (click)="showPreviousImage()">
+          <mat-icon aria-hidden="true">chevron_left</mat-icon>
+        </button>
+        <button class="gallery-control next" type="button" aria-label="Próxima imagem" (click)="showNextImage()">
+          <mat-icon aria-hidden="true">chevron_right</mat-icon>
+        </button>
+        <span class="gallery-count">{{ activeImageIndex() + 1 }} / {{ vehicle().gallery.length }}</span>
+      </div>
+
+      <div class="badges">
+        <span class="badge" [class.warning]="vehicle().status === 'Em análise'" [class.success]="vehicle().status === 'Arrematado'">
+          {{ vehicle().status }}
+        </span>
+        <span class="badge" [class.risk-low]="vehicle().risk === 'Risco Baixo'" [class.risk-medium]="vehicle().risk === 'Risco Médio'">
+          <i></i>{{ vehicle().risk }}
+        </span>
+      </div>
+
+      <div class="gallery-thumbs" aria-label="Miniaturas do veículo">
+        @for (image of vehicle().gallery; track image; let index = $index) {
+          <button
+            type="button"
+            [class.active]="index === activeImageIndex()"
+            [attr.aria-label]="'Ver imagem ' + (index + 1)"
+            (click)="selectImage(index)"
+          >
+            <img [src]="image" [alt]="vehicle().imageAlt" />
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="detail-content">
+      <header class="detail-heading">
+        <div>
+          <h1>{{ vehicle().model }}</h1>
+          <p>{{ vehicle().year }} • {{ vehicle().location }}</p>
+        </div>
+
+        <button type="button">
+          <mat-icon aria-hidden="true">edit</mat-icon>
+          <span>Editar</span>
+        </button>
+      </header>
+
+      <section class="metrics-grid" aria-label="Resumo financeiro">
+        <div>
+          <span>FIPE</span>
+          <strong>{{ vehicle().fipe }}</strong>
+        </div>
+        <div>
+          <span>{{ vehicle().targetLabel }}</span>
+          <strong>{{ vehicle().targetValue }}</strong>
+        </div>
+        <div>
+          <span>Lucro estimado</span>
+          <strong>{{ vehicle().estimatedProfit }}</strong>
+        </div>
+        <div>
+          <span>Gastos estimados</span>
+          <strong>{{ vehicle().estimatedExpenses }}</strong>
+        </div>
+      </section>
+
+      <section class="info-grid" aria-label="Dados do veículo">
+        <div>
+          <span>Placa</span>
+          <strong>{{ vehicle().plate }}</strong>
+        </div>
+        <div>
+          <span>Chassi</span>
+          <strong>{{ vehicle().chassis }}</strong>
+        </div>
+        <div>
+          <span>Leilão</span>
+          <strong>{{ vehicle().auction }}</strong>
+        </div>
+        <div>
+          <span>Localização</span>
+          <strong>{{ vehicle().location }}</strong>
+        </div>
+      </section>
+
+      <section class="notes-card">
+        <h2>Análise</h2>
+        <p>{{ vehicle().notes }}</p>
+      </section>
+    </div>
+  </article>
+</section>
