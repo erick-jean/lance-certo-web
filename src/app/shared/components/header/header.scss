@@ -1,0 +1,147 @@
+:host {
+  display: contents;
+}
+
+.app-header {
+  position: fixed;
+  inset: 0 0 auto 14.5rem;
+  z-index: 9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 4.625rem;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+  padding: 0 2.125rem;
+}
+
+.search-field {
+  display: flex;
+  align-items: center;
+  width: min(16.5rem, 40vw);
+  min-height: 2.5rem;
+  gap: 0.5rem;
+  border: 1px solid #d7dce5;
+  border-radius: 0.5rem;
+  background: #f1f3f7;
+  color: #7b8494;
+  padding: 0 0.875rem;
+
+  mat-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #727b8b;
+    font-size: 1.25rem;
+  }
+
+  input {
+    min-width: 0;
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--color-text);
+    font-size: var(--font-size-sm);
+
+    &::placeholder {
+      color: #606a7a;
+      opacity: 1;
+    }
+  }
+
+  &:focus-within {
+    border-color: #9aa8bd;
+    background: #ffffff;
+  }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.create-button,
+.icon-button,
+.avatar-button {
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.create-button {
+  min-height: 2.25rem;
+  border-radius: 0.5rem;
+  background: #007a58;
+  color: #ffffff;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  padding: 0 1.125rem;
+  transition: background-color 160ms ease;
+
+  &:hover {
+    background: #078c67;
+  }
+}
+
+.icon-button {
+  display: grid;
+  width: 1.5rem;
+  height: 1.5rem;
+  place-items: center;
+  background: transparent;
+  color: #007a58;
+  padding: 0;
+
+  mat-icon {
+    width: 1.375rem;
+    height: 1.375rem;
+    font-size: 1.375rem;
+  }
+
+  &:hover {
+    color: #005f45;
+  }
+}
+
+.avatar-button {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  overflow: hidden;
+  border: 2px solid #d9dee8;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 50% 35%, #f3c8a5 0 18%, transparent 19%),
+    linear-gradient(145deg, #172033 0%, #0b1b32 100%);
+  color: #f3c8a5;
+  padding: 0;
+
+  mat-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    left: 4.5rem;
+    min-height: 4.25rem;
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+
+  .search-field {
+    width: 100%;
+  }
+
+  .header-actions {
+    gap: 0.75rem;
+  }
+
+  .create-button {
+    display: none;
+  }
+}
