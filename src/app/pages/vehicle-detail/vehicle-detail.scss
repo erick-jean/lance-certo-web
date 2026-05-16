@@ -78,16 +78,13 @@
 .vehicle-gallery {
   position: relative;
   display: grid;
-  gap: 0.75rem;
   background: #eef2f7;
-  padding: 1rem;
 }
 
 .vehicle-photo {
   position: relative;
   overflow: hidden;
   height: 32rem;
-  border-radius: var(--radius-md);
   background: #d8dde6;
 
   img {
@@ -130,33 +127,6 @@
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-bold);
   padding: 0.35rem 0.75rem;
-}
-
-.gallery-thumbs {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.625rem;
-
-  button {
-    overflow: hidden;
-    height: 5rem;
-    min-height: 5rem;
-    border: 2px solid transparent;
-    border-radius: var(--radius-sm);
-    background: #d8dde6;
-    cursor: pointer;
-    padding: 0;
-
-    &.active {
-      border-color: #007a58;
-    }
-  }
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
 }
 
 .badges {
@@ -782,10 +752,6 @@
     height: 18rem;
   }
 
-  .gallery-thumbs button {
-    height: 4rem;
-    min-height: 4rem;
-  }
 }
 
 @media (max-width: 768px) {

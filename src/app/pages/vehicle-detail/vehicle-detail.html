@@ -33,18 +33,6 @@
         </span>
       </div>
 
-      <div class="gallery-thumbs" aria-label="Miniaturas do veículo">
-        @for (image of imageUrls(); track image; let index = $index) {
-          <button
-            type="button"
-            [class.active]="index === activeImageIndex()"
-            [attr.aria-label]="'Ver imagem ' + (index + 1)"
-            (click)="selectImage(index)"
-          >
-            <img [src]="image" [alt]="vehicleTitle()" />
-          </button>
-        }
-      </div>
     </div>
 
     <div class="detail-content">
