@@ -47,32 +47,32 @@
     @for (vehicle of vehicles; track vehicle.id) {
       <a class="vehicle-card" [routerLink]="['/veiculos', vehicle.id]">
         <div class="vehicle-photo">
-          <img [src]="vehicle.imageUrl" [alt]="vehicle.imageAlt" />
+          <img [src]="coverImage(vehicle)" [alt]="vehicleTitle(vehicle)" />
           <div class="badges">
-            <span class="badge" [class.warning]="vehicle.status === 'Em análise'" [class.success]="vehicle.status === 'Arrematado'">
-              {{ vehicle.status }}
+            <span class="badge" [class.warning]="vehicle.status === 'ANALYZING'" [class.success]="vehicle.status === 'PURCHASED'">
+              {{ statusLabel(vehicle.status) }}
             </span>
-            <span class="badge" [class.risk-low]="vehicle.risk === 'Risco Baixo'" [class.risk-medium]="vehicle.risk === 'Risco Médio'">
-              <i></i>{{ vehicle.risk }}
+            <span class="badge" [class.risk-low]="vehicle.damageType === 'LIGHT'" [class.risk-medium]="vehicle.damageType === 'MEDIUM'">
+              <i></i>{{ damageLabel(vehicle.damageType) }}
             </span>
           </div>
         </div>
 
         <div class="vehicle-body">
           <div>
-            <h2>{{ vehicle.model }}</h2>
-            <p>{{ vehicle.year }} • {{ vehicle.location }}</p>
+            <h2>{{ vehicleTitle(vehicle) }}</h2>
+            <p>{{ vehicleSubtitle(vehicle) }}</p>
           </div>
 
           <div class="vehicle-values">
             <div>
               <span>FIPE</span>
-              <strong>{{ vehicle.fipe }}</strong>
+              <strong>{{ vehicle.fipeValue }}</strong>
             </div>
 
-            <div class="highlight-value" [class.success-value]="vehicle.targetLabel === 'Lucro Estimado'">
-              <span>{{ vehicle.targetLabel }}</span>
-              <strong>{{ vehicle.targetValue }}</strong>
+            <div class="highlight-value" [class.success-value]="vehicle.status === 'PURCHASED'">
+              <span>{{ vehicle.status === 'PURCHASED' ? 'Lucro estimado' : 'Lance sugerido' }}</span>
+              <strong>{{ vehicle.status === 'PURCHASED' ? vehicle.evaluation?.estimatedProfit : vehicle.evaluation?.suggestedBid }}</strong>
             </div>
           </div>
         </div>
