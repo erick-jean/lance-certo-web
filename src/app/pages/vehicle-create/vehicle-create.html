@@ -1,0 +1,270 @@
+<section class="vehicle-create-page">
+  <header class="create-topbar">
+    <a class="back-link" routerLink="/veiculos">
+      <mat-icon aria-hidden="true">arrow_back</mat-icon>
+      <span>Voltar para veículos</span>
+    </a>
+
+    <div class="topbar-actions">
+      <button class="secondary-action" type="button">Salvar rascunho</button>
+      <button class="primary-action" type="submit" form="vehicle-create-form">Cadastrar veículo</button>
+    </div>
+  </header>
+
+  <header class="page-heading">
+    <div>
+      <span>Novo veículo</span>
+      <h1>Cadastrar veículo</h1>
+      <p>Informe os dados principais do veículo, valores de referência e informações do leilão.</p>
+    </div>
+  </header>
+
+  <form id="vehicle-create-form" class="create-layout">
+    <div class="form-stack">
+      <section class="form-card">
+        <header>
+          <mat-icon aria-hidden="true">directions_car</mat-icon>
+          <div>
+            <h2>Identificação</h2>
+            <p>Dados usados para reconhecer o veículo no fluxo de análise.</p>
+          </div>
+        </header>
+
+        <div class="form-grid">
+          <label>
+            <span>Placa</span>
+            <input type="text" placeholder="ABC-1234" />
+          </label>
+
+          <label>
+            <span>Marca</span>
+            <input type="text" placeholder="Ex: Honda" />
+          </label>
+
+          <label>
+            <span>Modelo</span>
+            <input type="text" placeholder="Ex: Civic" />
+          </label>
+
+          <label>
+            <span>Versão</span>
+            <input type="text" placeholder="Ex: EXL" />
+          </label>
+
+          <label>
+            <span>Ano fabricação</span>
+            <input type="number" placeholder="2020" />
+          </label>
+
+          <label>
+            <span>Ano modelo</span>
+            <input type="number" placeholder="2021" />
+          </label>
+
+          <label>
+            <span>Cor</span>
+            <input type="text" placeholder="Ex: Branco" />
+          </label>
+
+          <label>
+            <span>Quilometragem</span>
+            <input type="number" placeholder="45200" />
+          </label>
+
+          <label>
+            <span>Combustível</span>
+            <select>
+              <option value="">Selecionar</option>
+              <option>Flex</option>
+              <option>Gasolina</option>
+              <option>Diesel</option>
+              <option>Elétrico</option>
+              <option>Híbrido</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Câmbio</span>
+            <select>
+              <option value="">Selecionar</option>
+              <option>Manual</option>
+              <option>Automático</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="form-card">
+        <header>
+          <mat-icon aria-hidden="true">paid</mat-icon>
+          <div>
+            <h2>Valores de mercado</h2>
+            <p>Referências financeiras para compor a análise de lance.</p>
+          </div>
+        </header>
+
+        <div class="form-grid three-columns">
+          <label>
+            <span>Código FIPE</span>
+            <input type="text" placeholder="005531-1" />
+          </label>
+
+          <label>
+            <span>Valor FIPE</span>
+            <input type="text" inputmode="decimal" placeholder="R$ 125.000" />
+          </label>
+
+          <label>
+            <span>Valor de mercado</span>
+            <input type="text" inputmode="decimal" placeholder="R$ 121.000" />
+          </label>
+        </div>
+      </section>
+
+      <section class="form-card">
+        <header>
+          <mat-icon aria-hidden="true">gavel</mat-icon>
+          <div>
+            <h2>Leilão</h2>
+            <p>Origem, localização e valores do lote.</p>
+          </div>
+        </header>
+
+        <div class="form-grid">
+          <label>
+            <span>Leiloeiro</span>
+            <input type="text" placeholder="Ex: Copart Brasil" />
+          </label>
+
+          <label>
+            <span>Tipo de leilão</span>
+            <select>
+              <option value="">Selecionar</option>
+              <option>Online</option>
+              <option>Presencial</option>
+              <option>Híbrido</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Data do evento</span>
+            <input type="date" />
+          </label>
+
+          <label>
+            <span>Status</span>
+            <select>
+              <option>Em análise</option>
+              <option>Arrematado</option>
+              <option>Vendido</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Cidade</span>
+            <input type="text" placeholder="São Paulo" />
+          </label>
+
+          <label>
+            <span>UF</span>
+            <input type="text" maxlength="2" placeholder="SP" />
+          </label>
+
+          <label>
+            <span>Lance inicial</span>
+            <input type="text" inputmode="decimal" placeholder="R$ 68.000" />
+          </label>
+
+          <label>
+            <span>Lance atual</span>
+            <input type="text" inputmode="decimal" placeholder="R$ 74.000" />
+          </label>
+
+          <label class="wide-field">
+            <span>Endereço do pátio</span>
+            <input type="text" placeholder="Estrada Municipal, 450 - Itaquaquecetuba, SP" />
+          </label>
+
+          <label class="wide-field">
+            <span>URL de origem</span>
+            <input type="url" placeholder="https://www.leilao.com.br/lote/123" />
+          </label>
+        </div>
+      </section>
+
+      <section class="form-card">
+        <header>
+          <mat-icon aria-hidden="true">assignment</mat-icon>
+          <div>
+            <h2>Análise inicial</h2>
+            <p>Observações e classificação visual para a primeira avaliação.</p>
+          </div>
+        </header>
+
+        <div class="form-grid">
+          <label>
+            <span>Avaria</span>
+            <select>
+              <option>Sem avaria</option>
+              <option>Avaria leve</option>
+              <option>Avaria média</option>
+              <option>Avaria grave</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Lance sugerido</span>
+            <input type="text" inputmode="decimal" placeholder="R$ 92.000" />
+          </label>
+
+          <label>
+            <span>Lucro estimado</span>
+            <input type="text" inputmode="decimal" placeholder="R$ 20.500" />
+          </label>
+
+          <label>
+            <span>Gastos estimados</span>
+            <input type="text" inputmode="decimal" placeholder="R$ 6.300" />
+          </label>
+
+          <label class="wide-field">
+            <span>Observações</span>
+            <textarea rows="4" placeholder="Perfil conservador, bom potencial para revenda se o lance ficar abaixo do recomendado."></textarea>
+          </label>
+        </div>
+      </section>
+    </div>
+
+    <aside class="create-summary">
+      <section class="preview-card">
+        <div class="preview-photo">
+          <img [src]="previewImages[0]" alt="Prévia do veículo" />
+        </div>
+
+        <div class="preview-content">
+          <span class="status-pill">Em análise</span>
+          <h2>Prévia do veículo</h2>
+          <p>As informações preenchidas vão alimentar a página de detalhes, a listagem e a avaliação financeira.</p>
+        </div>
+      </section>
+
+      <section class="upload-card">
+        <header>
+          <h2>Imagens</h2>
+          <p>Adicione fotos para o carrossel do veículo.</p>
+        </header>
+
+        <button type="button">
+          <mat-icon aria-hidden="true">cloud_upload</mat-icon>
+          <span>Selecionar imagens</span>
+        </button>
+
+        <div class="thumb-grid">
+          @for (image of previewImages; track image) {
+            <img [src]="image" alt="Miniatura do veículo" />
+          }
+        </div>
+      </section>
+    </aside>
+  </form>
+</section>
