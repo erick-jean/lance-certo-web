@@ -14,23 +14,43 @@
   <section class="filters-bar" aria-label="Filtros dos veículos">
     <label class="search-field" aria-label="Buscar veículo">
       <mat-icon aria-hidden="true">search</mat-icon>
-      <input type="search" placeholder="Buscar por modelo, placa ou chassi..." />
+      <input
+        type="search"
+        placeholder="Buscar por modelo, placa ou chassi..."
+        [ngModel]="vehicleSearch()"
+        (ngModelChange)="vehicleSearch.set($event)"
+      />
     </label>
 
-    <button class="filter-select" type="button">
-      <span>Status</span>
+    <label class="filter-select">
+      <select [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)" aria-label="Filtrar por status">
+        <option value="ALL">Status</option>
+        <option value="ANALYZING">Em análise</option>
+        <option value="PURCHASED">Arrematado</option>
+        <option value="SOLD">Vendido</option>
+      </select>
       <mat-icon aria-hidden="true">expand_more</mat-icon>
-    </button>
+    </label>
 
-    <button class="filter-select" type="button">
-      <span>Tipo</span>
+    <label class="filter-select">
+      <select [ngModel]="typeFilter()" (ngModelChange)="typeFilter.set($event)" aria-label="Filtrar por tipo">
+        <option value="ALL">Tipo</option>
+        <option value="CAR">Carro</option>
+        <option value="MOTORCYCLE">Moto</option>
+        <option value="TRUCK">Caminhão</option>
+      </select>
       <mat-icon aria-hidden="true">expand_more</mat-icon>
-    </button>
+    </label>
 
-    <button class="filter-select" type="button">
-      <span>Localização</span>
+    <label class="filter-select">
+      <select [ngModel]="locationFilter()" (ngModelChange)="locationFilter.set($event)" aria-label="Filtrar por localização">
+        <option value="ALL">Localização</option>
+        @for (location of locations; track location) {
+          <option [value]="location">{{ location }}</option>
+        }
+      </select>
       <mat-icon aria-hidden="true">expand_more</mat-icon>
-    </button>
+    </label>
 
     <div class="view-actions" aria-label="Modo de visualização">
       <button class="view-button" type="button" aria-label="Visualizar em grade" [class.active]="viewMode() === 'grid'" (click)="setViewMode('grid')">
@@ -44,7 +64,7 @@
   </section>
 
   <section class="vehicles-grid" [class.list-view]="viewMode() === 'list'" aria-label="Lista de veículos">
-    @for (vehicle of vehicles; track vehicle.id) {
+    @for (vehicle of filteredVehicles(); track vehicle.id) {
       <a class="vehicle-card" [routerLink]="['/veiculos', vehicle.id]">
         <div class="vehicle-photo">
           <img [src]="coverImage(vehicle)" [alt]="vehicleTitle(vehicle)" />
@@ -104,6 +124,12 @@
           </div>
         </div>
       </a>
+    } @empty {
+      <div class="vehicles-empty">
+        <mat-icon aria-hidden="true">search_off</mat-icon>
+        <h2>Nenhum veículo encontrado</h2>
+        <p>Ajuste a busca ou limpe os filtros para ver mais resultados.</p>
+      </div>
     }
   </section>
 </section>
