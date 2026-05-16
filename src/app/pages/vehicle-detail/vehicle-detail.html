@@ -54,7 +54,7 @@
           <p>{{ vehicleSubtitle() }}</p>
         </div>
 
-        <button class="primary-action edit-button" type="button">
+        <button class="primary-action edit-button" type="button" [routerLink]="['/veiculos', vehicle().id, 'editar']">
           <mat-icon aria-hidden="true">edit</mat-icon>
           <span>Editar</span>
         </button>

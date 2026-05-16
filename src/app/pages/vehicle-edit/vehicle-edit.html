@@ -1,25 +1,25 @@
 <section class="vehicle-create-page">
   <header class="create-topbar">
-    <a class="back-link" routerLink="/veiculos">
+    <a class="back-link" [routerLink]="['/veiculos', vehicle().id]">
       <mat-icon aria-hidden="true">arrow_back</mat-icon>
-      <span>Voltar para veículos</span>
+      <span>Voltar para detalhes</span>
     </a>
 
     <div class="topbar-actions">
-      <button class="secondary-action" type="button">Salvar rascunho</button>
-      <button class="primary-action" type="submit" form="vehicle-create-form">Cadastrar veículo</button>
+      <a class="secondary-action" [routerLink]="['/veiculos', vehicle().id]">Cancelar</a>
+      <button class="primary-action" type="submit" form="vehicle-edit-form">Salvar alterações</button>
     </div>
   </header>
 
   <header class="page-heading">
     <div>
-      <span>Novo veículo</span>
-      <h1>Cadastrar veículo</h1>
-      <p>Informe os dados principais do veículo, valores de referência e informações do leilão.</p>
+      <span>Editar veículo</span>
+      <h1>{{ vehicleTitle() }}</h1>
+      <p>Atualize os dados principais, referências financeiras e informações do leilão.</p>
     </div>
   </header>
 
-  <form id="vehicle-create-form" class="create-layout">
+  <form id="vehicle-edit-form" class="create-layout">
     <div class="form-stack">
       <section class="form-card">
         <header>
@@ -33,47 +33,47 @@
         <div class="form-grid">
           <label>
             <span>Placa</span>
-            <input type="text" placeholder="ABC-1234" />
+            <input type="text" [value]="vehicle().plate ?? ''" />
           </label>
 
           <label>
             <span>Marca</span>
-            <input type="text" placeholder="Ex: Honda" />
+            <input type="text" [value]="vehicle().brand ?? ''" />
           </label>
 
           <label>
             <span>Modelo</span>
-            <input type="text" placeholder="Ex: Civic" />
+            <input type="text" [value]="vehicle().model ?? ''" />
           </label>
 
           <label>
             <span>Versão</span>
-            <input type="text" placeholder="Ex: EXL" />
+            <input type="text" [value]="vehicle().version ?? ''" />
           </label>
 
           <label>
             <span>Ano fabricação</span>
-            <input type="number" placeholder="2020" />
+            <input type="number" [value]="vehicle().yearManufacture ?? ''" />
           </label>
 
           <label>
             <span>Ano modelo</span>
-            <input type="number" placeholder="2021" />
+            <input type="number" [value]="vehicle().yearModel ?? ''" />
           </label>
 
           <label>
             <span>Cor</span>
-            <input type="text" placeholder="Ex: Branco" />
+            <input type="text" [value]="vehicle().color ?? ''" />
           </label>
 
           <label>
             <span>Quilometragem</span>
-            <input type="number" placeholder="45200" />
+            <input type="number" [value]="vehicle().mileage ?? ''" />
           </label>
 
           <label>
             <span>Combustível</span>
-            <select>
+            <select [value]="fuelTypeLabel(vehicle().fuelType)">
               <option value="">Selecionar</option>
               <option>Flex</option>
               <option>Gasolina</option>
@@ -85,7 +85,7 @@
 
           <label>
             <span>Câmbio</span>
-            <select>
+            <select [value]="transmissionLabel(vehicle().transmission)">
               <option value="">Selecionar</option>
               <option>Manual</option>
               <option>Automático</option>
@@ -106,17 +106,17 @@
         <div class="form-grid three-columns">
           <label>
             <span>Código FIPE</span>
-            <input type="text" placeholder="005531-1" />
+            <input type="text" [value]="vehicle().fipeCode ?? ''" />
           </label>
 
           <label>
             <span>Valor FIPE</span>
-            <input type="text" inputmode="decimal" placeholder="R$ 125.000" />
+            <input type="text" inputmode="decimal" [value]="vehicle().fipeValue ?? ''" />
           </label>
 
           <label>
             <span>Valor de mercado</span>
-            <input type="text" inputmode="decimal" placeholder="R$ 121.000" />
+            <input type="text" inputmode="decimal" [value]="vehicle().marketValue ?? ''" />
           </label>
         </div>
       </section>
@@ -133,12 +133,12 @@
         <div class="form-grid">
           <label>
             <span>Leiloeiro</span>
-            <input type="text" placeholder="Ex: Copart Brasil" />
+            <input type="text" [value]="vehicle().auctioneer ?? ''" />
           </label>
 
           <label>
             <span>Tipo de leilão</span>
-            <select>
+            <select [value]="auctionTypeLabel(vehicle().auctionType)">
               <option value="">Selecionar</option>
               <option>Online</option>
               <option>Presencial</option>
@@ -148,12 +148,12 @@
 
           <label>
             <span>Data do evento</span>
-            <input type="date" />
+            <input type="date" [value]="dateInputValue(vehicle().eventDate)" />
           </label>
 
           <label>
             <span>Status</span>
-            <select>
+            <select [value]="statusLabel(vehicle().status)">
               <option>Em análise</option>
               <option>Arrematado</option>
               <option>Vendido</option>
@@ -162,32 +162,32 @@
 
           <label>
             <span>Cidade</span>
-            <input type="text" placeholder="São Paulo" />
+            <input type="text" [value]="vehicle().city ?? ''" />
           </label>
 
           <label>
             <span>UF</span>
-            <input type="text" maxlength="2" placeholder="SP" />
+            <input type="text" maxlength="2" [value]="vehicle().state ?? ''" />
           </label>
 
           <label>
             <span>Lance inicial</span>
-            <input type="text" inputmode="decimal" placeholder="R$ 68.000" />
+            <input type="text" inputmode="decimal" [value]="vehicle().auctionInitialBid ?? ''" />
           </label>
 
           <label>
             <span>Lance atual</span>
-            <input type="text" inputmode="decimal" placeholder="R$ 74.000" />
+            <input type="text" inputmode="decimal" [value]="vehicle().auctionCurrentBid ?? ''" />
           </label>
 
           <label class="wide-field">
             <span>Endereço do pátio</span>
-            <input type="text" placeholder="Estrada Municipal, 450 - Itaquaquecetuba, SP" />
+            <input type="text" [value]="vehicle().yardAddress ?? ''" />
           </label>
 
           <label class="wide-field">
             <span>URL de origem</span>
-            <input type="url" placeholder="https://www.leilao.com.br/lote/123" />
+            <input type="url" [value]="vehicle().sourceUrl ?? ''" />
           </label>
         </div>
       </section>
@@ -204,7 +204,7 @@
         <div class="form-grid">
           <label>
             <span>Avaria</span>
-            <select>
+            <select [value]="damageLabel(vehicle().damageType)">
               <option>Sem avaria</option>
               <option>Avaria leve</option>
               <option>Avaria média</option>
@@ -214,22 +214,22 @@
 
           <label>
             <span>Lance sugerido</span>
-            <input type="text" inputmode="decimal" placeholder="R$ 92.000" />
+            <input type="text" inputmode="decimal" [value]="vehicle().evaluation?.suggestedBid ?? ''" />
           </label>
 
           <label>
             <span>Lucro estimado</span>
-            <input type="text" inputmode="decimal" placeholder="R$ 20.500" />
+            <input type="text" inputmode="decimal" [value]="vehicle().evaluation?.estimatedProfit ?? ''" />
           </label>
 
           <label>
             <span>Gastos estimados</span>
-            <input type="text" inputmode="decimal" placeholder="R$ 6.300" />
+            <input type="text" inputmode="decimal" [value]="vehicle().evaluation?.estimatedExpenses ?? ''" />
           </label>
 
           <label class="wide-field">
             <span>Observações</span>
-            <textarea rows="4" placeholder="Perfil conservador, bom potencial para revenda se o lance ficar abaixo do recomendado."></textarea>
+            <textarea rows="4">{{ vehicle().notes ?? '' }}</textarea>
           </label>
         </div>
       </section>
@@ -239,7 +239,7 @@
           <mat-icon aria-hidden="true">image</mat-icon>
           <div>
             <h2>Imagens</h2>
-            <p>Adicione fotos para o carrossel do veículo.</p>
+            <p>Atualize as fotos exibidas no carrossel do veículo.</p>
           </div>
         </header>
 
@@ -249,8 +249,8 @@
         </button>
 
         <div class="thumb-grid">
-          @for (image of previewImages; track image) {
-            <img [src]="image" alt="Miniatura do veículo" />
+          @for (image of previewImages(); track image) {
+            <img [src]="image" [alt]="vehicleTitle()" />
           }
         </div>
       </section>
