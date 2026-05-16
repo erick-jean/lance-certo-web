@@ -4,6 +4,7 @@ import { RouterLink, ActivatedRoute } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import {
   AuctionType,
+  EvaluationExpense,
   ExpenseCategory,
   ExpenseSource,
   FuelType,
@@ -28,6 +29,14 @@ export class VehicleDetail {
   protected readonly expenseSearch = signal('');
   protected readonly expenseCategoryFilter = signal<'ALL' | ExpenseCategory>('ALL');
   protected readonly expenseRequiredFilter = signal<'ALL' | 'REQUIRED' | 'OPTIONAL'>('ALL');
+  protected readonly isExpenseDrawerOpen = signal(false);
+  protected readonly selectedExpenseId = signal<string | null>(null);
+  protected readonly expenseVersion = signal(0);
+  protected readonly expenseName = signal('');
+  protected readonly expenseCategory = signal<ExpenseCategory | ''>('');
+  protected readonly expenseAmount = signal('');
+  protected readonly expenseNotes = signal('');
+  protected readonly expenseIsRequired = signal(false);
 
   protected readonly vehicle = computed(() => {
     const id = this.route.snapshot.paramMap.get('id');
@@ -37,6 +46,7 @@ export class VehicleDetail {
   protected readonly imageUrls = computed(() => this.vehicle().images.map((image) => image.url));
   protected readonly activeImage = computed(() => this.imageUrls()[this.activeImageIndex()] ?? '');
   protected readonly filteredExpenses = computed(() => {
+    this.expenseVersion();
     const search = this.expenseSearch().trim().toLowerCase();
     const category = this.expenseCategoryFilter();
     const required = this.expenseRequiredFilter();
@@ -52,6 +62,11 @@ export class VehicleDetail {
       return matchesSearch && matchesCategory && matchesRequired;
     });
   });
+  protected readonly isEditingExpense = computed(() => this.selectedExpenseId() !== null);
+  protected readonly expenseDrawerTitle = computed(() => (this.isEditingExpense() ? 'Editar Gasto' : 'Adicionar Novo Gasto'));
+  protected readonly expenseDrawerDescription = computed(() =>
+    this.isEditingExpense() ? 'Atualize os dados do investimento previsto.' : 'Preencha os dados do investimento realizado.',
+  );
 
   protected vehicleTitle(): string {
     const vehicle = this.vehicle();
@@ -165,6 +180,88 @@ export class VehicleDetail {
 
   protected selectTab(tab: 'data' | 'evaluation' | 'checklist' | 'report'): void {
     this.activeTab.set(tab);
+  }
+
+  protected openExpenseDrawer(): void {
+    this.selectedExpenseId.set(null);
+    this.expenseName.set('');
+    this.expenseCategory.set('');
+    this.expenseAmount.set('');
+    this.expenseNotes.set('');
+    this.expenseIsRequired.set(false);
+    this.isExpenseDrawerOpen.set(true);
+  }
+
+  protected editExpense(expense: EvaluationExpense): void {
+    this.selectedExpenseId.set(expense.id);
+    this.expenseName.set(expense.name);
+    this.expenseCategory.set(expense.category);
+    this.expenseAmount.set(expense.amount);
+    this.expenseNotes.set(expense.notes ?? '');
+    this.expenseIsRequired.set(expense.isRequired);
+    this.isExpenseDrawerOpen.set(true);
+  }
+
+  protected closeExpenseDrawer(): void {
+    this.isExpenseDrawerOpen.set(false);
+  }
+
+  protected saveExpense(): void {
+    const evaluation = this.vehicle().evaluation;
+    if (!evaluation) {
+      this.closeExpenseDrawer();
+      return;
+    }
+
+    const now = new Date().toISOString();
+    const selectedExpenseId = this.selectedExpenseId();
+    const expenseData = {
+      category: this.expenseCategory() || 'OTHER',
+      name: this.expenseName() || 'Novo gasto',
+      amount: this.formatExpenseAmount(this.expenseAmount()),
+      isRequired: this.expenseIsRequired(),
+      notes: this.expenseNotes() || undefined,
+      updatedAt: now,
+    };
+
+    if (selectedExpenseId) {
+      const expense = evaluation.expenses.find((item) => item.id === selectedExpenseId);
+
+      if (expense) {
+        Object.assign(expense, expenseData);
+      }
+    } else {
+      evaluation.expenses.unshift({
+        id: `expense-${Date.now()}`,
+        evaluationId: `evaluation-${this.vehicle().id}`,
+        source: 'USER',
+        createdAt: now,
+        ...expenseData,
+      });
+    }
+
+    this.expenseVersion.update((version) => version + 1);
+    this.closeExpenseDrawer();
+  }
+
+  protected deleteExpense(): void {
+    const evaluation = this.vehicle().evaluation;
+    const selectedExpenseId = this.selectedExpenseId();
+
+    if (!evaluation || !selectedExpenseId) {
+      return;
+    }
+
+    evaluation.expenses = evaluation.expenses.filter((expense) => expense.id !== selectedExpenseId);
+    this.expenseVersion.update((version) => version + 1);
+    this.closeExpenseDrawer();
+  }
+
+  private formatExpenseAmount(amount: string): string {
+    const cleanAmount = amount.trim();
+    if (!cleanAmount) return 'R$ 0,00';
+
+    return cleanAmount.startsWith('R$') ? cleanAmount : `R$ ${cleanAmount}`;
   }
 
   protected selectImage(index: number): void {

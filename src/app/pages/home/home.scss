@@ -73,10 +73,22 @@
 }
 
 .summary-card {
+  position: relative;
   display: grid;
   min-height: 10.75rem;
   align-content: space-between;
+  overflow: hidden;
   padding: 1.5rem;
+
+  &::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 0.25rem;
+    background: #667085;
+    content: '';
+  }
 
   strong {
     color: #07101d;
@@ -89,6 +101,22 @@
     color: #101828;
     font-size: var(--font-size-xs);
   }
+}
+
+.total-card::after {
+  background: #2563eb;
+}
+
+.analysis-card::after {
+  background: #f6a440;
+}
+
+.purchased-card::after {
+  background: #007a58;
+}
+
+.sold-card::after {
+  background: #07101d;
 }
 
 .card-header {
@@ -182,9 +210,18 @@
   border-bottom: 1px solid #d8dde6;
   color: #172033;
   font-size: var(--font-size-sm);
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease;
 
   &:last-child {
     border-bottom: 0;
+  }
+
+  &:not(.table-head):hover {
+    background: #f8fafc;
+    cursor: pointer;
+    transform: translateX(0.25rem);
   }
 
   > * {

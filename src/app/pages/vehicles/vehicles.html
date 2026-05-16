@@ -33,17 +33,17 @@
     </button>
 
     <div class="view-actions" aria-label="Modo de visualização">
-      <button class="view-button active" type="button" aria-label="Visualizar em grade">
+      <button class="view-button" type="button" aria-label="Visualizar em grade" [class.active]="viewMode() === 'grid'" (click)="setViewMode('grid')">
         <mat-icon aria-hidden="true">grid_view</mat-icon>
       </button>
 
-      <button class="view-button" type="button" aria-label="Visualizar em lista">
+      <button class="view-button" type="button" aria-label="Visualizar em lista" [class.active]="viewMode() === 'list'" (click)="setViewMode('list')">
         <mat-icon aria-hidden="true">table_rows</mat-icon>
       </button>
     </div>
   </section>
 
-  <section class="vehicles-grid" aria-label="Lista de veículos">
+  <section class="vehicles-grid" [class.list-view]="viewMode() === 'list'" aria-label="Lista de veículos">
     @for (vehicle of vehicles; track vehicle.id) {
       <a class="vehicle-card" [routerLink]="['/veiculos', vehicle.id]">
         <div class="vehicle-photo">
@@ -59,9 +59,36 @@
         </div>
 
         <div class="vehicle-body">
-          <div>
+          <div class="vehicle-main-info">
             <h2>{{ vehicleTitle(vehicle) }}</h2>
             <p>{{ vehicleSubtitle(vehicle) }}</p>
+
+            <div class="list-details" aria-label="Dados resumidos do veículo">
+              <div>
+                <span>Placa</span>
+                <strong>{{ vehicle.plate ?? '-' }}</strong>
+              </div>
+              <div>
+                <span>KM</span>
+                <strong>{{ formatMileage(vehicle.mileage) }}</strong>
+              </div>
+              <div>
+                <span>Câmbio</span>
+                <strong>{{ transmissionLabel(vehicle.transmission) }}</strong>
+              </div>
+              <div>
+                <span>Combustível</span>
+                <strong>{{ fuelTypeLabel(vehicle.fuelType) }}</strong>
+              </div>
+              <div>
+                <span>Leiloeiro</span>
+                <strong>{{ vehicle.auctioneer ?? '-' }}</strong>
+              </div>
+              <div>
+                <span>Evento</span>
+                <strong>{{ formatDate(vehicle.eventDate) }}</strong>
+              </div>
+            </div>
           </div>
 
           <div class="vehicle-values">

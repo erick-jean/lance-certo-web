@@ -61,19 +61,19 @@
       </header>
 
       <section class="metrics-grid" aria-label="Resumo financeiro">
-        <div>
+        <div class="metric-card fipe-card">
           <span>FIPE</span>
           <strong>{{ vehicle().fipeValue ?? '-' }}</strong>
         </div>
-        <div>
+        <div class="metric-card bid-card">
           <span>Lance sugerido</span>
           <strong>{{ vehicle().evaluation?.suggestedBid ?? '-' }}</strong>
         </div>
-        <div>
+        <div class="metric-card profit-card">
           <span>Lucro estimado</span>
           <strong>{{ vehicle().evaluation?.estimatedProfit ?? '-' }}</strong>
         </div>
-        <div>
+        <div class="metric-card expense-card">
           <span>Gastos estimados</span>
           <strong>{{ vehicle().evaluation?.estimatedExpenses ?? '-' }}</strong>
         </div>
@@ -163,7 +163,7 @@
             <p>Custos previstos para regularização, reparos e preparação do veículo.</p>
           </div>
 
-          <button class="add-expense-button" type="button">
+          <button class="add-expense-button" type="button" (click)="openExpenseDrawer()">
             <mat-icon aria-hidden="true">add</mat-icon>
             <span>Adicionar gasto</span>
           </button>
@@ -222,7 +222,13 @@
           </div>
 
           @for (expense of filteredExpenses(); track expense.id) {
-            <div class="expenses-row" role="row">
+            <div
+              class="expenses-row editable-row"
+              role="row"
+              tabindex="0"
+              (click)="editExpense(expense)"
+              (keydown.enter)="editExpense(expense)"
+            >
               <div role="cell">
                 <strong>{{ expense.name }}</strong>
                 @if (expense.notes) {
@@ -256,4 +262,98 @@
       </section>
     }
   </section>
+
+  @if (isExpenseDrawerOpen()) {
+    <div class="expense-drawer-backdrop" (click)="closeExpenseDrawer()"></div>
+
+    <aside class="expense-drawer" [attr.aria-label]="expenseDrawerTitle()" (click)="$event.stopPropagation()">
+      <header class="expense-drawer-header">
+        <div>
+          <h2>{{ expenseDrawerTitle() }}</h2>
+          <p>{{ expenseDrawerDescription() }}</p>
+        </div>
+
+        <button type="button" aria-label="Fechar" (click)="closeExpenseDrawer()">
+          <mat-icon aria-hidden="true">close</mat-icon>
+        </button>
+      </header>
+
+      <form class="expense-form" (ngSubmit)="saveExpense()">
+        <label class="full-field">
+          <span>Descrição da Despesa</span>
+          <input
+            type="text"
+            placeholder="Ex: Pintura lateral esquerda"
+            [ngModel]="expenseName()"
+            (ngModelChange)="expenseName.set($event)"
+            name="expenseName"
+          />
+        </label>
+
+        <div class="form-row">
+          <label>
+            <span>Categoria</span>
+            <select [ngModel]="expenseCategory()" (ngModelChange)="expenseCategory.set($event)" name="expenseCategory">
+              <option value="">Selecionar</option>
+              <option value="DOCUMENTATION">Documentação</option>
+              <option value="REPAIR">Mecânica</option>
+              <option value="AUCTION_FEE">Taxa de leilão</option>
+              <option value="TRANSPORT">Transporte</option>
+              <option value="INSPECTION">Vistoria</option>
+              <option value="DEBT">Débitos</option>
+              <option value="REGULARIZATION">Regularização</option>
+              <option value="PREPARATION_SALE">Estética</option>
+              <option value="OTHER">Outro</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Valor (R$)</span>
+            <input
+              type="text"
+              inputmode="decimal"
+              placeholder="0,00"
+              [ngModel]="expenseAmount()"
+              (ngModelChange)="expenseAmount.set($event)"
+              name="expenseAmount"
+            />
+          </label>
+        </div>
+
+        <label class="full-field">
+          <span>Veículo Associado</span>
+          <input type="text" [value]="vehicleTitle()" readonly />
+        </label>
+
+        <label class="full-field">
+          <span>Observações</span>
+          <textarea
+            rows="4"
+            placeholder="Detalhes importantes sobre esse gasto"
+            [ngModel]="expenseNotes()"
+            (ngModelChange)="expenseNotes.set($event)"
+            name="expenseNotes"
+          ></textarea>
+        </label>
+
+        <label class="required-check">
+          <input
+            type="checkbox"
+            [ngModel]="expenseIsRequired()"
+            (ngModelChange)="expenseIsRequired.set($event)"
+            name="expenseIsRequired"
+          />
+          <span>Marcar como gasto obrigatório</span>
+        </label>
+
+        <footer class="expense-drawer-actions">
+          @if (isEditingExpense()) {
+            <button class="danger-action" type="button" (click)="deleteExpense()">Excluir</button>
+          }
+          <button class="secondary-action" type="button" (click)="closeExpenseDrawer()">Cancelar</button>
+          <button class="primary-action" type="submit">{{ isEditingExpense() ? 'Salvar Alterações' : 'Salvar Gasto' }}</button>
+        </footer>
+      </form>
+    </aside>
+  }
 </section>
