@@ -5,7 +5,11 @@
   </header>
 
   <nav class="menu" aria-label="Navegação principal">
-    <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+    <a
+      routerLink="/dashboard"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
       <mat-icon aria-hidden="true">dashboard</mat-icon>
       <span>Dashboard</span>
     </a>
@@ -15,19 +19,9 @@
       <span>Veículos</span>
     </a>
 
-    <a routerLink="/avaliacoes" routerLinkActive="active">
-      <mat-icon aria-hidden="true">rate_review</mat-icon>
-      <span>Avaliações</span>
-    </a>
-
     <a routerLink="/financeiro" routerLinkActive="active">
       <mat-icon aria-hidden="true">payments</mat-icon>
       <span>Financeiro</span>
-    </a>
-
-    <a routerLink="/relatorios" routerLinkActive="active">
-      <mat-icon aria-hidden="true">bar_chart</mat-icon>
-      <span>Relatórios</span>
     </a>
 
     <a routerLink="/assinatura" routerLinkActive="active">

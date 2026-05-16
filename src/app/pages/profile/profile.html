@@ -1,0 +1,172 @@
+<section class="profile-page">
+  <header class="page-heading">
+    <div>
+      <h1>Meu perfil</h1>
+      <p>Gerencie seus dados, preferências e segurança da conta.</p>
+    </div>
+
+    <button class="primary-action" type="submit" form="profile-form">Salvar alterações</button>
+  </header>
+
+  <form id="profile-form" class="profile-layout">
+    <aside class="profile-summary">
+      <section class="identity-card">
+        <button class="avatar-control" type="button" aria-label="Alterar foto do perfil">
+          <mat-icon aria-hidden="true">person</mat-icon>
+          <span>
+            <mat-icon aria-hidden="true">photo_camera</mat-icon>
+          </span>
+        </button>
+
+        <h2>Erick Santos</h2>
+        <p>Administrador</p>
+        <small>Plano grátis</small>
+      </section>
+
+      <section class="account-card">
+        <h2>Resumo da conta</h2>
+        <div>
+          <span>Veículos cadastrados</span>
+          <strong>2 de 3</strong>
+        </div>
+        <div>
+          <span>Conta criada em</span>
+          <strong>18/05/2024</strong>
+        </div>
+        <div>
+          <span>Último acesso</span>
+          <strong>Agora</strong>
+        </div>
+      </section>
+    </aside>
+
+    <div class="profile-stack">
+      <section class="form-card">
+        <header>
+          <mat-icon aria-hidden="true">badge</mat-icon>
+          <div>
+            <h2>Dados pessoais</h2>
+            <p>Essas informações aparecem na sua conta e nos registros internos.</p>
+          </div>
+        </header>
+
+        <div class="form-grid">
+          <label>
+            <span>Nome</span>
+            <input type="text" value="Erick" />
+          </label>
+
+          <label>
+            <span>Sobrenome</span>
+            <input type="text" value="Santos" />
+          </label>
+
+          <label>
+            <span>CPF/CNPJ</span>
+            <input type="text" placeholder="000.000.000-00" />
+          </label>
+
+          <label>
+            <span>Empresa</span>
+            <input type="text" placeholder="Nome da empresa" />
+          </label>
+        </div>
+      </section>
+
+      <section class="form-card">
+        <header>
+          <mat-icon aria-hidden="true">alternate_email</mat-icon>
+          <div>
+            <h2>Contato</h2>
+            <p>Use um e-mail e telefone atualizados para alertas importantes.</p>
+          </div>
+        </header>
+
+        <div class="form-grid">
+          <label>
+            <span>E-mail</span>
+            <input type="email" value="erick@email.com" />
+          </label>
+
+          <label>
+            <span>Telefone</span>
+            <input type="tel" placeholder="(00) 00000-0000" />
+          </label>
+
+          <label>
+            <span>Cidade</span>
+            <input type="text" value="Cuiabá" />
+          </label>
+
+          <label>
+            <span>UF</span>
+            <input type="text" maxlength="2" value="MT" />
+          </label>
+        </div>
+      </section>
+
+      <section class="form-card">
+        <header>
+          <mat-icon aria-hidden="true">notifications</mat-icon>
+          <div>
+            <h2>Preferências</h2>
+            <p>Configure como deseja acompanhar veículos e avaliações.</p>
+          </div>
+        </header>
+
+        <div class="preference-list">
+          <label class="toggle-row">
+            <span>
+              <strong>Alertas de leilão</strong>
+              <small>Receber aviso quando um evento estiver próximo.</small>
+            </span>
+            <input type="checkbox" checked />
+          </label>
+
+          <label class="toggle-row">
+            <span>
+              <strong>Resumo financeiro</strong>
+              <small>Receber resumo semanal de custos e oportunidades.</small>
+            </span>
+            <input type="checkbox" checked />
+          </label>
+
+          <label class="toggle-row">
+            <span>
+              <strong>Atualizações de avaliação</strong>
+              <small>Notificar quando gastos ou análises forem alterados.</small>
+            </span>
+            <input type="checkbox" />
+          </label>
+        </div>
+      </section>
+
+      <section class="form-card">
+        <header>
+          <mat-icon aria-hidden="true">lock</mat-icon>
+          <div>
+            <h2>Segurança</h2>
+            <p>Atualize sua senha quando precisar reforçar o acesso.</p>
+          </div>
+        </header>
+
+        <div class="form-grid">
+          <label>
+            <span>Senha atual</span>
+            <input type="password" placeholder="Digite sua senha atual" />
+          </label>
+
+          <label>
+            <span>Nova senha</span>
+            <input type="password" placeholder="Digite a nova senha" />
+          </label>
+        </div>
+      </section>
+
+      <footer class="form-footer-actions">
+        <button class="secondary-action" type="button">Cancelar</button>
+        <button class="primary-action" type="submit">Salvar alterações</button>
+      </footer>
+    </div>
+  </form>
+</section>

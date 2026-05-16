@@ -1,0 +1,158 @@
+<section class="finance-page">
+  <header class="page-heading">
+    <div>
+      <h1>Financeiro</h1>
+      <p>Acompanhe investimentos, despesas, vendas e margem por veículo.</p>
+    </div>
+
+    <button class="export-button" type="button">
+      <mat-icon aria-hidden="true">download</mat-icon>
+      <span>Exportar</span>
+    </button>
+  </header>
+
+  @if (hasFinancialData()) {
+    <section class="summary-grid" aria-label="Resumo financeiro">
+      <article class="summary-card purchased-card">
+        <span>Veículos arrematados</span>
+        <strong>{{ purchasedRows().length }} veículos</strong>
+      </article>
+
+      <article class="summary-card sold-card">
+        <span>Veículos vendidos</span>
+        <strong>{{ soldRows().length }} veículos</strong>
+      </article>
+
+      <article class="summary-card invested-card">
+        <span>Total investido</span>
+        <strong>{{ formatCurrency(totalInvested()) }}</strong>
+      </article>
+
+      <article class="summary-card profit-card">
+        <span>Lucro total</span>
+        <strong [class.negative]="totalProfit() < 0">{{ formatSignedCurrency(totalProfit()) }}</strong>
+      </article>
+    </section>
+
+    <section class="results-panel" aria-labelledby="results-title">
+      <header class="panel-header">
+        <div>
+          <h2 id="results-title">Resultados por veículo</h2>
+          <p>Resumo do arremate, despesas, venda e resultado final.</p>
+        </div>
+      </header>
+
+      <div class="table-filters" aria-label="Filtros da tabela financeira">
+        <label class="search-filter">
+          <span>Veículo</span>
+          <mat-icon aria-hidden="true">search</mat-icon>
+          <input
+            type="search"
+            placeholder="Buscar por veículo..."
+            [ngModel]="vehicleSearch()"
+            (ngModelChange)="vehicleSearch.set($event)"
+          />
+        </label>
+
+        <label>
+          <span>Status</span>
+          <select [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)">
+            <option value="ALL">Todos</option>
+            <option value="Vendido">Vendido</option>
+            <option value="Arrematado">Arrematado</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Resultado</span>
+          <select [ngModel]="resultFilter()" (ngModelChange)="resultFilter.set($event)">
+            <option value="ALL">Todos</option>
+            <option value="PROFIT">Lucro</option>
+            <option value="LOSS">Prejuízo</option>
+            <option value="OPEN">Em aberto</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="finance-table" role="table" aria-label="Resultados por veículo">
+        <div class="finance-row finance-head" role="row">
+          <span role="columnheader">Veículo</span>
+          <span role="columnheader">Status</span>
+          <span role="columnheader">Valor arremate</span>
+          <span role="columnheader">Despesas</span>
+          <span role="columnheader">Total investido</span>
+          <span role="columnheader">Valor venda</span>
+          <span role="columnheader">Lucro/Prejuízo</span>
+          <span role="columnheader">Margem</span>
+        </div>
+
+        @for (row of filteredRows(); track row.vehicle) {
+          <div class="finance-row" role="row">
+            <strong role="cell">{{ row.vehicle }}</strong>
+            <span role="cell"><span class="status-pill" [class.sold]="row.status === 'Vendido'">{{ row.status }}</span></span>
+            <span role="cell">{{ formatCurrency(row.purchase) }}</span>
+            <span role="cell">{{ formatCurrency(row.expenses) }}</span>
+            <span role="cell">{{ formatCurrency(totalInvestedByRow(row)) }}</span>
+            <span role="cell">{{ row.sale ? formatCurrency(row.sale) : '—' }}</span>
+            <strong role="cell" [class.positive]="resultByRow(row) > 0" [class.negative]="resultByRow(row) < 0">
+              {{ row.sale ? formatSignedCurrency(resultByRow(row)) : 'Em aberto' }}
+            </strong>
+            <span role="cell">{{ row.sale ? formatPercent(marginByRow(row)) : '—' }}</span>
+          </div>
+        } @empty {
+          <div class="finance-empty">Nenhum resultado encontrado com os filtros selecionados.</div>
+        }
+      </div>
+    </section>
+
+    <section class="charts-grid" aria-label="Gráficos financeiros">
+      <article class="chart-card">
+        <header>
+          <h2>Despesas por categoria</h2>
+          <p>Onde o dinheiro está indo.</p>
+        </header>
+
+        <div class="bar-list">
+          @for (category of categoryExpenses; track category.name) {
+            <div class="bar-item">
+              <div>
+                <span>{{ category.name }}</span>
+                <strong>{{ formatCurrency(category.value) }}</strong>
+              </div>
+              <div class="bar-track">
+                <i [style.width]="barWidth(category.value, maxCategoryExpense())" [style.background]="category.color"></i>
+              </div>
+            </div>
+          }
+        </div>
+      </article>
+
+      <article class="chart-card monthly-card">
+        <header>
+          <h2>Resultado mensal</h2>
+          <p>Evolução do lucro e prejuízo.</p>
+        </header>
+
+        <div class="monthly-cards">
+          @for (month of monthlyResults; track month.month) {
+            <article class="month-card" [class.negative]="month.value < 0">
+              <div>
+                <span>{{ month.month }}</span>
+                <mat-icon aria-hidden="true">{{ month.value < 0 ? 'trending_down' : 'trending_up' }}</mat-icon>
+              </div>
+              <strong [class.negative]="month.value < 0">{{ formatSignedCurrency(month.value) }}</strong>
+              <i [style.width]="barWidth(month.value, maxMonthlyResultAbs())"></i>
+            </article>
+          }
+        </div>
+      </article>
+    </section>
+  } @else {
+    <section class="empty-state">
+      <mat-icon aria-hidden="true">payments</mat-icon>
+      <h2>Você ainda não possui dados financeiros.</h2>
+      <p>Quando marcar um veículo como arrematado, os resultados financeiros aparecerão aqui.</p>
+      <a routerLink="/veiculos">Ver meus veículos</a>
+    </section>
+  }
+</section>

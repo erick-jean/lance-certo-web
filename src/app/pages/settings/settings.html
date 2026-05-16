@@ -1,0 +1,208 @@
+<section class="settings-page">
+  <header class="page-heading">
+    <div>
+      <h1>Configurações</h1>
+      <p>Ajuste preferências da plataforma, notificações e parâmetros de análise.</p>
+    </div>
+
+    <button class="primary-action" type="submit" form="settings-form">Salvar alterações</button>
+  </header>
+
+  <form id="settings-form" class="settings-layout">
+    <aside class="settings-nav" aria-label="Categorias de configuração">
+      <a href="#geral" class="active">
+        <mat-icon aria-hidden="true">tune</mat-icon>
+        <span>Geral</span>
+      </a>
+      <a href="#notificacoes">
+        <mat-icon aria-hidden="true">notifications</mat-icon>
+        <span>Notificações</span>
+      </a>
+      <a href="#analise">
+        <mat-icon aria-hidden="true">query_stats</mat-icon>
+        <span>Análise</span>
+      </a>
+      <a href="#integracoes">
+        <mat-icon aria-hidden="true">hub</mat-icon>
+        <span>Integrações</span>
+      </a>
+      <a href="#conta">
+        <mat-icon aria-hidden="true">admin_panel_settings</mat-icon>
+        <span>Conta</span>
+      </a>
+    </aside>
+
+    <div class="settings-stack">
+      <section id="geral" class="settings-card">
+        <header>
+          <mat-icon aria-hidden="true">tune</mat-icon>
+          <div>
+            <h2>Preferências gerais</h2>
+            <p>Configurações padrão usadas na navegação e nos formulários.</p>
+          </div>
+        </header>
+
+        <div class="form-grid">
+          <label>
+            <span>Moeda padrão</span>
+            <select>
+              <option>Real brasileiro (BRL)</option>
+              <option>Dólar americano (USD)</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Estado padrão</span>
+            <select>
+              <option>SP</option>
+              <option>RJ</option>
+              <option>MG</option>
+              <option>MT</option>
+              <option>PR</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Tema</span>
+            <select>
+              <option>Claro</option>
+              <option>Escuro</option>
+              <option>Sistema</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Itens por página</span>
+            <select>
+              <option>10</option>
+              <option>20</option>
+              <option>50</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section id="notificacoes" class="settings-card">
+        <header>
+          <mat-icon aria-hidden="true">notifications</mat-icon>
+          <div>
+            <h2>Notificações</h2>
+            <p>Escolha quais alertas deseja receber durante o fluxo de compra.</p>
+          </div>
+        </header>
+
+        <div class="toggle-list">
+          <label class="toggle-row">
+            <span>
+              <strong>Alertas de leilão próximo</strong>
+              <small>Aviso quando um evento estiver chegando.</small>
+            </span>
+            <input type="checkbox" checked />
+          </label>
+
+          <label class="toggle-row">
+            <span>
+              <strong>Alterações em gastos</strong>
+              <small>Notificar quando uma avaliação receber novas despesas.</small>
+            </span>
+            <input type="checkbox" checked />
+          </label>
+
+          <label class="toggle-row">
+            <span>
+              <strong>Resumo financeiro semanal</strong>
+              <small>Enviar consolidado de lucro, despesas e veículos em aberto.</small>
+            </span>
+            <input type="checkbox" />
+          </label>
+        </div>
+      </section>
+
+      <section id="analise" class="settings-card">
+        <header>
+          <mat-icon aria-hidden="true">query_stats</mat-icon>
+          <div>
+            <h2>Análise financeira</h2>
+            <p>Parâmetros usados como referência para sugestões e indicadores.</p>
+          </div>
+        </header>
+
+        <div class="form-grid">
+          <label>
+            <span>Margem mínima desejada</span>
+            <input type="text" value="18%" />
+          </label>
+
+          <label>
+            <span>Reserva para imprevistos</span>
+            <input type="text" value="R$ 2.000" />
+          </label>
+
+          <label>
+            <span>Comissão padrão do leiloeiro</span>
+            <input type="text" value="5%" />
+          </label>
+
+          <label>
+            <span>Prazo estimado de revenda</span>
+            <select>
+              <option>Até 30 dias</option>
+              <option>Até 60 dias</option>
+              <option>Até 90 dias</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section id="integracoes" class="settings-card">
+        <header>
+          <mat-icon aria-hidden="true">hub</mat-icon>
+          <div>
+            <h2>Integrações</h2>
+            <p>Conecte serviços externos para reduzir preenchimento manual.</p>
+          </div>
+        </header>
+
+        <div class="integration-list">
+          <article>
+            <mat-icon aria-hidden="true">directions_car</mat-icon>
+            <div>
+              <strong>Tabela FIPE</strong>
+              <span>Buscar referências de preço automaticamente.</span>
+            </div>
+            <button type="button">Conectar</button>
+          </article>
+
+          <article>
+            <mat-icon aria-hidden="true">receipt_long</mat-icon>
+            <div>
+              <strong>Emissão de relatórios</strong>
+              <span>Exportar análises para PDF e planilha.</span>
+            </div>
+            <button type="button">Configurar</button>
+          </article>
+        </div>
+      </section>
+
+      <section id="conta" class="settings-card danger-card">
+        <header>
+          <mat-icon aria-hidden="true">admin_panel_settings</mat-icon>
+          <div>
+            <h2>Conta e dados</h2>
+            <p>Ações sensíveis para exportar ou remover informações da conta.</p>
+          </div>
+        </header>
+
+        <div class="danger-actions">
+          <button class="secondary-action" type="button">Exportar meus dados</button>
+          <button class="danger-action" type="button">Excluir conta</button>
+        </div>
+      </section>
+
+      <footer class="form-footer-actions">
+        <button class="secondary-action" type="button">Cancelar</button>
+        <button class="primary-action" type="submit">Salvar alterações</button>
+      </footer>
+    </div>
+  </form>
+</section>

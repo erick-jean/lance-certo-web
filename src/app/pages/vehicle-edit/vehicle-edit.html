@@ -254,6 +254,11 @@
           }
         </div>
       </section>
+
+      <footer class="form-footer-actions">
+        <a class="secondary-action" [routerLink]="['/veiculos', vehicle().id]">Cancelar</a>
+        <button class="primary-action" type="submit" form="vehicle-edit-form">Salvar alterações</button>
+      </footer>
     </div>
 
     <aside class="summary-sidebar" aria-label="Resumo dos veículos">

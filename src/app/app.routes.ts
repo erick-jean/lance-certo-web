@@ -4,6 +4,10 @@ import { VehicleCreate } from './pages/vehicle-create/vehicle-create';
 import { VehicleDetail } from './pages/vehicle-detail/vehicle-detail';
 import { VehicleEdit } from './pages/vehicle-edit/vehicle-edit';
 import { Vehicles } from './pages/vehicles/vehicles';
+import { Profile } from './pages/profile/profile';
+import { Finance } from './pages/finance/finance';
+import { Subscription } from './pages/subscription/subscription';
+import { Settings } from './pages/settings/settings';
 
 export const routes: Routes = [
   {
@@ -25,6 +29,22 @@ export const routes: Routes = [
   {
     path: 'veiculos/:id',
     component: VehicleDetail,
+  },
+  {
+    path: 'perfil',
+    component: Profile,
+  },
+  {
+    path: 'financeiro',
+    component: Finance,
+  },
+  {
+    path: 'assinatura',
+    component: Subscription,
+  },
+  {
+    path: 'configuracoes',
+    component: Settings,
   },
   {
     path: '',
