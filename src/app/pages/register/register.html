@@ -1,0 +1,77 @@
+<section class="register-page">
+  <aside class="register-hero">
+    <a class="brand-mark" routerLink="/login" aria-label="Lance Certo">
+      <img src="/logo.png" alt="Lance Certo" />
+    </a>
+
+    <div class="hero-copy">
+      <h1>Comece analisando melhor.</h1>
+      <p>
+        Organize veículos, calcule custos, acompanhe margens e tome decisões mais seguras antes de entrar em um leilão.
+      </p>
+    </div>
+  </aside>
+
+  <main class="register-panel">
+    <form class="register-card">
+      <header>
+        <h2>Criar conta</h2>
+        <p>Preencha os dados abaixo para começar a usar o Lance Certo.</p>
+      </header>
+
+      <div class="form-row">
+        <label>
+          <span>Nome</span>
+          <div class="input-field">
+            <mat-icon aria-hidden="true">person</mat-icon>
+            <input type="text" placeholder="Seu nome" autocomplete="given-name" />
+          </div>
+        </label>
+
+        <label>
+          <span>Sobrenome</span>
+          <div class="input-field">
+            <mat-icon aria-hidden="true">badge</mat-icon>
+            <input type="text" placeholder="Seu sobrenome" autocomplete="family-name" />
+          </div>
+        </label>
+      </div>
+
+      <label>
+        <span>E-mail</span>
+        <div class="input-field">
+          <mat-icon aria-hidden="true">mail</mat-icon>
+          <input type="email" placeholder="seu@email.com" autocomplete="email" />
+        </div>
+      </label>
+
+      <label>
+        <span>Telefone</span>
+        <div class="input-field">
+          <mat-icon aria-hidden="true">phone</mat-icon>
+          <input type="tel" placeholder="(00) 00000-0000" autocomplete="tel" />
+        </div>
+      </label>
+
+      <label>
+        <span>Senha</span>
+        <div class="input-field">
+          <mat-icon aria-hidden="true">lock</mat-icon>
+          <input [type]="showPassword() ? 'text' : 'password'" placeholder="••••••••" autocomplete="new-password" />
+          <button type="button" aria-label="Mostrar ou ocultar senha" (click)="togglePassword()">
+            <mat-icon aria-hidden="true">{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+        </div>
+      </label>
+
+      <label class="terms-check">
+        <input type="checkbox" />
+        <span>Li e aceito os termos de uso e a política de privacidade.</span>
+      </label>
+
+      <button class="submit-button" type="submit">Criar conta</button>
+
+      <p class="signin-text">Já tem uma conta? <a routerLink="/login">Entrar</a></p>
+    </form>
+  </main>
+</section>

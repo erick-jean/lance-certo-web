@@ -9,12 +9,18 @@ import { Finance } from './pages/finance/finance';
 import { Subscription } from './pages/subscription/subscription';
 import { Settings } from './pages/settings/settings';
 import { Login } from './pages/login/login';
+import { Register } from './pages/register/register';
 import { authGuard, loginGuard } from './core/auth.guard';
 
 export const routes: Routes = [
   {
     path: 'login',
     component: Login,
+    canActivate: [loginGuard],
+  },
+  {
+    path: 'criar-conta',
+    component: Register,
     canActivate: [loginGuard],
   },
   {

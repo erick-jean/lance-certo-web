@@ -13,11 +13,15 @@ import { Sidebar } from './shared/components/sidebar/sidebar';
 export class App {
   private readonly router = inject(Router);
   protected readonly title = signal('lance-certo-web');
-  protected readonly isAuthPage = signal(this.router.url.startsWith('/login'));
+  protected readonly isAuthPage = signal(this.isAuthenticationRoute(this.router.url));
 
   constructor() {
     this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd)).subscribe((event) => {
-      this.isAuthPage.set(event.urlAfterRedirects.startsWith('/login'));
+      this.isAuthPage.set(this.isAuthenticationRoute(event.urlAfterRedirects));
     });
+  }
+
+  private isAuthenticationRoute(url: string): boolean {
+    return url.startsWith('/login') || url.startsWith('/criar-conta');
   }
 }
