@@ -2,12 +2,25 @@ import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { StatusBadge, StatusBadgeTone } from '../../shared/components/status-badge/status-badge';
 import { Vehicle, vehicles } from './vehicles-data';
+import {
+  FUEL_TYPE_LABEL,
+  TRANSMISSION_LABEL,
+  VEHICLE_DAMAGE_LABEL,
+  VEHICLE_STATUS_LABEL,
+  VEHICLE_TYPE_LABEL,
+  formatDate,
+  formatMileage,
+  safeImageUrl,
+  vehicleSubtitle,
+  vehicleTitle,
+} from './vehicle-labels';
 
 @Component({
   selector: 'app-vehicles',
   standalone: true,
-  imports: [FormsModule, MatIconModule, RouterLink],
+  imports: [FormsModule, MatIconModule, RouterLink, StatusBadge],
   templateUrl: './vehicles.html',
   styleUrl: './vehicles.scss',
 })
@@ -58,77 +71,56 @@ export class Vehicles {
   }
 
   protected vehicleTitle(vehicle: Vehicle): string {
-    return [vehicle.brand, vehicle.model, vehicle.version].filter(Boolean).join(' ');
+    return vehicleTitle(vehicle);
   }
 
   protected vehicleSubtitle(vehicle: Vehicle): string {
-    const year = [vehicle.yearManufacture, vehicle.yearModel].filter(Boolean).join('/');
-    const location = [vehicle.city, vehicle.state].filter(Boolean).join(', ');
-    return [year, location].filter(Boolean).join(' • ');
+    return vehicleSubtitle(vehicle);
   }
 
   protected coverImage(vehicle: Vehicle): string {
-    return vehicle.images[0]?.url ?? '';
+    return safeImageUrl(vehicle.images[0]?.url);
   }
 
   protected statusLabel(status: Vehicle['status']): string {
-    const labels = {
-      ANALYZING: 'Em análise',
-      PURCHASED: 'Arrematado',
-      SOLD: 'Vendido',
-    };
-
-    return labels[status];
+    return VEHICLE_STATUS_LABEL[status];
   }
 
   protected damageLabel(damageType: Vehicle['damageType']): string {
-    const labels = {
-      NONE: 'Sem avaria',
-      LIGHT: 'Avaria leve',
-      MEDIUM: 'Avaria média',
-      HEAVY: 'Avaria grave',
-    };
+    return VEHICLE_DAMAGE_LABEL[damageType];
+  }
 
-    return labels[damageType];
+  protected statusTone(status: Vehicle['status']): StatusBadgeTone {
+    return status === 'ANALYZING' ? 'warning' : 'success';
+  }
+
+  protected damageTone(damageType: Vehicle['damageType']): StatusBadgeTone {
+    if (damageType === 'MEDIUM' || damageType === 'HEAVY') return 'risk-medium';
+
+    return 'risk-low';
   }
 
   protected vehicleTypeLabel(type: Vehicle['type']): string {
-    return {
-      CAR: 'Carro',
-      MOTORCYCLE: 'Moto',
-      TRUCK: 'Caminhão',
-    }[type];
+    return VEHICLE_TYPE_LABEL[type];
   }
+
   protected fuelTypeLabel(fuelType: Vehicle['fuelType']): string {
     if (!fuelType) return '-';
 
-    return {
-      FLEX: 'Flex',
-      GASOLINE: 'Gasolina',
-      DIESEL: 'Diesel',
-      ELECTRIC: 'Elétrico',
-      HYBRID: 'Híbrido',
-    }[fuelType];
+    return FUEL_TYPE_LABEL[fuelType];
   }
 
   protected transmissionLabel(transmission: Vehicle['transmission']): string {
     if (!transmission) return '-';
 
-    return {
-      MANUAL: 'Manual',
-      AUTOMATIC: 'Automático',
-    }[transmission];
+    return TRANSMISSION_LABEL[transmission];
   }
 
   protected formatMileage(mileage: Vehicle['mileage']): string {
-    if (mileage === undefined || mileage === null) return '-';
-
-    return `${new Intl.NumberFormat('pt-BR').format(mileage)} km`;
+    return formatMileage(mileage);
   }
 
   protected formatDate(date: Vehicle['eventDate']): string {
-    if (!date) return '-';
-
-    return new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' }).format(new Date(date));
+    return formatDate(date);
   }
 }

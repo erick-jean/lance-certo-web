@@ -24,9 +24,18 @@
   --color-text: #172033;
   --color-text-muted: #667085;
   --color-border: #d9e0ea;
+  --color-border-strong: #c7ced9;
   --color-primary: #155eef;
   --color-primary-hover: #004eeb;
+  --color-action: #007a58;
+  --color-action-hover: #078c67;
+  --color-heading: #07101d;
   --color-danger: #d92d20;
+  --color-warning: #f6a440;
+  --color-success-soft: #dff8ec;
+  --color-warning-soft: #fff2d8;
+  --shadow-surface: 0 0.5rem 1.25rem rgb(15 23 42 / 0.05);
+  --shadow-surface-hover: 0 0.75rem 1.5rem rgb(15 23 42 / 0.09);
 
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
@@ -156,6 +165,58 @@ h3,
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-base);
+}
+
+:where(
+  .dashboard-page,
+  .vehicles-page,
+  .vehicle-create-page,
+  .vehicle-detail-page,
+  .profile-page,
+  .finance-page,
+  .subscription-page,
+  .settings-page
+) {
+  width: min(100%, 86rem);
+  margin-inline: auto;
+}
+
+:where(.page-heading) {
+  gap: var(--space-md);
+
+  h1 {
+    color: var(--color-heading);
+    line-height: var(--line-height-tight);
+  }
+
+  p {
+    color: #475467;
+  }
+}
+
+:where(.primary-action, .create-button, .export-button, .submit-button, .add-expense-button) {
+  background: var(--color-action);
+  color: var(--color-surface);
+}
+
+:where(.primary-action, .create-button, .export-button, .submit-button, .add-expense-button):hover {
+  background: var(--color-action-hover);
+}
+
+:where(.secondary-action) {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface);
+  color: var(--color-heading);
+}
+
+:where(.status-pill.warning) {
+  background: var(--color-warning-soft);
+  color: #b65700;
+}
+
+:where(.status-pill.success, .status-pill.sold) {
+  background: var(--color-success-soft);
+  color: var(--color-action);
 }
 
 .dashboard-page,

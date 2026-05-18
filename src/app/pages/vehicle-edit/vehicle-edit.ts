@@ -10,6 +10,15 @@ import {
   VehicleStatus,
   vehicles,
 } from '../vehicles/vehicles-data';
+import {
+  AUCTION_TYPE_LABEL,
+  FUEL_TYPE_LABEL,
+  TRANSMISSION_LABEL,
+  VEHICLE_DAMAGE_LABEL,
+  VEHICLE_STATUS_LABEL,
+  safeImageUrl,
+  vehicleTitle,
+} from '../vehicles/vehicle-labels';
 
 @Component({
   selector: 'app-vehicle-edit',
@@ -26,59 +35,40 @@ export class VehicleEdit {
     return vehicles.find((vehicle) => vehicle.id === id) ?? vehicles[0];
   });
 
-  protected readonly previewImages = computed(() => this.vehicle().images.map((image) => image.url));
+  protected readonly previewImages = computed(() =>
+    this.vehicle()
+      .images.map((image) => safeImageUrl(image.url))
+      .filter(Boolean),
+  );
 
   protected vehicleTitle(): string {
-    const vehicle = this.vehicle();
-    return [vehicle.brand, vehicle.model, vehicle.version].filter(Boolean).join(' ');
+    return vehicleTitle(this.vehicle());
   }
 
   protected fuelTypeLabel(fuelType?: FuelType): string {
     if (!fuelType) return '';
 
-    return {
-      FLEX: 'Flex',
-      GASOLINE: 'Gasolina',
-      DIESEL: 'Diesel',
-      ELECTRIC: 'Elétrico',
-      HYBRID: 'Híbrido',
-    }[fuelType];
+    return FUEL_TYPE_LABEL[fuelType];
   }
 
   protected transmissionLabel(transmission?: TransmissionType): string {
     if (!transmission) return '';
 
-    return {
-      MANUAL: 'Manual',
-      AUTOMATIC: 'Automático',
-    }[transmission];
+    return TRANSMISSION_LABEL[transmission];
   }
 
   protected statusLabel(status: VehicleStatus): string {
-    return {
-      ANALYZING: 'Em análise',
-      PURCHASED: 'Arrematado',
-      SOLD: 'Vendido',
-    }[status];
+    return VEHICLE_STATUS_LABEL[status];
   }
 
   protected auctionTypeLabel(auctionType?: AuctionType): string {
     if (!auctionType) return '';
 
-    return {
-      ONLINE: 'Online',
-      IN_PERSON: 'Presencial',
-      HYBRID: 'Híbrido',
-    }[auctionType];
+    return AUCTION_TYPE_LABEL[auctionType];
   }
 
   protected damageLabel(damageType: VehicleDamageType): string {
-    return {
-      NONE: 'Sem avaria',
-      LIGHT: 'Avaria leve',
-      MEDIUM: 'Avaria média',
-      HEAVY: 'Avaria grave',
-    }[damageType];
+    return VEHICLE_DAMAGE_LABEL[damageType];
   }
 
   protected dateInputValue(date?: string): string {

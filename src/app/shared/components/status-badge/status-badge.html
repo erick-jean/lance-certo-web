@@ -1,0 +1,12 @@
+<span
+  class="badge"
+  [class.warning]="tone() === 'warning'"
+  [class.success]="tone() === 'success'"
+  [class.risk-low]="tone() === 'risk-low'"
+  [class.risk-medium]="tone() === 'risk-medium'"
+>
+  @if (showDot()) {
+    <i aria-hidden="true"></i>
+  }
+  {{ label() }}
+</span>

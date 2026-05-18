@@ -5,7 +5,7 @@
       <span>Você está no plano grátis. Cadastre até 3 veículos e desbloqueie recursos avançados no Premium.</span>
     </div>
 
-    <a href="#" aria-label="Fazer upgrade para o plano premium">Fazer Upgrade</a>
+    <a routerLink="/assinatura" aria-label="Fazer upgrade para o plano premium">Fazer Upgrade</a>
   </div>
 
   <header class="page-heading">
@@ -14,47 +14,41 @@
   </header>
 
   <section class="summary-grid" aria-label="Resumo dos veículos">
-    <article class="summary-card total-card">
-      <div class="card-header">
-        <span>Total de veículos</span>
-        <mat-icon aria-hidden="true">directions_car</mat-icon>
-      </div>
-      <strong>2</strong>
-      <small>Atualizado agora</small>
-    </article>
-
-    <article class="summary-card analysis-card">
-      <div class="card-header">
-        <span>Em análise</span>
-        <mat-icon class="warning-icon" aria-hidden="true">pending_actions</mat-icon>
-      </div>
-      <strong>1</strong>
-      <small class="status-pill warning">Aguardando</small>
-    </article>
-
-    <article class="summary-card purchased-card">
-      <div class="card-header">
-        <span>Arrematados</span>
-        <mat-icon class="success-icon" aria-hidden="true">gavel</mat-icon>
-      </div>
-      <strong>1</strong>
-      <small class="status-pill success">Sucesso</small>
-    </article>
-
-    <article class="summary-card sold-card">
-      <div class="card-header">
-        <span>Vendidos</span>
-        <mat-icon class="dark-icon" aria-hidden="true">sell</mat-icon>
-      </div>
-      <strong>0</strong>
-      <small>Nenhum este mês</small>
-    </article>
+    @for (card of summaryCards; track card.label) {
+      <article
+        class="summary-card"
+        [class.total-card]="card.tone === 'total'"
+        [class.analysis-card]="card.tone === 'analysis'"
+        [class.purchased-card]="card.tone === 'purchased'"
+        [class.sold-card]="card.tone === 'sold'"
+      >
+        <div class="card-header">
+          <span>{{ card.label }}</span>
+          <mat-icon
+            [class.warning-icon]="card.tone === 'analysis'"
+            [class.success-icon]="card.tone === 'purchased'"
+            [class.dark-icon]="card.tone === 'sold'"
+            aria-hidden="true"
+          >
+            {{ card.icon }}
+          </mat-icon>
+        </div>
+        <strong>{{ card.value }}</strong>
+        <small
+          [class.status-pill]="!!card.helperTone"
+          [class.warning]="card.helperTone === 'warning'"
+          [class.success]="card.helperTone === 'success'"
+        >
+          {{ card.helper }}
+        </small>
+      </article>
+    }
   </section>
 
   <section class="vehicles-panel" aria-labelledby="recent-vehicles-title">
     <header class="panel-header">
       <h2 id="recent-vehicles-title">Últimos veículos cadastrados</h2>
-      <a href="#">Ver todos</a>
+      <a routerLink="/veiculos">Ver todos</a>
     </header>
 
     <div class="vehicles-table" role="table" aria-label="Últimos veículos cadastrados">
@@ -66,159 +60,29 @@
         <span role="columnheader">Ação</span>
       </div>
 
-      <div class="table-row" role="row">
-        <div class="vehicle-cell" role="cell">
-          <span class="vehicle-icon">
-            <mat-icon aria-hidden="true">directions_car</mat-icon>
-          </span>
-          <div>
-            <strong>Honda Civic EXL</strong>
-            <small>2020/2020</small>
+      @for (vehicle of recentVehicles; track vehicle.name) {
+        <a class="table-row" role="row" [routerLink]="vehicle.link" [attr.aria-label]="'Ver ' + vehicle.name">
+          <div class="vehicle-cell" role="cell">
+            <span class="vehicle-icon">
+              <mat-icon aria-hidden="true">directions_car</mat-icon>
+            </span>
+            <div>
+              <strong>{{ vehicle.name }}</strong>
+              <small>{{ vehicle.year }}</small>
+            </div>
           </div>
-        </div>
-        <span role="cell">ABC-1234</span>
-        <span role="cell"><span class="status-pill warning">Em análise</span></span>
-        <span role="cell">15/05/2024</span>
-        <span class="action-cell" role="cell">
-          <button type="button" aria-label="Ver Honda Civic EXL">
-            <mat-icon aria-hidden="true">chevron_right</mat-icon>
-          </button>
-        </span>
-      </div>
-
-      <div class="table-row" role="row">
-        <div class="vehicle-cell" role="cell">
-          <span class="vehicle-icon">
-            <mat-icon aria-hidden="true">directions_car</mat-icon>
+          <span role="cell">{{ vehicle.plate }}</span>
+          <span role="cell">
+            <span class="status-pill" [class.warning]="vehicle.status === 'ANALYZING'" [class.success]="vehicle.status === 'PURCHASED'">
+              {{ statusLabel(vehicle.status) }}
+            </span>
           </span>
-          <div>
-            <strong>Toyota Corolla XEI</strong>
-            <small>2019/2020</small>
-          </div>
-        </div>
-        <span role="cell">XYZ-9876</span>
-        <span role="cell"><span class="status-pill success">Arrematado</span></span>
-        <span role="cell">10/05/2024</span>
-        <span class="action-cell" role="cell">
-          <button type="button" aria-label="Ver Toyota Corolla XEI">
+          <span role="cell">{{ vehicle.date }}</span>
+          <span class="action-cell" role="cell">
             <mat-icon aria-hidden="true">chevron_right</mat-icon>
-          </button>
-        </span>
-      </div>
-            <div class="table-row" role="row">
-        <div class="vehicle-cell" role="cell">
-          <span class="vehicle-icon">
-            <mat-icon aria-hidden="true">directions_car</mat-icon>
           </span>
-          <div>
-            <strong>Toyota Corolla XEI</strong>
-            <small>2019/2020</small>
-          </div>
-        </div>
-        <span role="cell">XYZ-9876</span>
-        <span role="cell"><span class="status-pill success">Arrematado</span></span>
-        <span role="cell">10/05/2024</span>
-        <span class="action-cell" role="cell">
-          <button type="button" aria-label="Ver Toyota Corolla XEI">
-            <mat-icon aria-hidden="true">chevron_right</mat-icon>
-          </button>
-        </span>
-      </div>
-            <div class="table-row" role="row">
-        <div class="vehicle-cell" role="cell">
-          <span class="vehicle-icon">
-            <mat-icon aria-hidden="true">directions_car</mat-icon>
-          </span>
-          <div>
-            <strong>Toyota Corolla XEI</strong>
-            <small>2019/2020</small>
-          </div>
-        </div>
-        <span role="cell">XYZ-9876</span>
-        <span role="cell"><span class="status-pill success">Arrematado</span></span>
-        <span role="cell">10/05/2024</span>
-        <span class="action-cell" role="cell">
-          <button type="button" aria-label="Ver Toyota Corolla XEI">
-            <mat-icon aria-hidden="true">chevron_right</mat-icon>
-          </button>
-        </span>
-      </div>
-            <div class="table-row" role="row">
-        <div class="vehicle-cell" role="cell">
-          <span class="vehicle-icon">
-            <mat-icon aria-hidden="true">directions_car</mat-icon>
-          </span>
-          <div>
-            <strong>Toyota Corolla XEI</strong>
-            <small>2019/2020</small>
-          </div>
-        </div>
-        <span role="cell">XYZ-9876</span>
-        <span role="cell"><span class="status-pill success">Arrematado</span></span>
-        <span role="cell">10/05/2024</span>
-        <span class="action-cell" role="cell">
-          <button type="button" aria-label="Ver Toyota Corolla XEI">
-            <mat-icon aria-hidden="true">chevron_right</mat-icon>
-          </button>
-        </span>
-      </div>
-            <div class="table-row" role="row">
-        <div class="vehicle-cell" role="cell">
-          <span class="vehicle-icon">
-            <mat-icon aria-hidden="true">directions_car</mat-icon>
-          </span>
-          <div>
-            <strong>Toyota Corolla XEI</strong>
-            <small>2019/2020</small>
-          </div>
-        </div>
-        <span role="cell">XYZ-9876</span>
-        <span role="cell"><span class="status-pill success">Arrematado</span></span>
-        <span role="cell">10/05/2024</span>
-        <span class="action-cell" role="cell">
-          <button type="button" aria-label="Ver Toyota Corolla XEI">
-            <mat-icon aria-hidden="true">chevron_right</mat-icon>
-          </button>
-        </span>
-      </div>
-            <div class="table-row" role="row">
-        <div class="vehicle-cell" role="cell">
-          <span class="vehicle-icon">
-            <mat-icon aria-hidden="true">directions_car</mat-icon>
-          </span>
-          <div>
-            <strong>Toyota Corolla XEI</strong>
-            <small>2019/2020</small>
-          </div>
-        </div>
-        <span role="cell">XYZ-9876</span>
-        <span role="cell"><span class="status-pill success">Arrematado</span></span>
-        <span role="cell">10/05/2024</span>
-        <span class="action-cell" role="cell">
-          <button type="button" aria-label="Ver Toyota Corolla XEI">
-            <mat-icon aria-hidden="true">chevron_right</mat-icon>
-          </button>
-        </span>
-      </div>
-            <div class="table-row" role="row">
-        <div class="vehicle-cell" role="cell">
-          <span class="vehicle-icon">
-            <mat-icon aria-hidden="true">directions_car</mat-icon>
-          </span>
-          <div>
-            <strong>Toyota Corolla XEI</strong>
-            <small>2019/2020</small>
-          </div>
-        </div>
-        <span role="cell">XYZ-9876</span>
-        <span role="cell"><span class="status-pill success">Arrematado</span></span>
-        <span role="cell">10/05/2024</span>
-        <span class="action-cell" role="cell">
-          <button type="button" aria-label="Ver Toyota Corolla XEI">
-            <mat-icon aria-hidden="true">chevron_right</mat-icon>
-          </button>
-        </span>
-      </div>
+        </a>
+      }
     </div>
   </section>
 </section>

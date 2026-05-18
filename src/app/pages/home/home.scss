@@ -210,6 +210,7 @@
   border-bottom: 1px solid #d8dde6;
   color: #172033;
   font-size: var(--font-size-sm);
+  text-decoration: none;
   transition:
     background-color 160ms ease,
     transform 160ms ease;
@@ -277,7 +278,8 @@
 .action-cell {
   justify-self: end;
 
-  button {
+  button,
+  mat-icon {
     display: grid;
     width: 2rem;
     height: 2rem;
@@ -288,9 +290,7 @@
     cursor: pointer;
     padding: 0;
 
-    mat-icon {
-      font-size: 1.5rem;
-    }
+    font-size: 1.5rem;
   }
 }
 

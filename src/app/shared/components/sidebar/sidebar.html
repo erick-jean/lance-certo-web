@@ -1,10 +1,6 @@
 <aside class="sidebar" aria-label="Menu principal">
   <nav class="menu" aria-label="Navegação principal">
-    <a
-      routerLink="/dashboard"
-      routerLinkActive="active"
-      [routerLinkActiveOptions]="{ exact: true }"
-    >
+    <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
       <mat-icon aria-hidden="true">dashboard</mat-icon>
       <span>Dashboard</span>
     </a>
@@ -39,10 +35,10 @@
         <span>Configurações</span>
       </a>
 
-      <a href="#" (click)="$event.preventDefault(); logout()">
+      <button type="button" (click)="logout()">
         <mat-icon aria-hidden="true">logout</mat-icon>
         <span>Sair</span>
-      </a>
+      </button>
     </nav>
   </footer>
 </aside>

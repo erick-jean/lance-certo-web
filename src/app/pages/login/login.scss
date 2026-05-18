@@ -227,10 +227,15 @@
   gap: 1rem;
   margin-top: -0.25rem;
 
-  a {
+  a,
+  .link-button {
+    border: 0;
+    background: transparent;
     color: #07101d;
+    cursor: pointer;
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-bold);
+    padding: 0;
   }
 }
 

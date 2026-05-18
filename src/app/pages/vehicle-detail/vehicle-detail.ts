@@ -1,10 +1,11 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { StatusBadge, StatusBadgeTone } from '../../shared/components/status-badge/status-badge';
 import {
-  AuctionType,
   EvaluationExpense,
+  AuctionType,
   ExpenseCategory,
   ExpenseSource,
   FuelType,
@@ -14,18 +15,36 @@ import {
   VehicleType,
   vehicles,
 } from '../vehicles/vehicles-data';
+import {
+  AUCTION_TYPE_LABEL,
+  EXPENSE_CATEGORY_LABEL,
+  EXPENSE_SOURCE_LABEL,
+  FUEL_TYPE_LABEL,
+  TRANSMISSION_LABEL,
+  VEHICLE_DAMAGE_LABEL,
+  VEHICLE_STATUS_LABEL,
+  VEHICLE_TYPE_LABEL,
+  formatDate,
+  formatMileage,
+  safeImageUrl,
+  vehicleSubtitle,
+  vehicleTitle,
+} from '../vehicles/vehicle-labels';
+
+type DetailTab = 'data' | 'evaluation' | 'checklist' | 'report';
 
 @Component({
   selector: 'app-vehicle-detail',
   standalone: true,
   templateUrl: './vehicle-detail.html',
   styleUrl: './vehicle-detail.scss',
-  imports: [MatIconModule, RouterLink, FormsModule],
+  imports: [MatIconModule, RouterLink, FormsModule, StatusBadge],
 })
 export class VehicleDetail {
   private readonly route = inject(ActivatedRoute);
+
   protected readonly activeImageIndex = signal(0);
-  protected readonly activeTab = signal<'data' | 'evaluation' | 'checklist' | 'report'>('data');
+  protected readonly activeTab = signal<DetailTab>('data');
   protected readonly expenseSearch = signal('');
   protected readonly expenseCategoryFilter = signal<'ALL' | ExpenseCategory>('ALL');
   protected readonly expenseRequiredFilter = signal<'ALL' | 'REQUIRED' | 'OPTIONAL'>('ALL');
@@ -43,7 +62,11 @@ export class VehicleDetail {
     return vehicles.find((vehicle) => vehicle.id === id) ?? vehicles[0];
   });
 
-  protected readonly imageUrls = computed(() => this.vehicle().images.map((image) => image.url));
+  protected readonly imageUrls = computed(() =>
+    this.vehicle()
+      .images.map((image) => safeImageUrl(image.url))
+      .filter(Boolean),
+  );
   protected readonly activeImage = computed(() => this.imageUrls()[this.activeImageIndex()] ?? '');
   protected readonly filteredExpenses = computed(() => {
     this.expenseVersion();
@@ -52,7 +75,8 @@ export class VehicleDetail {
     const required = this.expenseRequiredFilter();
 
     return (this.vehicle().evaluation?.expenses ?? []).filter((expense) => {
-      const matchesSearch = !search || expense.name.toLowerCase().includes(search) || expense.notes?.toLowerCase().includes(search);
+      const matchesSearch =
+        !search || expense.name.toLowerCase().includes(search) || expense.notes?.toLowerCase().includes(search);
       const matchesCategory = category === 'ALL' || expense.category === category;
       const matchesRequired =
         required === 'ALL' ||
@@ -69,85 +93,55 @@ export class VehicleDetail {
   );
 
   protected vehicleTitle(): string {
-    const vehicle = this.vehicle();
-    return [vehicle.brand, vehicle.model, vehicle.version].filter(Boolean).join(' ');
+    return vehicleTitle(this.vehicle());
   }
 
   protected vehicleSubtitle(): string {
-    const vehicle = this.vehicle();
-    const year = [vehicle.yearManufacture, vehicle.yearModel].filter(Boolean).join('/');
-    const location = [vehicle.city, vehicle.state].filter(Boolean).join(', ');
-    return [year, location].filter(Boolean).join(' • ');
+    return vehicleSubtitle(this.vehicle());
   }
 
   protected statusLabel(status: VehicleStatus): string {
-    return {
-      ANALYZING: 'Em análise',
-      PURCHASED: 'Arrematado',
-      SOLD: 'Vendido',
-    }[status];
+    return VEHICLE_STATUS_LABEL[status];
   }
 
   protected fuelTypeLabel(fuelType?: FuelType): string {
     if (!fuelType) return '-';
 
-    return {
-      FLEX: 'Flex',
-      GASOLINE: 'Gasolina',
-      DIESEL: 'Diesel',
-      ELECTRIC: 'Elétrico',
-      HYBRID: 'Híbrido',
-    }[fuelType];
+    return FUEL_TYPE_LABEL[fuelType];
   }
 
   protected transmissionLabel(transmission?: TransmissionType): string {
     if (!transmission) return '-';
 
-    return {
-      MANUAL: 'Manual',
-      AUTOMATIC: 'Automático',
-    }[transmission];
+    return TRANSMISSION_LABEL[transmission];
   }
 
   protected vehicleTypeLabel(type: VehicleType): string {
-    return {
-      CAR: 'Carro',
-      MOTORCYCLE: 'Moto',
-      TRUCK: 'Caminhão',
-    }[type];
+    return VEHICLE_TYPE_LABEL[type];
   }
 
   protected auctionTypeLabel(auctionType?: AuctionType): string {
     if (!auctionType) return '-';
 
-    return {
-      ONLINE: 'Online',
-      IN_PERSON: 'Presencial',
-      HYBRID: 'Híbrido',
-    }[auctionType];
+    return AUCTION_TYPE_LABEL[auctionType];
   }
 
   protected damageLabel(damageType: VehicleDamageType): string {
-    return {
-      NONE: 'Sem avaria',
-      LIGHT: 'Avaria leve',
-      MEDIUM: 'Avaria média',
-      HEAVY: 'Avaria grave',
-    }[damageType];
+    return VEHICLE_DAMAGE_LABEL[damageType];
+  }
+
+  protected statusTone(status: VehicleStatus): StatusBadgeTone {
+    return status === 'ANALYZING' ? 'warning' : 'success';
+  }
+
+  protected damageTone(damageType: VehicleDamageType): StatusBadgeTone {
+    if (damageType === 'MEDIUM' || damageType === 'HEAVY') return 'risk-medium';
+
+    return 'risk-low';
   }
 
   protected expenseCategoryLabel(category: ExpenseCategory): string {
-    return {
-      DOCUMENTATION: 'Documentação',
-      REPAIR: 'Mecânica',
-      AUCTION_FEE: 'Taxa de leilão',
-      TRANSPORT: 'Transporte',
-      INSPECTION: 'Vistoria',
-      DEBT: 'Débitos',
-      REGULARIZATION: 'Regularização',
-      PREPARATION_SALE: 'Estética',
-      OTHER: 'Outro',
-    }[category];
+    return EXPENSE_CATEGORY_LABEL[category];
   }
 
   protected expenseCategoryClass(category: ExpenseCategory): string {
@@ -155,30 +149,22 @@ export class VehicleDetail {
   }
 
   protected expenseSourceLabel(source: ExpenseSource): string {
-    return {
-      SYSTEM: 'Sistema',
-      USER: 'Usuário',
-      PARTNER: 'Parceiro',
-    }[source];
+    return EXPENSE_SOURCE_LABEL[source];
   }
 
   protected formatDate(date?: string): string {
-    if (!date) return '-';
-
-    return new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' }).format(new Date(date));
+    return formatDate(date);
   }
 
   protected formatMileage(mileage?: number): string {
-    if (mileage === undefined || mileage === null) return '-';
-
-    return `${new Intl.NumberFormat('pt-BR').format(mileage)} km`;
+    return formatMileage(mileage);
   }
 
   protected primaryActionLabel(): string {
     return this.vehicle().status === 'PURCHASED' ? 'Vender veículo' : 'Marcar como arrematado';
   }
 
-  protected selectTab(tab: 'data' | 'evaluation' | 'checklist' | 'report'): void {
+  protected selectTab(tab: DetailTab): void {
     this.activeTab.set(tab);
   }
 
@@ -257,24 +243,28 @@ export class VehicleDetail {
     this.closeExpenseDrawer();
   }
 
-  private formatExpenseAmount(amount: string): string {
-    const cleanAmount = amount.trim();
-    if (!cleanAmount) return 'R$ 0,00';
-
-    return cleanAmount.startsWith('R$') ? cleanAmount : `R$ ${cleanAmount}`;
-  }
-
   protected selectImage(index: number): void {
     this.activeImageIndex.set(index);
   }
 
   protected showPreviousImage(): void {
     const imagesCount = this.imageUrls().length;
+    if (!imagesCount) return;
+
     this.activeImageIndex.update((index) => (index - 1 + imagesCount) % imagesCount);
   }
 
   protected showNextImage(): void {
     const imagesCount = this.imageUrls().length;
+    if (!imagesCount) return;
+
     this.activeImageIndex.update((index) => (index + 1) % imagesCount);
+  }
+
+  private formatExpenseAmount(amount: string): string {
+    const cleanAmount = amount.trim();
+    if (!cleanAmount) return 'R$ 0,00';
+
+    return cleanAmount.startsWith('R$') ? cleanAmount : `R$ ${cleanAmount}`;
   }
 }

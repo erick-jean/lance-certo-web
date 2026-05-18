@@ -38,17 +38,23 @@
   display: grid;
   gap: 0.625rem;
 
-  a {
+  a,
+  button {
     display: flex;
     align-items: center;
     gap: 0.75rem;
     min-height: 2.25rem;
+    border: 0;
     border-right: 0.25rem solid transparent;
     border-radius: var(--radius-sm);
+    background: transparent;
     color: #71829f;
+    cursor: pointer;
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-semibold);
+    font-family: inherit;
     padding: 0 0.5rem 0 0.75rem;
+    text-align: left;
     transition:
       background-color 160ms ease,
       border-color 160ms ease,
@@ -119,7 +125,8 @@
 
   .menu,
   .footer-menu {
-    a {
+    a,
+    button {
       justify-content: center;
       width: 2.75rem;
       padding: 0;

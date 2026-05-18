@@ -25,12 +25,8 @@
       </div>
 
       <div class="badges">
-        <span class="badge" [class.warning]="vehicle().status === 'ANALYZING'" [class.success]="vehicle().status === 'PURCHASED'">
-          {{ statusLabel(vehicle().status) }}
-        </span>
-        <span class="badge" [class.risk-low]="vehicle().damageType === 'LIGHT'" [class.risk-medium]="vehicle().damageType === 'MEDIUM'">
-          <i></i>{{ damageLabel(vehicle().damageType) }}
-        </span>
+        <app-status-badge [label]="statusLabel(vehicle().status)" [tone]="statusTone(vehicle().status)" />
+        <app-status-badge [label]="damageLabel(vehicle().damageType)" [tone]="damageTone(vehicle().damageType)" [showDot]="true" />
       </div>
 
     </div>
