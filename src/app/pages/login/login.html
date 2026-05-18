@@ -7,8 +7,8 @@
     <div class="hero-copy">
       <h1>Não compre no escuro.</h1>
       <p>
-        Calcule o lance certo antes de arrematar. Nossa plataforma oferece dados precisos para você tomar decisões
-        financeiras seguras e lucrativas em leilões de veículos.
+        Calcule o lance certo antes de arrematar. Nossa plataforma oferece dados precisos para você
+        tomar decisões financeiras seguras e lucrativas em leilões de veículos.
       </p>
     </div>
 
@@ -24,7 +24,7 @@
       <img src="/logo.png" alt="Lance Certo" />
     </div>
 
-    <form class="login-card" (ngSubmit)="submitLogin()">
+    <form class="login-card" (ngSubmit)="login()">
       <header>
         <span>Acesso seguro</span>
         <h2>Bem-vindo de volta</h2>
@@ -35,7 +35,13 @@
         <span>E-mail</span>
         <div class="input-field">
           <mat-icon aria-hidden="true">mail</mat-icon>
-          <input type="email" placeholder="seu@email.com" autocomplete="email" />
+          <input
+            name="email"
+            [(ngModel)]="email"
+            type="email"
+            placeholder="seu@email.com"
+            autocomplete="email"
+          />
         </div>
       </label>
 
@@ -43,11 +49,22 @@
         <span>Senha</span>
         <div class="input-field">
           <mat-icon aria-hidden="true">lock</mat-icon>
-          <input [type]="showPassword() ? 'text' : 'password'" placeholder="••••••••" autocomplete="current-password" />
+          <input
+            name="password"
+            [(ngModel)]="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            placeholder="••••••••"
+            autocomplete="current-password"
+          />
           <button type="button" aria-label="Mostrar ou ocultar senha" (click)="togglePassword()">
-            <mat-icon aria-hidden="true">{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+            <mat-icon aria-hidden="true">{{
+              showPassword() ? 'visibility_off' : 'visibility'
+            }}</mat-icon>
           </button>
         </div>
+        @if (errorMessage) {
+          <p>{{ errorMessage }}</p>
+        }
       </label>
 
       <div class="login-options">
@@ -61,7 +78,9 @@
 
       <button class="submit-button" type="submit">Entrar</button>
 
-      <p class="signup-text">Ainda não tem uma conta? <a routerLink="/criar-conta">Criar conta</a></p>
+      <p class="signup-text">
+        Ainda não tem uma conta? <a routerLink="/criar-conta">Criar conta</a>
+      </p>
     </form>
   </main>
 </section>

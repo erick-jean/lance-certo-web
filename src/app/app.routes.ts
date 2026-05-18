@@ -10,7 +10,7 @@ import { Subscription } from './pages/subscription/subscription';
 import { Settings } from './pages/settings/settings';
 import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
-import { authGuard, loginGuard } from './core/auth.guard';
+import { authGuard, loginGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {

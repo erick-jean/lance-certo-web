@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { AuthService } from '../../core/auth.service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -20,8 +20,26 @@ export class Login {
     this.showPassword.update((visible) => !visible);
   }
 
-  protected submitLogin(): void {
-    this.auth.login();
-    this.router.navigateByUrl('/dashboard');
+  email = '';
+  password = '';
+  loading = false;
+  errorMessage = '';
+
+  login() {
+    this.loading = true;
+    //this.errorMessage = '';
+
+    this.auth.login({ email: this.email, password: this.password }).subscribe({
+      next: () => {
+        this.loading = false;
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        this.loading = false;
+        this.errorMessage = 'E-mail ou senha inválidos.';
+        console.error('Login error:', err);
+        console.log('Login data:', { email: this.email, password: this.password });
+      },
+    });
   }
 }

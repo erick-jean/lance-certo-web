@@ -9,7 +9,7 @@ import { Sidebar } from './shared/components/sidebar/sidebar';
   selector: 'app-root',
   imports: [RouterOutlet, Sidebar, Header],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
 })
 export class App {
   private readonly router = inject(Router);
