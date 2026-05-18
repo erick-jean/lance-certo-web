@@ -57,8 +57,6 @@ export class Login {
           this.router.navigate(['/dashboard']);
         },
         error: (err) => {
-          console.log('Erro login:', err);
-
           if (err.status === 401) {
             this.errorMessage.set('E-mail ou senha inválidos');
             return;

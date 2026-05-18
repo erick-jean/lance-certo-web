@@ -1,6 +1,8 @@
-import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+
 import { environment } from '../../environments/environment';
+import { buildApiUrl, normalizeApiBaseUrl } from '../utils/api';
 
 export interface DashboardSummary {
   totalVehicles: number;
@@ -18,9 +20,9 @@ export interface DashboardSummary {
 })
 export class Dashboard {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = environment.apiUrl;
+  private readonly apiUrl = normalizeApiBaseUrl(environment.apiUrl);
 
   getSummary() {
-    return this.http.get<DashboardSummary>(`${this.apiUrl}/dashboard/summary`);
+    return this.http.get<DashboardSummary>(buildApiUrl(this.apiUrl, '/dashboard/summary'));
   }
 }

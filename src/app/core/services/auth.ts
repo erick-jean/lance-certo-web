@@ -1,8 +1,9 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { Observable, finalize, shareReplay, tap } from 'rxjs';
 
 import { environment } from '../../environments/environment';
+import { buildApiUrl, normalizeApiBaseUrl } from '../utils/api';
 
 interface LoginRequest {
   email: string;
@@ -16,15 +17,17 @@ interface AuthResponse {
 @Injectable({ providedIn: 'root' })
 export class Auth {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = environment.apiUrl;
+  private readonly apiUrl = normalizeApiBaseUrl(environment.apiUrl);
 
+  // The access token stays in memory only; refresh depends on the backend httpOnly cookie.
   private readonly accessToken = signal<string | null>(null);
+  private refreshInFlight$?: Observable<AuthResponse>;
 
   readonly isAuthenticated = computed(() => !!this.accessToken());
 
   login(data: LoginRequest) {
     return this.http
-      .post<AuthResponse>(`${this.apiUrl}/auth/login`, data, {
+      .post<AuthResponse>(buildApiUrl(this.apiUrl, '/auth/login'), data, {
         withCredentials: true,
       })
       .pipe(
@@ -35,25 +38,33 @@ export class Auth {
   }
 
   refreshToken() {
-    return this.http
-      .post<AuthResponse>(
-        `${this.apiUrl}/auth/refresh`,
-        {},
-        {
-          withCredentials: true,
-        },
-      )
-      .pipe(
-        tap((response) => {
-          this.accessToken.set(response.access_token);
-        }),
-      );
+    if (!this.refreshInFlight$) {
+      this.refreshInFlight$ = this.http
+        .post<AuthResponse>(
+          buildApiUrl(this.apiUrl, '/auth/refresh'),
+          {},
+          {
+            withCredentials: true,
+          },
+        )
+        .pipe(
+          tap((response) => {
+            this.accessToken.set(response.access_token);
+          }),
+          finalize(() => {
+            this.refreshInFlight$ = undefined;
+          }),
+          shareReplay({ bufferSize: 1, refCount: false }),
+        );
+    }
+
+    return this.refreshInFlight$;
   }
 
   logout() {
     return this.http
       .post(
-        `${this.apiUrl}/auth/logout`,
+        buildApiUrl(this.apiUrl, '/auth/logout'),
         {},
         {
           withCredentials: true,
@@ -61,6 +72,10 @@ export class Auth {
       )
       .pipe(
         tap(() => {
+          // The backend invalidates the session; the client clears the in-memory token too.
+          this.clearSession();
+        }),
+        finalize(() => {
           this.clearSession();
         }),
       );
@@ -72,5 +87,6 @@ export class Auth {
 
   clearSession(): void {
     this.accessToken.set(null);
+    this.refreshInFlight$ = undefined;
   }
 }

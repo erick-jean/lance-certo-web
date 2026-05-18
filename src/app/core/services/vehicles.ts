@@ -1,6 +1,8 @@
-import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+
 import { environment } from '../../environments/environment';
+import { buildApiUrl, normalizeApiBaseUrl } from '../utils/api';
 
 export interface VehicleFilters {
   page?: number;
@@ -85,7 +87,7 @@ export type VehicleStatus = 'ANALYZING' | 'REJECTED' | 'PURCHASED' | 'SOLD';
 })
 export class Vehicles {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = environment.apiUrl;
+  private readonly apiUrl = normalizeApiBaseUrl(environment.apiUrl);
 
   getVehicles(filters: VehicleFilters = {}) {
     let params = new HttpParams();
@@ -109,6 +111,6 @@ export class Vehicles {
       params = params.set('plate', filters.plate);
     }
 
-    return this.http.get<VehicleListResponse>(`${this.apiUrl}/vehicles`, { params });
+    return this.http.get<VehicleListResponse>(buildApiUrl(this.apiUrl, '/vehicles'), { params });
   }
 }
