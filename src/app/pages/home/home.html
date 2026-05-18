@@ -2,7 +2,10 @@
   <div class="plan-alert">
     <div class="alert-message">
       <mat-icon aria-hidden="true">stars</mat-icon>
-      <span>Você está no plano grátis. Cadastre até 3 veículos e desbloqueie recursos avançados no Premium.</span>
+      <span
+        >Você está no plano grátis. Cadastre até 3 veículos e desbloqueie recursos avançados no
+        Premium.</span
+      >
     </div>
 
     <a routerLink="/assinatura" aria-label="Fazer upgrade para o plano premium">Fazer Upgrade</a>
@@ -14,7 +17,7 @@
   </header>
 
   <section class="summary-grid" aria-label="Resumo dos veículos">
-    @for (card of summaryCards; track card.label) {
+    @for (card of summaryCards(); track card.label) {
       <article
         class="summary-card"
         [class.total-card]="card.tone === 'total'"
@@ -61,7 +64,12 @@
       </div>
 
       @for (vehicle of recentVehicles; track vehicle.name) {
-        <a class="table-row" role="row" [routerLink]="vehicle.link" [attr.aria-label]="'Ver ' + vehicle.name">
+        <a
+          class="table-row"
+          role="row"
+          [routerLink]="vehicle.link"
+          [attr.aria-label]="'Ver ' + vehicle.name"
+        >
           <div class="vehicle-cell" role="cell">
             <span class="vehicle-icon">
               <mat-icon aria-hidden="true">directions_car</mat-icon>
@@ -73,7 +81,11 @@
           </div>
           <span role="cell">{{ vehicle.plate }}</span>
           <span role="cell">
-            <span class="status-pill" [class.warning]="vehicle.status === 'ANALYZING'" [class.success]="vehicle.status === 'PURCHASED'">
+            <span
+              class="status-pill"
+              [class.warning]="vehicle.status === 'ANALYZING'"
+              [class.success]="vehicle.status === 'PURCHASED'"
+            >
               {{ statusLabel(vehicle.status) }}
             </span>
           </span>

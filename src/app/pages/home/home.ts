@@ -1,8 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { finalize } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { VehicleStatus } from '../vehicles/vehicles-data';
 import { VEHICLE_STATUS_LABEL } from '../vehicles/vehicle-labels';
+
+import { Dashboard, DashboardSummary } from '../../core/services/dashboard';
 
 type SummaryCard = {
   label: string;
@@ -30,12 +33,82 @@ type RecentVehicle = {
   styleUrl: './home.scss',
 })
 export class Home {
-  protected readonly summaryCards: SummaryCard[] = [
-    { label: 'Total de veículos', value: '2', helper: 'Atualizado agora', icon: 'directions_car', tone: 'total' },
-    { label: 'Em análise', value: '1', helper: 'Aguardando', icon: 'pending_actions', tone: 'analysis', helperTone: 'warning' },
-    { label: 'Arrematados', value: '1', helper: 'Sucesso', icon: 'gavel', tone: 'purchased', helperTone: 'success' },
-    { label: 'Vendidos', value: '0', helper: 'Nenhum este mês', icon: 'sell', tone: 'sold' },
-  ];
+  private readonly dashboardService = inject(Dashboard);
+
+  summary = signal<DashboardSummary | null>(null);
+  loading = signal(false);
+  errorMessage = signal('');
+
+  ngOnInit(): void {
+    this.loadSummary();
+  }
+
+  loadSummary(): void {
+    this.loading.set(true);
+    this.errorMessage.set('');
+
+    this.dashboardService
+      .getSummary()
+      .pipe(
+        finalize(() => {
+          this.loading.set(false);
+        }),
+      )
+      .subscribe({
+        next: (summary) => {
+          this.summary.set(summary);
+        },
+        error: (err) => {
+          if (err.status === 401) {
+            this.errorMessage.set('Sessão expirada. Faça login novamente.');
+            return;
+          }
+
+          this.errorMessage.set('Erro ao carregar o dashboard.');
+        },
+      });
+  }
+
+  protected readonly summaryCards = computed<SummaryCard[]>(() => {
+    const data = this.summary();
+
+    if (!data) {
+      return [];
+    }
+
+    return [
+      {
+        label: 'Total de veículos',
+        value: String(data.totalVehicles),
+        helper: 'Atualizado agora',
+        icon: 'directions_car',
+        tone: 'total',
+      },
+      {
+        label: 'Em análise',
+        value: String(data.analyzingVehicles),
+        helper: 'Aguardando',
+        icon: 'pending_actions',
+        tone: 'analysis',
+        helperTone: 'warning',
+      },
+      {
+        label: 'Arrematados',
+        value: String(data.purchasedVehicles),
+        helper: 'Sucesso',
+        icon: 'gavel',
+        tone: 'purchased',
+        helperTone: 'success',
+      },
+      {
+        label: 'Vendidos',
+        value: String(data.soldVehicles),
+        helper: data.soldVehicles > 0 ? 'Veículos vendidos' : 'Nenhum este mês',
+        icon: 'sell',
+        tone: 'sold',
+      },
+    ];
+  });
 
   protected readonly recentVehicles: RecentVehicle[] = [
     {
