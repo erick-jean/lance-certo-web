@@ -1,7 +1,7 @@
-export type VehicleStatus = 'ANALYZING' | 'PURCHASED' | 'SOLD';
-export type FuelType = 'FLEX' | 'GASOLINE' | 'DIESEL' | 'ELECTRIC' | 'HYBRID';
-export type TransmissionType = 'MANUAL' | 'AUTOMATIC';
-export type VehicleType = 'CAR' | 'MOTORCYCLE' | 'TRUCK';
+export type VehicleStatus = 'ANALYZING' | 'REJECTED' | 'PURCHASED' | 'SOLD';
+export type FuelType = 'FLEX' | 'GASOLINE' | 'ETHANOL' | 'DIESEL' | 'ELECTRIC' | 'HYBRID' | 'GNV';
+export type TransmissionType = 'MANUAL' | 'AUTOMATIC' | 'CVT';
+export type VehicleType = 'CAR' | 'MOTORCYCLE';
 export type AuctionType = 'ONLINE' | 'IN_PERSON' | 'HYBRID';
 export type VehicleDamageType = 'NONE' | 'LIGHT' | 'MEDIUM' | 'HEAVY';
 export type ExpenseCategory =
@@ -96,10 +96,22 @@ export const vehicles: Vehicle[] = [
     type: 'CAR',
     mileage: 48200,
     images: [
-      { id: 'corolla-1', url: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1100&q=80' },
-      { id: 'corolla-2', url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1100&q=80' },
-      { id: 'corolla-3', url: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1100&q=80' },
-      { id: 'corolla-4', url: 'https://images.unsplash.com/photo-1549924231-f129b911e442?auto=format&fit=crop&w=1100&q=80' },
+      {
+        id: 'corolla-1',
+        url: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1100&q=80',
+      },
+      {
+        id: 'corolla-2',
+        url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1100&q=80',
+      },
+      {
+        id: 'corolla-3',
+        url: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1100&q=80',
+      },
+      {
+        id: 'corolla-4',
+        url: 'https://images.unsplash.com/photo-1549924231-f129b911e442?auto=format&fit=crop&w=1100&q=80',
+      },
     ],
     fipeCode: '002170-0',
     fipeValue: 'R$ 135.000',
@@ -175,10 +187,22 @@ export const vehicles: Vehicle[] = [
     type: 'CAR',
     mileage: 76300,
     images: [
-      { id: 'compass-1', url: 'https://images.unsplash.com/photo-1535732820275-9ffd998cac22?auto=format&fit=crop&w=1100&q=80' },
-      { id: 'compass-2', url: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=1100&q=80' },
-      { id: 'compass-3', url: 'https://images.unsplash.com/photo-1549925862-990c3a4e10a5?auto=format&fit=crop&w=1100&q=80' },
-      { id: 'compass-4', url: 'https://images.unsplash.com/photo-1518987048-93e29699e79a?auto=format&fit=crop&w=1100&q=80' },
+      {
+        id: 'compass-1',
+        url: 'https://images.unsplash.com/photo-1535732820275-9ffd998cac22?auto=format&fit=crop&w=1100&q=80',
+      },
+      {
+        id: 'compass-2',
+        url: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=1100&q=80',
+      },
+      {
+        id: 'compass-3',
+        url: 'https://images.unsplash.com/photo-1549925862-990c3a4e10a5?auto=format&fit=crop&w=1100&q=80',
+      },
+      {
+        id: 'compass-4',
+        url: 'https://images.unsplash.com/photo-1518987048-93e29699e79a?auto=format&fit=crop&w=1100&q=80',
+      },
     ],
     fipeCode: '017096-9',
     fipeValue: 'R$ 142.000',
@@ -245,10 +269,22 @@ export const vehicles: Vehicle[] = [
     type: 'CAR',
     mileage: 19300,
     images: [
-      { id: 'nivus-1', url: 'https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=1100&q=80' },
-      { id: 'nivus-2', url: 'https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?auto=format&fit=crop&w=1100&q=80' },
-      { id: 'nivus-3', url: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1100&q=80' },
-      { id: 'nivus-4', url: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1100&q=80' },
+      {
+        id: 'nivus-1',
+        url: 'https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=1100&q=80',
+      },
+      {
+        id: 'nivus-2',
+        url: 'https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?auto=format&fit=crop&w=1100&q=80',
+      },
+      {
+        id: 'nivus-3',
+        url: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1100&q=80',
+      },
+      {
+        id: 'nivus-4',
+        url: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1100&q=80',
+      },
     ],
     fipeCode: '005531-1',
     fipeValue: 'R$ 125.000',

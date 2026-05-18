@@ -6,6 +6,8 @@ import { VehicleStatus } from '../vehicles/vehicles-data';
 import { VEHICLE_STATUS_LABEL } from '../vehicles/vehicle-labels';
 
 import { Dashboard, DashboardSummary } from '../../core/services/dashboard';
+import { PaginationMeta, Vehicle, Vehicles } from '../../core/services/vehicles';
+import { formatDate, formatPlate } from '../../core/utils/helpers';
 
 type SummaryCard = {
   label: string;
@@ -17,10 +19,11 @@ type SummaryCard = {
 };
 
 type RecentVehicle = {
+  id: string;
   name: string;
   year: string;
   plate: string;
-  status: Extract<VehicleStatus, 'ANALYZING' | 'PURCHASED'>;
+  status: Extract<VehicleStatus, 'ANALYZING' | 'PURCHASED' | 'SOLD' | 'REJECTED'>;
   date: string;
   link: string;
 };
@@ -34,6 +37,7 @@ type RecentVehicle = {
 })
 export class Home {
   private readonly dashboardService = inject(Dashboard);
+  private readonly vehiclesService = inject(Vehicles);
 
   summary = signal<DashboardSummary | null>(null);
   loading = signal(false);
@@ -41,6 +45,7 @@ export class Home {
 
   ngOnInit(): void {
     this.loadSummary();
+    this.searchRecentVehicles();
   }
 
   loadSummary(): void {
@@ -110,24 +115,51 @@ export class Home {
     ];
   });
 
-  protected readonly recentVehicles: RecentVehicle[] = [
-    {
-      name: 'Toyota Corolla XEI',
-      year: '2021/2022',
-      plate: 'ABC-1234',
-      status: 'ANALYZING',
-      date: '15/05/2024',
-      link: '/veiculos/toyota-corolla-xei',
-    },
-    {
-      name: 'Jeep Compass Longitude',
-      year: '2020/2021',
-      plate: 'XYZ-9876',
-      status: 'PURCHASED',
-      date: '10/05/2024',
-      link: '/veiculos/jeep-compass-longitude',
-    },
-  ];
+  recentVehicles = signal<RecentVehicle[]>([]);
+  pagination = signal<PaginationMeta | null>(null);
+
+  searchRecentVehicles(): void {
+    this.vehiclesService
+      .getVehicles({
+        page: 1,
+        limit: 5,
+      })
+      .pipe(
+        finalize(() => {
+          this.loading.set(false);
+        }),
+      )
+      .subscribe({
+        next: (response) => {
+          const allowedStatus: VehicleStatus[] = ['ANALYZING', 'PURCHASED'];
+
+          const vehicles: RecentVehicle[] = response.data
+            .filter((vehicle) => allowedStatus.includes(vehicle.status))
+            .map((vehicle) => ({
+              id: vehicle.id,
+              name: `${vehicle.brand} ${vehicle.model}`,
+              year: `${vehicle.yearManufacture}/${vehicle.yearModel}`,
+              plate: formatPlate(vehicle.plate),
+              status: vehicle.status,
+              date:
+                vehicle.status === 'ANALYZING'
+                  ? formatDate(vehicle.createdAt)
+                  : formatDate(vehicle.purchasedAt || vehicle.createdAt),
+              link: `/veiculos/${vehicle.brand.toLowerCase()}-${vehicle.model.toLowerCase()}`,
+            }));
+
+          this.recentVehicles.set(vehicles);
+        },
+        error: (err) => {
+          if (err.status === 401) {
+            this.errorMessage.set('Sessão expirada. Faça login novamente.');
+            return;
+          }
+
+          this.errorMessage.set('Erro ao carregar os veículos recentes.');
+        },
+      });
+  }
 
   protected statusLabel(status: RecentVehicle['status']): string {
     return VEHICLE_STATUS_LABEL[status];

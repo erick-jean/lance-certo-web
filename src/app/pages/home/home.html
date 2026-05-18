@@ -63,7 +63,7 @@
         <span role="columnheader">Ação</span>
       </div>
 
-      @for (vehicle of recentVehicles; track vehicle.name) {
+      @for (vehicle of recentVehicles(); track vehicle.id) {
         <a
           class="table-row"
           role="row"

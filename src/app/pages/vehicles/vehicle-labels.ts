@@ -1,3 +1,4 @@
+import { VehicleStatus } from '../../core/services/vehicles';
 import {
   AuctionType,
   ExpenseCategory,
@@ -6,12 +7,12 @@ import {
   TransmissionType,
   Vehicle,
   VehicleDamageType,
-  VehicleStatus,
   VehicleType,
 } from './vehicles-data';
 
 export const VEHICLE_STATUS_LABEL: Record<VehicleStatus, string> = {
   ANALYZING: 'Em análise',
+  REJECTED: 'Rejeitado',
   PURCHASED: 'Arrematado',
   SOLD: 'Vendido',
 };
@@ -26,7 +27,6 @@ export const VEHICLE_DAMAGE_LABEL: Record<VehicleDamageType, string> = {
 export const VEHICLE_TYPE_LABEL: Record<VehicleType, string> = {
   CAR: 'Carro',
   MOTORCYCLE: 'Moto',
-  TRUCK: 'Caminhão',
 };
 
 export const FUEL_TYPE_LABEL: Record<FuelType, string> = {
@@ -35,11 +35,14 @@ export const FUEL_TYPE_LABEL: Record<FuelType, string> = {
   DIESEL: 'Diesel',
   ELECTRIC: 'Elétrico',
   HYBRID: 'Híbrido',
+  GNV: 'GNV',
+  ETHANOL: 'Etanol',
 };
 
 export const TRANSMISSION_LABEL: Record<TransmissionType, string> = {
   MANUAL: 'Manual',
   AUTOMATIC: 'Automático',
+  CVT: 'CVT',
 };
 
 export const AUCTION_TYPE_LABEL: Record<AuctionType, string> = {
@@ -70,7 +73,9 @@ export function vehicleTitle(vehicle: Pick<Vehicle, 'brand' | 'model' | 'version
   return [vehicle.brand, vehicle.model, vehicle.version].filter(Boolean).join(' ');
 }
 
-export function vehicleSubtitle(vehicle: Pick<Vehicle, 'yearManufacture' | 'yearModel' | 'city' | 'state'>): string {
+export function vehicleSubtitle(
+  vehicle: Pick<Vehicle, 'yearManufacture' | 'yearModel' | 'city' | 'state'>,
+): string {
   const year = [vehicle.yearManufacture, vehicle.yearModel].filter(Boolean).join('/');
   const location = [vehicle.city, vehicle.state].filter(Boolean).join(', ');
   return [year, location].filter(Boolean).join(' • ');
