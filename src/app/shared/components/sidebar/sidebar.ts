@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../../../core/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -8,4 +9,12 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
 })
-export class Sidebar {}
+export class Sidebar {
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
+
+  protected logout(): void {
+    this.auth.logout();
+    this.router.navigateByUrl('/login');
+  }
+}

@@ -39,7 +39,7 @@
         <span>Configurações</span>
       </a>
 
-      <a routerLink="/login">
+      <a href="#" (click)="$event.preventDefault(); logout()">
         <mat-icon aria-hidden="true">logout</mat-icon>
         <span>Sair</span>
       </a>
