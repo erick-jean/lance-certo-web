@@ -7,12 +7,12 @@ import {
 } from '@angular/common/http';
 import { catchError, switchMap, throwError } from 'rxjs';
 
-import { AuthService } from '../services/auth';
+import { Auth } from '../services/auth';
 
 export const authInterceptor: HttpInterceptorFn = (request, next) => {
-  const authService = inject(AuthService);
+  const auth = inject(Auth);
 
-  const token = authService.getAccessToken();
+  const token = auth.getAccessToken();
 
   const isAuthRoute =
     request.url.includes('/auth/login') ||
@@ -34,9 +34,9 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
         return throwError(() => error);
       }
 
-      return authService.refreshToken().pipe(
+      return auth.refreshToken().pipe(
         switchMap(() => {
-          const newToken = authService.getAccessToken();
+          const newToken = auth.getAccessToken();
 
           const retryRequest = request.clone({
             withCredentials: true,
@@ -50,7 +50,7 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
           return next(retryRequest);
         }),
         catchError((refreshError) => {
-          authService.clearSession();
+          auth.clearSession();
           return throwError(() => refreshError);
         })
       );
