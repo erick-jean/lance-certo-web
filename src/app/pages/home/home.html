@@ -63,37 +63,69 @@
         <span role="columnheader">Ação</span>
       </div>
 
-      @for (vehicle of recentVehicles(); track vehicle.id) {
-        <a
-          class="table-row"
-          role="row"
-          [routerLink]="vehicle.link"
-          [attr.aria-label]="'Ver ' + vehicle.name"
-        >
-          <div class="vehicle-cell" role="cell">
-            <span class="vehicle-icon">
-              <mat-icon aria-hidden="true">directions_car</mat-icon>
-            </span>
-            <div>
-              <strong>{{ vehicle.name }}</strong>
-              <small>{{ vehicle.year }}</small>
+      @if (recentVehiclesLoading()) {
+        @for (row of loadingRows; track row) {
+          <div class="table-row table-skeleton" role="row" aria-hidden="true">
+            <div class="vehicle-cell" role="cell">
+              <span class="vehicle-icon skeleton-box"></span>
+              <div class="skeleton-text-group">
+                <span class="skeleton-line skeleton-title"></span>
+                <span class="skeleton-line skeleton-subtitle"></span>
+              </div>
             </div>
-          </div>
-          <span role="cell">{{ vehicle.plate }}</span>
-          <span role="cell">
-            <span
-              class="status-pill"
-              [class.warning]="vehicle.status === 'ANALYZING'"
-              [class.success]="vehicle.status === 'PURCHASED'"
-            >
-              {{ statusLabel(vehicle.status) }}
+
+            <span class="skeleton-line skeleton-plate" role="cell"></span>
+
+            <span role="cell">
+              <span class="status-pill skeleton-pill"></span>
             </span>
-          </span>
-          <span role="cell">{{ vehicle.date }}</span>
-          <span class="action-cell" role="cell">
-            <mat-icon aria-hidden="true">chevron_right</mat-icon>
-          </span>
-        </a>
+
+            <span class="skeleton-line skeleton-date" role="cell"></span>
+
+            <span class="action-cell" role="cell">
+              <span class="action-skeleton"></span>
+            </span>
+          </div>
+        }
+      } @else {
+        @for (vehicle of recentVehicles(); track vehicle.id) {
+          <a
+            class="table-row"
+            role="row"
+            [routerLink]="vehicle.link"
+            [attr.aria-label]="'Ver ' + vehicle.name"
+          >
+            <div class="vehicle-cell" role="cell">
+              <span class="vehicle-icon">
+                <mat-icon aria-hidden="true">directions_car</mat-icon>
+              </span>
+              <div>
+                <strong>{{ vehicle.name }}</strong>
+                <small>{{ vehicle.year }}</small>
+              </div>
+            </div>
+            <span role="cell">{{ vehicle.plate }}</span>
+            <span role="cell">
+              <span
+                class="status-pill"
+                [class.warning]="vehicle.status === 'ANALYZING'"
+                [class.success]="vehicle.status === 'PURCHASED'"
+              >
+                {{ statusLabel(vehicle.status) }}
+              </span>
+            </span>
+            <span role="cell">{{ vehicle.date }}</span>
+            <span class="action-cell" role="cell">
+              <mat-icon aria-hidden="true">chevron_right</mat-icon>
+            </span>
+          </a>
+        } @empty {
+          <div class="vehicles-empty">
+            <mat-icon aria-hidden="true">search_off</mat-icon>
+            <h2>Nenhum veículo encontrado</h2>
+            <p>Quando a API retornar registros, eles vão aparecer aqui automaticamente.</p>
+          </div>
+        }
       }
     </div>
   </section>

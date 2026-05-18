@@ -40,8 +40,11 @@ export class Home {
   private readonly vehiclesService = inject(Vehicles);
 
   summary = signal<DashboardSummary | null>(null);
-  loading = signal(false);
+  summaryLoading = signal(false);
+  recentVehiclesLoading = signal(true);
   errorMessage = signal('');
+  // Keep the skeleton aligned with the dashboard's recent-vehicles fetch size.
+  protected readonly loadingRows = [0, 1, 2, 3, 4];
 
   ngOnInit(): void {
     this.loadSummary();
@@ -49,14 +52,14 @@ export class Home {
   }
 
   loadSummary(): void {
-    this.loading.set(true);
+    this.summaryLoading.set(true);
     this.errorMessage.set('');
 
     this.dashboardService
       .getSummary()
       .pipe(
         finalize(() => {
-          this.loading.set(false);
+          this.summaryLoading.set(false);
         }),
       )
       .subscribe({
@@ -119,6 +122,8 @@ export class Home {
   pagination = signal<PaginationMeta | null>(null);
 
   searchRecentVehicles(): void {
+    this.recentVehiclesLoading.set(true);
+
     this.vehiclesService
       .getVehicles({
         page: 1,
@@ -126,7 +131,7 @@ export class Home {
       })
       .pipe(
         finalize(() => {
-          this.loading.set(false);
+          this.recentVehiclesLoading.set(false);
         }),
       )
       .subscribe({
