@@ -220,6 +220,11 @@
   }
 }
 
+.mensage-error {
+  color: var(--color-danger) !important;
+  //background-color: var(--color-danger);
+}
+
 .login-options {
   display: flex;
   align-items: center;

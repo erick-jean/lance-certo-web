@@ -10,11 +10,17 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrl: './sidebar.scss',
 })
 export class Sidebar {
-  private readonly auth = inject(AuthService);
+  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
-  protected logout(): void {
-    this.auth.logout();
-    this.router.navigateByUrl('/login');
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        this.router.navigate(['/login']);
+      },
+    });
   }
 }

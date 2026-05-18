@@ -24,7 +24,7 @@
       <img src="/logo.png" alt="Lance Certo" />
     </div>
 
-    <form class="login-card" (ngSubmit)="login()">
+    <form class="login-card" (ngSubmit)="login()" [formGroup]="form">
       <header>
         <span>Acesso seguro</span>
         <h2>Bem-vindo de volta</h2>
@@ -37,12 +37,19 @@
           <mat-icon aria-hidden="true">mail</mat-icon>
           <input
             name="email"
-            [(ngModel)]="email"
+            formControlName="email"
             type="email"
             placeholder="seu@email.com"
             autocomplete="email"
           />
         </div>
+        @if (form.controls.email.touched && form.controls.email.hasError('required')) {
+          <small class="mensage-error">E-mail é obrigatório.</small>
+        }
+
+        @if (form.controls.email.touched && form.controls.email.hasError('email')) {
+          <small class="mensage-error">E-mail inválido.</small>
+        }
       </label>
 
       <label>
@@ -51,7 +58,7 @@
           <mat-icon aria-hidden="true">lock</mat-icon>
           <input
             name="password"
-            [(ngModel)]="password"
+            formControlName="password"
             [type]="showPassword() ? 'text' : 'password'"
             placeholder="••••••••"
             autocomplete="current-password"
@@ -62,8 +69,12 @@
             }}</mat-icon>
           </button>
         </div>
+        @if (form.controls.password.touched && form.controls.password.hasError('required')) {
+          <small class="mensage-error">Senha é obrigatória.</small>
+        }
+
         @if (errorMessage) {
-          <p>{{ errorMessage }}</p>
+          <small class="mensage-error">{{ errorMessage }}</small>
         }
       </label>
 
