@@ -10,9 +10,19 @@
   padding: 7rem 2rem 2.625rem;
 }
 
+.auth-content {
+  margin-left: 0;
+  padding: 0;
+}
+
 @media (max-width: 768px) {
   .app-content {
     margin-left: 4.5rem;
     padding: 5.75rem 1rem 1.5rem;
+  }
+
+  .auth-content {
+    margin-left: 0;
+    padding: 0;
   }
 }

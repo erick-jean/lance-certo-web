@@ -8,8 +8,13 @@ import { Profile } from './pages/profile/profile';
 import { Finance } from './pages/finance/finance';
 import { Subscription } from './pages/subscription/subscription';
 import { Settings } from './pages/settings/settings';
+import { Login } from './pages/login/login';
 
 export const routes: Routes = [
+  {
+    path: 'login',
+    component: Login,
+  },
   {
     path: 'dashboard',
     component: Home,

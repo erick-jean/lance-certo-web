@@ -1,6 +1,8 @@
-<app-sidebar></app-sidebar>
-<app-header></app-header>
+@if (!isAuthPage()) {
+  <app-sidebar></app-sidebar>
+  <app-header></app-header>
+}
 
-<main class="app-content">
+<main class="app-content" [class.auth-content]="isAuthPage()">
   <router-outlet />
 </main>
