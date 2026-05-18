@@ -5,7 +5,7 @@ import { catchError, of } from 'rxjs';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
-import { AuthService } from './core/services/auth';
+import { Auth } from './core/services/auth';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
     ),
 
     provideAppInitializer(() => {
-      const authService = inject(AuthService);
+      const authService = inject(Auth);
 
       return authService.refreshToken().pipe(
         catchError(() => {
