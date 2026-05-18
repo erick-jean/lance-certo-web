@@ -1,40 +1,46 @@
 .register-page {
   display: grid;
-  grid-template-columns: minmax(22rem, 0.95fr) minmax(30rem, 1.05fr);
+  grid-template-columns: minmax(24rem, 0.9fr) minmax(30rem, 1.1fr);
   min-height: 100dvh;
-  background: #ffffff;
+  background: #f6f7fb;
 }
 
 .register-hero {
   position: relative;
   display: grid;
-  align-content: start;
+  min-height: 100dvh;
+  grid-template-rows: auto 1fr auto;
   overflow: hidden;
   background: #0b1b32;
   color: #ffffff;
-  padding: 2rem 2.5rem;
+  padding: 2.5rem;
 
   &::before {
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(120deg, transparent 0 42%, rgb(255 255 255 / 0.05) 42% 58%, transparent 58%),
-      radial-gradient(circle at 15% 10%, rgb(0 122 88 / 0.2), transparent 32%);
+      linear-gradient(122deg, transparent 0 50%, rgb(255 255 255 / 0.055) 50% 66%, transparent 66%),
+      radial-gradient(circle at 12% 8%, rgb(21 94 239 / 0.18), transparent 32%),
+      radial-gradient(circle at 92% 88%, rgb(0 122 88 / 0.18), transparent 30%);
     content: '';
   }
 }
 
 .brand-mark,
-.hero-copy {
+.hero-copy,
+.hero-insight {
   position: relative;
   z-index: 1;
 }
 
 .brand-mark {
   display: inline-flex;
-  width: 12rem;
+  width: 14rem;
   align-items: center;
-  margin-bottom: 3.5rem;
+  border-radius: var(--radius-md);
+  background: rgb(255 255 255 / 0.94);
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 1rem 2rem rgb(0 0 0 / 0.18);
 
   img {
     width: 100%;
@@ -44,20 +50,53 @@
 }
 
 .hero-copy {
-  max-width: 25rem;
+  align-self: center;
+  max-width: 28rem;
+  margin-top: 2rem;
 
   h1 {
     color: #ffffff;
-    font-size: 2.25rem;
+    font-size: 2.75rem;
     font-weight: var(--font-weight-bold);
-    line-height: 1.12;
+    line-height: 1.08;
   }
 
   p {
-    color: #9fb4d1;
+    color: #b8c8de;
     font-size: var(--font-size-sm);
     line-height: var(--line-height-relaxed);
     margin-top: 1.25rem;
+  }
+}
+
+.hero-insight {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 25rem;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: var(--radius-lg);
+  background: rgb(255 255 255 / 0.07);
+  padding: 1.25rem;
+  backdrop-filter: blur(6px);
+
+  > span {
+    color: #34d399;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  strong {
+    color: #ffffff;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    line-height: 1.25;
+  }
+
+  p {
+    color: #b8c8de;
+    font-size: var(--font-size-sm);
   }
 }
 
@@ -68,19 +107,42 @@
   padding: 2rem;
 }
 
+.mobile-brand {
+  display: none;
+}
+
 .register-card {
   display: grid;
-  width: min(100%, 27rem);
+  width: min(100%, 28rem);
   gap: 1rem;
+  border: 1px solid #e4e7ec;
+  border-radius: var(--radius-lg);
+  background: #ffffff;
+  box-shadow: 0 1.5rem 3rem rgb(15 23 42 / 0.08);
+  padding: 2rem;
 
   header {
     margin-bottom: 0.25rem;
   }
 
+  header > span {
+    display: inline-flex;
+    width: fit-content;
+    min-height: 1.5rem;
+    align-items: center;
+    border-radius: 999px;
+    background: #dff8ec;
+    color: #007a58;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    padding: 0 0.75rem;
+  }
+
   h2 {
     color: #07101d;
-    font-size: var(--font-size-2xl);
+    font-size: 1.75rem;
     font-weight: var(--font-weight-bold);
+    margin-top: 1rem;
   }
 
   p {
@@ -110,7 +172,7 @@
 .input-field {
   display: flex;
   align-items: center;
-  min-height: 2.75rem;
+  min-height: 2.875rem;
   border: 1px solid #c7ced9;
   border-radius: var(--radius-sm);
   background: #ffffff;
@@ -180,7 +242,7 @@
 }
 
 .submit-button {
-  min-height: 2.75rem;
+  min-height: 2.875rem;
   border: 0;
   border-radius: var(--radius-sm);
   background: #007a58;
@@ -213,30 +275,30 @@
   }
 
   .register-hero {
-    min-height: 18rem;
-  }
-
-  .brand-mark {
-    margin-bottom: 2rem;
+    display: none;
   }
 
   .register-panel {
-    min-height: auto;
-    padding: 2.5rem 1.25rem;
+    min-height: 100dvh;
+    padding: 2rem 1.25rem;
+  }
+
+  .mobile-brand {
+    display: block;
+    width: 12rem;
+    margin-bottom: 1.5rem;
+
+    img {
+      width: 100%;
+    }
   }
 }
 
 @media (max-width: 560px) {
-  .register-hero {
+  .register-card {
+    border: 0;
+    box-shadow: none;
     padding: 1.5rem;
-  }
-
-  .brand-mark {
-    width: 10rem;
-  }
-
-  .hero-copy h1 {
-    font-size: 1.9rem;
   }
 
   .form-row {
