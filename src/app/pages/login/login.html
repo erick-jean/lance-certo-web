@@ -73,16 +73,16 @@
           <small class="mensage-error">Senha é obrigatória.</small>
         }
 
-        @if (errorMessage) {
-          <small class="mensage-error">{{ errorMessage }}</small>
+        @if (errorMessage()) {
+          <small class="mensage-error">{{ errorMessage() }}</small>
         }
       </label>
 
       <div class="login-options">
-        <label class="remember-check">
-          <input type="checkbox" />
+        <!-- <label class="remember-check">
+          <input type="checkbox" formControlName="rememberMe" />
           <span>Lembrar-me</span>
-        </label>
+        </label> -->
 
         <button class="link-button" type="button">Esqueci minha senha</button>
       </div>

@@ -25,7 +25,7 @@ export class Login {
   }
 
   loading = false;
-  errorMessage = '';
+  errorMessage = signal('');
 
   email = '';
   password = '';
@@ -33,16 +33,17 @@ export class Login {
   form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
+    //rememberMe: [false],
   });
 
-  login() {
+  login(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
     this.loading = true;
-    this.errorMessage = '';
+    this.errorMessage.set('');
 
     this.auth
       .login(this.form.getRawValue())
@@ -53,12 +54,27 @@ export class Login {
       )
       .subscribe({
         next: () => {
-          this.loading = false;
           this.router.navigate(['/dashboard']);
         },
         error: (err) => {
-          this.loading = false;
-          this.errorMessage = 'E-mail ou senha inválidos.';
+          console.log('Erro login:', err);
+
+          if (err.status === 401) {
+            this.errorMessage.set('E-mail ou senha inválidos');
+            return;
+          }
+
+          if (err.status === 400) {
+            this.errorMessage.set('Dados inválidos.');
+            return;
+          }
+
+          if (err.status === 429) {
+            this.errorMessage.set('Muitas tentativas de login. Tente novamente mais tarde.');
+            return;
+          }
+
+          this.errorMessage.set('Erro ao realizar login. Tente novamente.');
         },
       });
   }
