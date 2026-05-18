@@ -2,7 +2,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
 
-import { environment } from '../../../app/environments/environment';
+import { environment } from '../../environments/environment';
 
 interface LoginRequest {
   email: string;
@@ -14,7 +14,7 @@ interface AuthResponse {
 }
 
 @Injectable({ providedIn: 'root' })
-export class AuthService {
+export class Auth {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = environment.apiUrl;
 

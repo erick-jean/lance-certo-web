@@ -1,4 +1,4 @@
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../services/auth';
 import { catchError, of } from 'rxjs';
 
 export function initializeAuth(authService: AuthService) {

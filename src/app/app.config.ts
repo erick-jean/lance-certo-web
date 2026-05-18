@@ -5,7 +5,7 @@ import { catchError, of } from 'rxjs';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
-import { AuthService } from './core/services/auth.service';
+import { AuthService } from './core/services/auth';
 
 export const appConfig: ApplicationConfig = {
   providers: [
