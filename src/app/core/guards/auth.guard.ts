@@ -12,3 +12,10 @@ export const authGuard: CanActivateFn = () => {
 
   return router.createUrlTree(['/login']);
 };
+
+export const loginGuard: CanActivateFn = () => {
+  const auth = inject(Auth);
+  const router = inject(Router);
+
+  return auth.isAuthenticated() ? router.createUrlTree(['/dashboard']) : true;
+};
