@@ -1,0 +1,181 @@
+<section class="premium-checkout">
+  <header class="premium-checkout__heading">
+    <div>
+      <span class="premium-checkout__eyebrow">Plano Premium</span>
+      <h1>Assinar Premium</h1>
+      <p>Acesso ao plano Premium por R$ 29,90/mês.</p>
+    </div>
+
+    <a class="premium-checkout__back" routerLink="/assinatura">Voltar para assinaturas</a>
+  </header>
+
+  <div class="premium-checkout__grid">
+    <article class="plan-summary" aria-label="Resumo do plano Premium">
+      <span class="plan-summary__badge">Premium</span>
+
+      <div class="plan-summary__price">
+        <strong>R$ 29,90</strong>
+        <span>/mês</span>
+      </div>
+
+      <ul class="plan-summary__features">
+        <li>Análises completas</li>
+        <li>Histórico de veículos</li>
+        <li>Recursos avançados do Lance Certo</li>
+      </ul>
+
+      <div class="card-preview" aria-label="Previa do cartao">
+        <div class="card-preview__top">
+          <span>Premium</span>
+        </div>
+
+        <strong class="card-preview__number">{{ cardPreviewNumber() }}</strong>
+
+        <div class="card-preview__footer">
+          <div>
+            <span>Titular</span>
+            <strong>{{ cardPreviewName() }}</strong>
+          </div>
+
+          <div>
+            <span>Validade</span>
+            <strong>{{ cardPreviewExpiration() }}</strong>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="checkout-card">
+      <header class="checkout-card__header">
+        <h2>Preencha os dados do seu cartão</h2>
+      </header>
+
+      @if (errorMessage()) {
+        <div class="checkout-alert checkout-alert--error" role="alert">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      @if (successMessage()) {
+        <div class="checkout-alert checkout-alert--success" role="status">
+          {{ successMessage() }}
+        </div>
+      }
+
+      <form id="form-checkout" class="checkout-form">
+        <div class="checkout-form__field checkout-form__field--wide">
+          <label for="form-checkout__cardNumber">Número do cartão</label>
+          <input
+            id="form-checkout__cardNumber"
+            class="checkout-form__control"
+            type="text"
+            inputmode="numeric"
+            maxlength="19"
+            placeholder="0000 0000 0000 0000"
+            autocomplete="cc-number"
+            [class.checkout-form__control--error]="cardNumberError()"
+            (input)="formatCardNumberInput($event)"
+            (blur)="validateCardNumberInput($event)"
+          />
+          @if (cardNumberError()) {
+            <span class="checkout-form__error">{{ cardNumberError() }}</span>
+          } @else {
+            <span class="checkout-form__error checkout-form__error--empty" aria-hidden="true">&nbsp;</span>
+          }
+        </div>
+
+        <div class="checkout-form__field checkout-form__field--wide">
+          <label for="form-checkout__cardholderName">Nome do titular</label>
+          <input
+            id="form-checkout__cardholderName"
+            class="checkout-form__control"
+            type="text"
+            placeholder="Ex.: Maria Lopes"
+            (input)="updateCardholderNamePreview($event)"
+          />
+        </div>
+
+        <div class="checkout-form__field">
+          <label for="form-checkout__expirationDate">Vencimento</label>
+          <input
+            id="form-checkout__expirationDate"
+            class="checkout-form__control"
+            type="text"
+            inputmode="numeric"
+            maxlength="5"
+            placeholder="MM/AA"
+            autocomplete="cc-exp"
+            [class.checkout-form__control--error]="expirationDateError()"
+            (input)="formatExpirationDateInput($event)"
+            (blur)="validateExpirationDateInput($event)"
+          />
+          @if (expirationDateError()) {
+            <span class="checkout-form__error">{{ expirationDateError() }}</span>
+          } @else {
+            <span class="checkout-form__error checkout-form__error--empty" aria-hidden="true">&nbsp;</span>
+          }
+        </div>
+
+        <div class="checkout-form__field">
+          <label for="form-checkout__securityCode">Código de segurança</label>
+          <input
+            id="form-checkout__securityCode"
+            class="checkout-form__control"
+            type="text"
+            inputmode="numeric"
+            maxlength="4"
+            placeholder="000"
+            autocomplete="cc-csc"
+            (input)="formatSecurityCodeInput($event)"
+          />
+          <span class="checkout-form__error checkout-form__error--empty" aria-hidden="true">&nbsp;</span>
+        </div>
+
+        <div class="checkout-form__field checkout-form__field--wide">
+          <label for="form-checkout__identificationNumber">Documento do titular</label>
+          <div class="document-control">
+            <select
+              id="form-checkout__identificationType"
+              class="document-control__type"
+              aria-label="Tipo de documento"
+              (change)="updateDocumentPlaceholder($event)"
+            >
+              <option value="CPF">CPF</option>
+              <option value="CNPJ">CNPJ</option>
+            </select>
+            <input
+              id="form-checkout__identificationNumber"
+              class="document-control__number"
+              type="text"
+              inputmode="numeric"
+              autocomplete="off"
+              [placeholder]="documentNumberPlaceholder()"
+              [attr.maxlength]="documentType() === 'CNPJ' ? 18 : 14"
+              (input)="formatDocumentNumberInput($event)"
+            />
+          </div>
+        </div>
+
+        <select id="form-checkout__issuer" class="checkout-form__hidden-field" tabindex="-1" aria-hidden="true"></select>
+        <select
+          id="form-checkout__installments"
+          class="checkout-form__hidden-field"
+          tabindex="-1"
+          aria-hidden="true"
+        ></select>
+        <input
+          id="form-checkout__cardholderEmail"
+          class="checkout-form__hidden-field"
+          type="email"
+          tabindex="-1"
+          aria-hidden="true"
+          autocomplete="off"
+        />
+
+        <button class="checkout-form__submit" type="submit" [disabled]="isLoading() || !!successMessage()">
+          {{ isLoading() ? 'Processando...' : 'Assinar agora' }}
+        </button>
+      </form>
+    </article>
+  </div>
+</section>

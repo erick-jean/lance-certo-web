@@ -241,7 +241,8 @@
     font-size: 1rem;
   }
 
-  button {
+  button,
+  a {
     margin-top: auto;
   }
 }
@@ -334,7 +335,11 @@
   }
 }
 
-.billing-card header button {
+.billing-card header button,
+.billing-card header .billing-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid #c7ced9;
   border-radius: var(--radius-sm);
   background: #ffffff;
@@ -434,7 +439,8 @@
 
   .primary-action,
   .secondary-action,
-  .billing-card header button {
+  .billing-card header button,
+  .billing-card header .billing-action {
     width: 100%;
   }
 

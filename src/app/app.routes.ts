@@ -64,6 +64,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'assinatura/premium',
+    loadComponent: () =>
+      import('./features/subscriptions/pages/premium-checkout/premium-checkout.component').then(
+        (component) => component.PremiumCheckoutComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: 'configuracoes',
     component: Settings,
     canActivate: [authGuard],

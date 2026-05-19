@@ -5,10 +5,10 @@
       <p>Gerencie seu plano, limites de uso e informações de cobrança.</p>
     </div>
 
-    <button class="primary-action" type="button">
+    <a class="primary-action" routerLink="/assinatura/premium">
       <mat-icon aria-hidden="true">workspace_premium</mat-icon>
-      <span>Assinar Pro</span>
-    </button>
+      <span>Assinar Premium</span>
+    </a>
   </header>
 
   <section class="current-plan">
@@ -32,7 +32,7 @@
         <i></i>
       </div>
 
-      <p>Você ainda pode cadastrar mais 1 veículo antes de fazer upgrade.</p>
+      <p>Você ainda pode cadastrar mais 1 veículo antes de assinar o Premium.</p>
     </article>
   </section>
 
@@ -61,23 +61,23 @@
     <article class="plan-card featured-plan">
       <header>
         <span>Recomendado</span>
-        <h2>Pro</h2>
-        <p>Para acompanhar oportunidades com mais volume.</p>
+        <h2>Premium</h2>
+        <p>Para desbloquear análises completas e recursos avançados.</p>
       </header>
 
       <div class="price">
-        <strong>R$ 49</strong>
+        <strong>R$ 29,90</strong>
         <span>/mês</span>
       </div>
 
       <ul>
-        <li><mat-icon aria-hidden="true">check</mat-icon>Veículos ilimitados</li>
-        <li><mat-icon aria-hidden="true">check</mat-icon>Gastos e avaliações avançadas</li>
-        <li><mat-icon aria-hidden="true">check</mat-icon>Relatórios financeiros completos</li>
-        <li><mat-icon aria-hidden="true">check</mat-icon>Alertas de leilão e oportunidades</li>
+        <li><mat-icon aria-hidden="true">check</mat-icon>Análises completas</li>
+        <li><mat-icon aria-hidden="true">check</mat-icon>Histórico de veículos</li>
+        <li><mat-icon aria-hidden="true">check</mat-icon>Recursos avançados do Lance Certo</li>
+        <li><mat-icon aria-hidden="true">check</mat-icon>Mais controle para suas oportunidades</li>
       </ul>
 
-      <button class="primary-action" type="button">Fazer upgrade</button>
+      <a class="primary-action" routerLink="/assinatura/premium">Assinar Premium</a>
     </article>
 
     <article class="plan-card">
@@ -93,7 +93,7 @@
       </div>
 
       <ul>
-        <li><mat-icon aria-hidden="true">check</mat-icon>Todos os recursos do Pro</li>
+        <li><mat-icon aria-hidden="true">check</mat-icon>Todos os recursos do Premium</li>
         <li><mat-icon aria-hidden="true">check</mat-icon>Usuários da equipe</li>
         <li><mat-icon aria-hidden="true">check</mat-icon>Permissões por função</li>
         <li><mat-icon aria-hidden="true">check</mat-icon>Suporte prioritário</li>
@@ -106,26 +106,26 @@
   <section class="details-grid">
     <article class="benefits-card">
       <header>
-        <h2>Recursos liberados no Pro</h2>
-        <p>O upgrade remove limites e melhora a gestão financeira dos veículos.</p>
+        <h2>Recursos liberados no Premium</h2>
+        <p>A assinatura libera análises completas e recursos avançados para suas decisões.</p>
       </header>
 
       <div class="benefit-list">
         <div>
           <mat-icon aria-hidden="true">directions_car</mat-icon>
-          <span>Veículos ilimitados</span>
+          <span>Análises completas</span>
         </div>
         <div>
           <mat-icon aria-hidden="true">paid</mat-icon>
-          <span>Controle completo de gastos</span>
+          <span>Histórico de veículos</span>
         </div>
         <div>
           <mat-icon aria-hidden="true">analytics</mat-icon>
-          <span>Indicadores e relatórios</span>
+          <span>Recursos avançados</span>
         </div>
         <div>
           <mat-icon aria-hidden="true">notifications_active</mat-icon>
-          <span>Alertas importantes</span>
+          <span>Mais controle nas oportunidades</span>
         </div>
       </div>
     </article>
@@ -133,14 +133,14 @@
     <article class="billing-card">
       <header>
         <h2>Cobrança</h2>
-        <button type="button">Atualizar método</button>
+        <a class="billing-action" routerLink="/assinatura/premium">Atualizar método</a>
       </header>
 
       <div class="payment-method">
         <mat-icon aria-hidden="true">credit_card</mat-icon>
         <div>
           <strong>Nenhum cartão cadastrado</strong>
-          <span>Adicione um método de pagamento para ativar o Pro.</span>
+          <span>Adicione um método de pagamento para ativar o Premium.</span>
         </div>
       </div>
 
