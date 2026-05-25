@@ -14,13 +14,14 @@ interface AuthResponse {
   access_token: string;
 }
 
+const ACCESS_TOKEN_STORAGE_KEY = 'lance_certo_access_token';
+
 @Injectable({ providedIn: 'root' })
 export class Auth {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = normalizeApiBaseUrl(environment.apiUrl);
 
-  // The access token stays in memory only; refresh depends on the backend httpOnly cookie.
-  private readonly accessToken = signal<string | null>(null);
+  private readonly accessToken = signal<string | null>(this.getStoredAccessToken());
   private refreshInFlight$?: Observable<AuthResponse>;
 
   readonly isAuthenticated = computed(() => !!this.accessToken());
@@ -30,11 +31,11 @@ export class Auth {
       .post<AuthResponse>(buildApiUrl(this.apiUrl, '/auth/login'), data, {
         withCredentials: true,
       })
-      .pipe(
-        tap((response) => {
-          this.accessToken.set(response.access_token);
-        }),
-      );
+        .pipe(
+          tap((response) => {
+            this.setAccessToken(response.access_token);
+          }),
+        );
   }
 
   refreshToken() {
@@ -49,7 +50,7 @@ export class Auth {
         )
         .pipe(
           tap((response) => {
-            this.accessToken.set(response.access_token);
+            this.setAccessToken(response.access_token);
           }),
           finalize(() => {
             this.refreshInFlight$ = undefined;
@@ -88,5 +89,15 @@ export class Auth {
   clearSession(): void {
     this.accessToken.set(null);
     this.refreshInFlight$ = undefined;
+    sessionStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
+  }
+
+  private setAccessToken(token: string): void {
+    this.accessToken.set(token);
+    sessionStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, token);
+  }
+
+  private getStoredAccessToken(): string | null {
+    return sessionStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);
   }
 }

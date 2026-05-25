@@ -7,7 +7,9 @@
 
     <div class="topbar-actions">
       <button class="secondary-action" type="button">Salvar rascunho</button>
-      <button class="primary-action" type="submit" form="vehicle-create-form">Cadastrar veículo</button>
+      <button class="primary-action" type="submit" form="vehicle-create-form">
+        Cadastrar veículo
+      </button>
     </div>
   </header>
 
@@ -32,13 +34,77 @@
 
         <div class="form-grid">
           <label>
-            <span>Placa</span>
-            <input type="text" placeholder="ABC-1234" />
+            <span>Tipo de veículo</span>
+            <select [value]="vehicleType()" (change)="onVehicleTypeChange($event)">
+              <option value="">Selecionar</option>
+              <option value="cars">Carro</option>
+              <option value="motorcycles">Moto</option>
+            </select>
           </label>
 
-          <label>
+          <div class="search-select-field">
             <span>Marca</span>
-            <input type="text" placeholder="Ex: Honda" />
+            <div class="search-select" [class.open]="brandDropdownOpen()">
+              <input
+                type="text"
+                [value]="brandSearch()"
+                [disabled]="!vehicleType() || brandsLoading()"
+                [placeholder]="brandsLoading() ? 'Carregando marcas...' : 'Selecionar'"
+                autocomplete="off"
+                (focus)="openBrandDropdown()"
+                (blur)="closeBrandDropdown()"
+                (input)="onBrandSearch($any($event.target).value)"
+              />
+
+              <button
+                type="button"
+                aria-label="Abrir marcas"
+                [disabled]="!vehicleType() || brandsLoading()"
+                (mousedown)="$event.preventDefault()"
+                (click)="openBrandDropdown()"
+              >
+                <mat-icon aria-hidden="true">expand_more</mat-icon>
+              </button>
+
+              @if (brandDropdownOpen()) {
+                <div class="search-select__menu">
+                  @if (brandsLoading()) {
+                    <div class="search-select__state">Carregando marcas...</div>
+                  } @else if (brandsError()) {
+                    <div class="search-select__state search-select__state--error">{{ brandsError() }}</div>
+                  } @else {
+                    <button
+                      type="button"
+                      class="search-select__option"
+                      [class.selected]="!selectedBrand()"
+                      (mousedown)="$event.preventDefault()"
+                      (click)="brandSearch.set(''); selectedBrand.set(null); brandDropdownOpen.set(false)"
+                    >
+                      Selecionar
+                    </button>
+
+                    @for (brand of filteredBrands(); track brand.code) {
+                      <button
+                        type="button"
+                        class="search-select__option"
+                        [class.selected]="selectedBrand()?.code === brand.code"
+                        (mousedown)="$event.preventDefault()"
+                        (click)="selectBrand(brand)"
+                      >
+                        {{ brand.name }}
+                      </button>
+                    } @empty {
+                      <div class="search-select__state">Nenhuma marca encontrada.</div>
+                    }
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          <label>
+            <span>Placa</span>
+            <input type="text" placeholder="ABC-1234" />
           </label>
 
           <label>
@@ -229,7 +295,10 @@
 
           <label class="wide-field">
             <span>Observações</span>
-            <textarea rows="4" placeholder="Perfil conservador, bom potencial para revenda se o lance ficar abaixo do recomendado."></textarea>
+            <textarea
+              rows="4"
+              placeholder="Perfil conservador, bom potencial para revenda se o lance ficar abaixo do recomendado."
+            ></textarea>
           </label>
         </div>
       </section>
@@ -257,46 +326,11 @@
 
       <footer class="form-footer-actions">
         <button class="secondary-action" type="button">Salvar rascunho</button>
-        <button class="primary-action" type="submit" form="vehicle-create-form">Cadastrar veículo</button>
+        <button class="primary-action" type="submit" form="vehicle-create-form">
+          Cadastrar veículo
+        </button>
       </footer>
     </div>
 
-    <aside class="summary-sidebar" aria-label="Resumo dos veículos">
-      <article class="side-summary-card total-card">
-        <div>
-          <span>Total de veículos</span>
-          <strong>2</strong>
-          <small>Atualizado agora</small>
-        </div>
-        <mat-icon aria-hidden="true">directions_car</mat-icon>
-      </article>
-
-      <article class="side-summary-card analysis-card">
-        <div>
-          <span>Em análise</span>
-          <strong>1</strong>
-          <small class="status-pill warning">Aguardando</small>
-        </div>
-        <mat-icon aria-hidden="true">pending_actions</mat-icon>
-      </article>
-
-      <article class="side-summary-card purchased-card">
-        <div>
-          <span>Arrematados</span>
-          <strong>1</strong>
-          <small class="status-pill success">Sucesso</small>
-        </div>
-        <mat-icon aria-hidden="true">gavel</mat-icon>
-      </article>
-
-      <article class="side-summary-card sold-card">
-        <div>
-          <span>Vendidos</span>
-          <strong>0</strong>
-          <small>Nenhum este mês</small>
-        </div>
-        <mat-icon aria-hidden="true">sell</mat-icon>
-      </article>
-    </aside>
   </form>
 </section>
