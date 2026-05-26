@@ -19,6 +19,8 @@ export interface YearsListResponse {
   name: string;
 }
 
+export type VehicleType = 'cars' | 'motorcycles' | 'trucks';
+
 export interface FipeVehicleInfoResponse {
   brand?: string;
   codeFipe?: string;
@@ -34,7 +36,7 @@ export interface FipeVehicleInfoResponse {
   [key: string]: string | number | boolean | null | undefined;
 }
 
-export type VehicleType = 'cars' | 'motorcycles' | 'trucks';
+
 
 @Injectable({
   providedIn: 'root',

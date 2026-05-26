@@ -6,9 +6,8 @@
     </a>
 
     <div class="topbar-actions">
-      <button class="secondary-action" type="button">Salvar rascunho</button>
-      <button class="primary-action" type="submit" form="vehicle-create-form" [disabled]="submitLoading()">
-        {{ submitLoading() ? 'Salvando...' : 'Cadastrar veículo' }}
+      <button class="primary-action" type="submit" form="vehicle-create-form" onclick="submit()">
+        Cadastrar veículo
       </button>
     </div>
   </header>
@@ -21,7 +20,47 @@
     </div>
   </header>
 
-  <form id="vehicle-create-form" class="create-layout" (submit)="submitVehicle($event)">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="create-layout">
+    <div class="form-stack">
+      <section class="form-card">
+        <header>
+          <mat-icon aria-hidden="true">directions_car</mat-icon>
+          <div>
+            <h2>Identificação</h2>
+            <p>Dados usados para reconhecer o veículo no fluxo de análise.</p>
+          </div>
+        </header>
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo de veículo</mat-label>
+            <mat-select formControlName="vehicleType">
+              @for (option of vehicleTypeOptions; track option.value) {
+                <mat-option [value]="option.value">{{ option.label }}</mat-option>
+              }
+            </mat-select>
+
+            @if (form.controls.vehicleType.hasError('required')) {
+              <mat-error>Selecione o tipo de veículo</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Marca</mat-label>
+            <mat-select formControlName="brand">
+              <mat-option value="toyota">Toyota</mat-option>
+              <mat-option value="honda">Honda</mat-option>
+              <mat-option value="ford">Ford</mat-option>
+            </mat-select>
+
+            @if (form.controls.brand.hasError('required')) {
+              <mat-error>Selecione a marca</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </section>
+    </div>
+  </form>
+
+  <!-- <form id="vehicle-create-form" class="create-layout" (submit)="submitVehicle($event)">
     <div class="form-stack">
       <section class="form-card">
         <header>
@@ -45,7 +84,6 @@
                 (blur)="closeVehicleTypeDropdown()"
                 (click)="openVehicleTypeDropdown()"
               />
-
               <button
                 type="button"
                 aria-label="Abrir tipos de veículo"
@@ -264,7 +302,7 @@
               }
             </div>
           </div>
-          
+
           <label>
             <span>Ano modelo</span>
             <input type="number" name="yearModel" placeholder="2021" />
@@ -523,17 +561,31 @@
 
           <label>
             <span>Lance inicial</span>
-            <input type="text" name="auctionInitialBid" inputmode="decimal" placeholder="R$ 68.000" />
+            <input
+              type="text"
+              name="auctionInitialBid"
+              inputmode="decimal"
+              placeholder="R$ 68.000"
+            />
           </label>
 
           <label>
             <span>Lance atual</span>
-            <input type="text" name="auctionCurrentBid" inputmode="decimal" placeholder="R$ 74.000" />
+            <input
+              type="text"
+              name="auctionCurrentBid"
+              inputmode="decimal"
+              placeholder="R$ 74.000"
+            />
           </label>
 
           <label class="wide-field">
             <span>Endereço do pátio</span>
-            <input type="text" name="yardAddress" placeholder="Estrada Municipal, 450 - Itaquaquecetuba, SP" />
+            <input
+              type="text"
+              name="yardAddress"
+              placeholder="Estrada Municipal, 450 - Itaquaquecetuba, SP"
+            />
           </label>
 
           <label class="wide-field">
@@ -645,10 +697,15 @@
           <p class="submit-error">{{ submitError() }}</p>
         }
         <button class="secondary-action" type="button">Salvar rascunho</button>
-        <button class="primary-action" type="submit" form="vehicle-create-form" [disabled]="submitLoading()">
+        <button
+          class="primary-action"
+          type="submit"
+          form="vehicle-create-form"
+          [disabled]="submitLoading()"
+        >
           {{ submitLoading() ? 'Salvando...' : 'Cadastrar veículo' }}
         </button>
       </footer>
     </div>
-  </form>
+  </form> -->
 </section>

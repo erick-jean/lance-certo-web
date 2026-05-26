@@ -1,0 +1,1 @@
+export type VehicleType = 'cars' | 'motorcycles' | 'trucks';
