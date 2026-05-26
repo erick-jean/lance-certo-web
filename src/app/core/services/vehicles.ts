@@ -4,6 +4,17 @@ import { Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { buildApiUrl, normalizeApiBaseUrl } from '../utils/api';
+import { VehicleType } from '../types/vehicle-options.type';
+import { AuctionType } from '../types/auction-options.type';
+import { FuelType } from '../types/fuel-options.type';
+import { TransmissionType } from '../types/transmission-options.type';
+import { DamageType } from '../types/damage-options.type';
+
+export type { VehicleType } from '../types/vehicle-options.type';
+export type { AuctionType } from '../types/auction-options.type';
+export type { FuelType } from '../types/fuel-options.type';
+export type { TransmissionType } from '../types/transmission-options.type';
+export type { DamageType } from '../types/damage-options.type';
 
 export interface VehicleFilters {
   page?: number;
@@ -134,7 +145,9 @@ export interface PaginationMeta {
   hasPreviousPage: boolean;
 }
 
-export type CreateVehicleRequest = Partial<Omit<Vehicle, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'images' | 'evaluation'>>;
+export type CreateVehicleRequest = Partial<
+  Omit<Vehicle, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'images' | 'evaluation'>
+>;
 export type UpdateVehicleRequest = CreateVehicleRequest;
 
 export interface PurchaseVehicleRequest {
@@ -164,16 +177,6 @@ export interface UpdateEvaluationChecklistItemRequest {
   isChecked?: boolean;
   notes?: string | null;
 }
-
-export type FuelType = 'FLEX' | 'GASOLINE' | 'ETHANOL' | 'DIESEL' | 'ELECTRIC' | 'HYBRID' | 'GNV';
-
-export type TransmissionType = 'MANUAL' | 'AUTOMATIC' | 'CVT' | 'AUTOMATED';
-
-export type VehicleType = 'CAR' | 'MOTORCYCLE';
-
-export type AuctionType = 'JUDICIAL' | 'EXTRAJUDICIAL' | 'BANK' | 'INSURANCE' | 'DEALERSHIP' | 'OTHER';
-
-export type DamageType = 'NONE' | 'LOW_DAMAGE' | 'MEDIUM_DAMAGE' | 'HIGH_DAMAGE' | 'FLOOD' | 'OTHER';
 
 export type VehicleStatus = 'ANALYZING' | 'REJECTED' | 'PURCHASED' | 'SOLD';
 
@@ -226,11 +229,17 @@ export class Vehicles {
   }
 
   markAsPurchased(vehicleId: string, payload: PurchaseVehicleRequest): Observable<Vehicle> {
-    return this.http.patch<Vehicle>(buildApiUrl(this.apiUrl, `/vehicles/${vehicleId}/purchase`), payload);
+    return this.http.patch<Vehicle>(
+      buildApiUrl(this.apiUrl, `/vehicles/${vehicleId}/purchase`),
+      payload,
+    );
   }
 
   markAsSold(vehicleId: string, payload: SellVehicleRequest): Observable<Vehicle> {
-    return this.http.patch<Vehicle>(buildApiUrl(this.apiUrl, `/vehicles/${vehicleId}/sale`), payload);
+    return this.http.patch<Vehicle>(
+      buildApiUrl(this.apiUrl, `/vehicles/${vehicleId}/sale`),
+      payload,
+    );
   }
 
   getFinancialSummary(vehicleId: string): Observable<VehicleFinancialSummary> {
@@ -247,23 +256,42 @@ export class Vehicles {
     const formData = new FormData();
     files.forEach((file) => formData.append('files', file));
 
-    return this.http.post<VehicleImage[]>(buildApiUrl(this.apiUrl, `/vehicles/${vehicleId}/images`), formData);
+    return this.http.post<VehicleImage[]>(
+      buildApiUrl(this.apiUrl, `/vehicles/${vehicleId}/images`),
+      formData,
+    );
   }
 
   deleteImage(vehicleId: string, imageId: string): Observable<void> {
-    return this.http.delete<void>(buildApiUrl(this.apiUrl, `/vehicles/${vehicleId}/images/${imageId}`));
+    return this.http.delete<void>(
+      buildApiUrl(this.apiUrl, `/vehicles/${vehicleId}/images/${imageId}`),
+    );
   }
 
-  createEvaluation(vehicleId: string, payload: VehicleEvaluationRequest): Observable<VehicleEvaluation> {
-    return this.http.post<VehicleEvaluation>(buildApiUrl(this.apiUrl, `/vehicles/${vehicleId}/evaluation`), payload);
+  createEvaluation(
+    vehicleId: string,
+    payload: VehicleEvaluationRequest,
+  ): Observable<VehicleEvaluation> {
+    return this.http.post<VehicleEvaluation>(
+      buildApiUrl(this.apiUrl, `/vehicles/${vehicleId}/evaluation`),
+      payload,
+    );
   }
 
   getEvaluation(vehicleId: string): Observable<VehicleEvaluation> {
-    return this.http.get<VehicleEvaluation>(buildApiUrl(this.apiUrl, `/vehicles/${vehicleId}/evaluation`));
+    return this.http.get<VehicleEvaluation>(
+      buildApiUrl(this.apiUrl, `/vehicles/${vehicleId}/evaluation`),
+    );
   }
 
-  updateEvaluation(vehicleId: string, payload: VehicleEvaluationRequest): Observable<VehicleEvaluation> {
-    return this.http.patch<VehicleEvaluation>(buildApiUrl(this.apiUrl, `/vehicles/${vehicleId}/evaluation`), payload);
+  updateEvaluation(
+    vehicleId: string,
+    payload: VehicleEvaluationRequest,
+  ): Observable<VehicleEvaluation> {
+    return this.http.patch<VehicleEvaluation>(
+      buildApiUrl(this.apiUrl, `/vehicles/${vehicleId}/evaluation`),
+      payload,
+    );
   }
 
   deleteEvaluation(vehicleId: string): Observable<void> {
@@ -282,16 +310,24 @@ export class Vehicles {
     payload: UpdateEvaluationChecklistItemRequest,
   ): Observable<EvaluationChecklistItem> {
     return this.http.patch<EvaluationChecklistItem>(
-      buildApiUrl(this.apiUrl, `/vehicles/${vehicleId}/evaluation/checklist-items/${checklistItemId}`),
+      buildApiUrl(
+        this.apiUrl,
+        `/vehicles/${vehicleId}/evaluation/checklist-items/${checklistItemId}`,
+      ),
       payload,
     );
   }
 
   getEvaluationExpenses(vehicleId: string): Observable<EvaluationExpense[]> {
-    return this.http.get<EvaluationExpense[]>(buildApiUrl(this.apiUrl, `/vehicles/${vehicleId}/evaluation/expenses`));
+    return this.http.get<EvaluationExpense[]>(
+      buildApiUrl(this.apiUrl, `/vehicles/${vehicleId}/evaluation/expenses`),
+    );
   }
 
-  createEvaluationExpense(vehicleId: string, payload: EvaluationExpenseRequest): Observable<EvaluationExpense> {
+  createEvaluationExpense(
+    vehicleId: string,
+    payload: EvaluationExpenseRequest,
+  ): Observable<EvaluationExpense> {
     return this.http.post<EvaluationExpense>(
       buildApiUrl(this.apiUrl, `/vehicles/${vehicleId}/evaluation/expenses`),
       payload,
@@ -310,6 +346,8 @@ export class Vehicles {
   }
 
   deleteEvaluationExpense(vehicleId: string, expenseId: string): Observable<void> {
-    return this.http.delete<void>(buildApiUrl(this.apiUrl, `/vehicles/${vehicleId}/evaluation/expenses/${expenseId}`));
+    return this.http.delete<void>(
+      buildApiUrl(this.apiUrl, `/vehicles/${vehicleId}/evaluation/expenses/${expenseId}`),
+    );
   }
 }

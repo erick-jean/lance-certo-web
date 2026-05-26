@@ -4,6 +4,7 @@ import { Injectable, inject } from '@angular/core';
 import { buildApiUrl, normalizeApiBaseUrl } from '../utils/api';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import { VehicleFipeType } from '../types/vehicle-options.type';
 
 export interface BrandsListResponse {
   code: string;
@@ -20,7 +21,7 @@ export interface YearsListResponse {
   name: string;
 }
 
-export type VehicleType = 'cars' | 'motorcycles' | 'trucks';
+
 
 export interface FipeVehicleInfoResponse {
   brand?: string;
@@ -44,7 +45,7 @@ export class FipeService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = normalizeApiBaseUrl(environment.apiUrl);
 
-  getBrands(vehicleType: VehicleType, reference?: number): Observable<BrandsListResponse[]> {
+  getBrands(vehicleType: VehicleFipeType, reference?: number): Observable<BrandsListResponse[]> {
     let params = new HttpParams();
 
     if (reference) {
@@ -58,7 +59,7 @@ export class FipeService {
   }
 
   getModels(
-    vehicleType: VehicleType,
+    vehicleType: VehicleFipeType,
     brandId: string | number,
     reference?: number,
   ): Observable<ModelsListResponse[]> {
@@ -75,7 +76,7 @@ export class FipeService {
   }
 
   getYears(
-    vehicleType: VehicleType,
+    vehicleType: VehicleFipeType,
     brandId: string | number,
     modelId: string | number,
     reference?: number,
@@ -93,7 +94,7 @@ export class FipeService {
   }
 
   getVehicleInfo(
-    vehicleType: VehicleType,
+    vehicleType: VehicleFipeType,
     brandId: string | number,
     modelId: string | number,
     yearId: string,
