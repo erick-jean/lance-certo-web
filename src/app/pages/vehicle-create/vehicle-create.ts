@@ -1,8 +1,16 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { safeImageUrl } from '../vehicles/vehicle-labels';
+import {
+  AuctionType,
+  CreateVehicleRequest,
+  DamageType,
+  FuelType,
+  TransmissionType,
+  Vehicles as VehiclesService,
+} from '../../core/services/vehicles';
 import {
   BrandsListResponse,
   FipeVehicleInfoResponse,
@@ -28,6 +36,8 @@ type StaticDropdownId = 'fuel' | 'transmission' | 'auctionType' | 'status' | 'da
 })
 export class VehicleCreate {
   private readonly fipeService = inject(FipeService);
+  private readonly vehiclesService = inject(VehiclesService);
+  private readonly router = inject(Router);
 
   protected readonly vehicleType = signal<VehicleType | ''>('');
   protected readonly vehicleTypeDropdownOpen = signal(false);
@@ -52,13 +62,15 @@ export class VehicleCreate {
   protected readonly fipeVehicleInfo = signal<FipeVehicleInfoResponse | null>(null);
   protected readonly fipeVehicleInfoLoading = signal(false);
   protected readonly fipeVehicleInfoError = signal('');
+  protected readonly submitLoading = signal(false);
+  protected readonly submitError = signal('');
   protected readonly staticDropdownOpen = signal<StaticDropdownId | null>(null);
   protected readonly staticDropdownValues = signal<Record<StaticDropdownId, string>>({
     fuel: '',
     transmission: '',
     auctionType: '',
-    status: 'in-review',
-    damage: 'none',
+    status: 'ANALYZING',
+    damage: 'NONE',
   });
   protected readonly vehicleTypeOptions: Array<{ label: string; value: VehicleType | '' }> = [
     { label: 'Selecionar', value: '' },
@@ -70,33 +82,40 @@ export class VehicleCreate {
   protected readonly staticDropdownOptions: Record<StaticDropdownId, SelectOption[]> = {
     fuel: [
       { label: 'Selecionar', value: '' },
-      { label: 'Flex', value: 'flex' },
-      { label: 'Gasolina', value: 'gasoline' },
-      { label: 'Diesel', value: 'diesel' },
-      { label: 'Elétrico', value: 'electric' },
-      { label: 'Híbrido', value: 'hybrid' },
+      { label: 'Flex', value: 'FLEX' },
+      { label: 'Gasolina', value: 'GASOLINE' },
+      { label: 'Diesel', value: 'DIESEL' },
+      { label: 'Eletrico', value: 'ELECTRIC' },
+      { label: 'Hibrido', value: 'HYBRID' },
     ],
     transmission: [
       { label: 'Selecionar', value: '' },
-      { label: 'Manual', value: 'manual' },
-      { label: 'Automático', value: 'automatic' },
+      { label: 'Manual', value: 'MANUAL' },
+      { label: 'Automatico', value: 'AUTOMATIC' },
+      { label: 'CVT', value: 'CVT' },
     ],
     auctionType: [
       { label: 'Selecionar', value: '' },
-      { label: 'Online', value: 'online' },
-      { label: 'Presencial', value: 'in-person' },
-      { label: 'Híbrido', value: 'hybrid' },
+      { label: 'Judicial', value: 'JUDICIAL' },
+      { label: 'Extrajudicial', value: 'EXTRAJUDICIAL' },
+      { label: 'Banco', value: 'BANK' },
+      { label: 'Seguradora', value: 'INSURANCE' },
+      { label: 'Concessionaria', value: 'DEALERSHIP' },
+      { label: 'Outro', value: 'OTHER' },
     ],
     status: [
-      { label: 'Em análise', value: 'in-review' },
-      { label: 'Arrematado', value: 'won' },
-      { label: 'Vendido', value: 'sold' },
+      { label: 'Em analise', value: 'ANALYZING' },
+      { label: 'Rejeitado', value: 'REJECTED' },
+      { label: 'Arrematado', value: 'PURCHASED' },
+      { label: 'Vendido', value: 'SOLD' },
     ],
     damage: [
-      { label: 'Sem avaria', value: 'none' },
-      { label: 'Avaria leve', value: 'light' },
-      { label: 'Avaria média', value: 'medium' },
-      { label: 'Avaria grave', value: 'severe' },
+      { label: 'Sem avaria', value: 'NONE' },
+      { label: 'Avaria leve', value: 'LOW_DAMAGE' },
+      { label: 'Avaria media', value: 'MEDIUM_DAMAGE' },
+      { label: 'Avaria grave', value: 'HIGH_DAMAGE' },
+      { label: 'Alagamento', value: 'FLOOD' },
+      { label: 'Outra', value: 'OTHER' },
     ],
   };
 
@@ -301,6 +320,67 @@ export class VehicleCreate {
     );
   }
 
+  protected submitVehicle(event: SubmitEvent): void {
+    event.preventDefault();
+    this.submitError.set('');
+
+    if (this.vehicleType() === 'trucks') {
+      this.submitError.set('A API de veículos ainda não aceita caminhão. Selecione carro ou moto.');
+      return;
+    }
+
+    const form = event.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const vehicleType = this.vehicleType();
+
+    if (!vehicleType) {
+      this.submitError.set('Selecione o tipo de veículo.');
+      return;
+    }
+
+    const payload = this.removeEmptyFields({
+      type: vehicleType === 'motorcycles' ? 'MOTORCYCLE' : 'CAR',
+      plate: this.getFormText(formData, 'plate'),
+      brand: this.selectedBrand()?.name,
+      model: this.selectedModel()?.name,
+      yearManufacture: this.getNumber(formData, 'yearManufacture') ?? this.extractYearFromSelectedFipeYear(),
+      yearModel: this.getNumber(formData, 'yearModel') ?? this.extractYearFromSelectedFipeYear(),
+      color: this.getFormText(formData, 'color'),
+      fuelType: this.getStaticValue<FuelType>('fuel'),
+      transmission: this.getStaticValue<TransmissionType>('transmission'),
+      mileage: this.getNumber(formData, 'mileage'),
+      fipeCode: this.fipeCode(),
+      fipeValue: this.parseCurrency(this.fipeValue()),
+      marketValue: this.getCurrency(formData, 'marketValue'),
+      auctioneer: this.getFormText(formData, 'auctioneer'),
+      auctionType: this.getStaticValue<AuctionType>('auctionType'),
+      sourceUrl: this.getFormText(formData, 'sourceUrl'),
+      eventDate: this.getDateTime(formData, 'eventDate'),
+      city: this.getFormText(formData, 'city'),
+      state: this.getFormText(formData, 'state')?.toUpperCase(),
+      yardAddress: this.getFormText(formData, 'yardAddress'),
+      auctionInitialBid: this.getCurrency(formData, 'auctionInitialBid'),
+      auctionCurrentBid: this.getCurrency(formData, 'auctionCurrentBid'),
+      damageType: this.getStaticValue<DamageType>('damage') ?? 'NONE',
+      status: this.getStaticValue<'ANALYZING' | 'REJECTED' | 'PURCHASED' | 'SOLD'>('status') ?? 'ANALYZING',
+      notes: this.getFormText(formData, 'notes'),
+    } satisfies CreateVehicleRequest);
+
+    this.submitLoading.set(true);
+
+    this.vehiclesService.createVehicle(payload).subscribe({
+      next: (vehicle) => {
+        this.submitLoading.set(false);
+        void this.router.navigate(['/veiculos', vehicle.id]);
+      },
+      error: (error) => {
+        console.error('Erro ao cadastrar veículo', error);
+        this.submitLoading.set(false);
+        this.submitError.set('Não foi possível cadastrar o veículo agora.');
+      },
+    });
+  }
+
   private getBrands(vehicleType: VehicleType): void {
     this.brandsLoading.set(true);
     this.brandsError.set('');
@@ -430,6 +510,58 @@ export class VehicleCreate {
     }
 
     return '';
+  }
+
+  private getStaticValue<T extends string>(dropdownId: StaticDropdownId): T | undefined {
+    const value = this.staticDropdownValues()[dropdownId];
+    return value ? (value as T) : undefined;
+  }
+
+  private getFormText(formData: FormData, key: string): string | undefined {
+    const value = String(formData.get(key) ?? '').trim();
+    return value || undefined;
+  }
+
+  private getNumber(formData: FormData, key: string): number | undefined {
+    const value = this.getFormText(formData, key);
+    if (!value) return undefined;
+
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : undefined;
+  }
+
+  private getCurrency(formData: FormData, key: string): number | undefined {
+    return this.parseCurrency(this.getFormText(formData, key));
+  }
+
+  private parseCurrency(value?: string): number | undefined {
+    if (!value) return undefined;
+
+    const normalized = value
+      .replace(/[^\d,.-]/g, '')
+      .replace(/\./g, '')
+      .replace(',', '.');
+    const parsed = Number(normalized);
+
+    return Number.isFinite(parsed) ? parsed : undefined;
+  }
+
+  private getDateTime(formData: FormData, key: string): string | undefined {
+    const value = this.getFormText(formData, key);
+    return value ? new Date(`${value}T00:00:00`).toISOString() : undefined;
+  }
+
+  private extractYearFromSelectedFipeYear(): number | undefined {
+    const year = this.selectedYear()?.code.split('-')[0];
+    const parsed = Number(year);
+
+    return Number.isFinite(parsed) ? parsed : undefined;
+  }
+
+  private removeEmptyFields<T extends Record<string, unknown>>(payload: T): T {
+    return Object.fromEntries(
+      Object.entries(payload).filter(([, value]) => value !== undefined && value !== null && value !== ''),
+    ) as T;
   }
 
   private normalizeText(value: string): string {

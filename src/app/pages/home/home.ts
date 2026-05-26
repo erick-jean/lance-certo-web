@@ -142,15 +142,15 @@ export class Home {
             .filter((vehicle) => allowedStatus.includes(vehicle.status))
             .map((vehicle) => ({
               id: vehicle.id,
-              name: `${vehicle.brand} ${vehicle.model}`,
-              year: `${vehicle.yearManufacture}/${vehicle.yearModel}`,
-              plate: formatPlate(vehicle.plate),
+              name: [vehicle.brand, vehicle.model].filter(Boolean).join(' ') || 'Veiculo sem nome',
+              year: [vehicle.yearManufacture, vehicle.yearModel].filter(Boolean).join('/') || '-',
+              plate: formatPlate(vehicle.plate ?? ''),
               status: vehicle.status,
               date:
                 vehicle.status === 'ANALYZING'
-                  ? formatDate(vehicle.createdAt)
-                  : formatDate(vehicle.purchasedAt || vehicle.createdAt),
-              link: `/veiculos/${vehicle.brand.toLowerCase()}-${vehicle.model.toLowerCase()}`,
+                  ? formatDate(vehicle.createdAt ?? new Date())
+                  : formatDate(vehicle.purchasedAt || vehicle.createdAt || new Date()),
+              link: `/veiculos/${vehicle.id}`,
             }));
 
           this.recentVehicles.set(vehicles);

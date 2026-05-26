@@ -37,7 +37,6 @@
         <option value="ALL">Tipo</option>
         <option value="CAR">Carro</option>
         <option value="MOTORCYCLE">Moto</option>
-        <option value="TRUCK">Caminhão</option>
       </select>
       <mat-icon aria-hidden="true">expand_more</mat-icon>
     </label>
@@ -45,7 +44,7 @@
     <label class="filter-select">
       <select [ngModel]="locationFilter()" (ngModelChange)="locationFilter.set($event)" aria-label="Filtrar por localização">
         <option value="ALL">Localização</option>
-        @for (location of locations; track location) {
+        @for (location of locations(); track location) {
           <option [value]="location">{{ location }}</option>
         }
       </select>
@@ -63,7 +62,21 @@
     </div>
   </section>
 
-  <section class="vehicles-grid" [class.list-view]="viewMode() === 'list'" aria-label="Lista de veículos">
+  @if (loading()) {
+    <div class="vehicles-empty">
+      <mat-icon aria-hidden="true">hourglass_empty</mat-icon>
+      <h2>Carregando veículos</h2>
+      <p>Buscando seus veículos cadastrados.</p>
+    </div>
+  } @else if (error()) {
+    <div class="vehicles-empty">
+      <mat-icon aria-hidden="true">error_outline</mat-icon>
+      <h2>Não foi possível carregar</h2>
+      <p>{{ error() }}</p>
+      <button class="create-button" type="button" (click)="loadVehicles()">Tentar novamente</button>
+    </div>
+  } @else {
+    <section class="vehicles-grid" [class.list-view]="viewMode() === 'list'" aria-label="Lista de veículos">
     @for (vehicle of filteredVehicles(); track vehicle.id) {
       <a class="vehicle-card" [routerLink]="['/veiculos', vehicle.id]">
         <div class="vehicle-photo">
@@ -110,12 +123,18 @@
           <div class="vehicle-values">
             <div>
               <span>FIPE</span>
-              <strong>{{ vehicle.fipeValue }}</strong>
+              <strong>{{ formatCurrency(vehicle.fipeValue) }}</strong>
             </div>
 
             <div class="highlight-value" [class.success-value]="vehicle.status === 'PURCHASED'">
               <span>{{ vehicle.status === 'PURCHASED' ? 'Lucro estimado' : 'Lance sugerido' }}</span>
-              <strong>{{ vehicle.status === 'PURCHASED' ? vehicle.evaluation?.estimatedProfit : vehicle.evaluation?.suggestedBid }}</strong>
+              <strong>
+                {{
+                  vehicle.status === 'PURCHASED'
+                    ? formatCurrency(vehicle.evaluation?.estimatedProfit)
+                    : formatCurrency(vehicle.evaluation?.maxRecommendedBid)
+                }}
+              </strong>
             </div>
           </div>
         </div>
@@ -127,5 +146,6 @@
         <p>Ajuste a busca ou limpe os filtros para ver mais resultados.</p>
       </div>
     }
-  </section>
+    </section>
+  }
 </section>

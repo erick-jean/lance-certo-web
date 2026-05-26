@@ -7,8 +7,8 @@
 
     <div class="topbar-actions">
       <button class="secondary-action" type="button">Salvar rascunho</button>
-      <button class="primary-action" type="submit" form="vehicle-create-form">
-        Cadastrar veículo
+      <button class="primary-action" type="submit" form="vehicle-create-form" [disabled]="submitLoading()">
+        {{ submitLoading() ? 'Salvando...' : 'Cadastrar veículo' }}
       </button>
     </div>
   </header>
@@ -21,7 +21,7 @@
     </div>
   </header>
 
-  <form id="vehicle-create-form" class="create-layout">
+  <form id="vehicle-create-form" class="create-layout" (submit)="submitVehicle($event)">
     <div class="form-stack">
       <section class="form-card">
         <header>
@@ -267,22 +267,22 @@
           
           <label>
             <span>Ano modelo</span>
-            <input type="number" placeholder="2021" />
+            <input type="number" name="yearModel" placeholder="2021" />
           </label>
 
           <label>
             <span>Placa</span>
-            <input type="text" placeholder="ABC-1234" />
+            <input type="text" name="plate" placeholder="ABC-1234" />
           </label>
 
           <label>
             <span>Cor</span>
-            <input type="text" placeholder="Ex: Branco" />
+            <input type="text" name="color" placeholder="Ex: Branco" />
           </label>
 
           <label>
             <span>Quilometragem</span>
-            <input type="number" placeholder="45200" />
+            <input type="number" name="mileage" placeholder="45200" />
           </label>
 
           <div class="search-select-field">
@@ -400,7 +400,7 @@
 
           <label>
             <span>Valor de mercado</span>
-            <input type="text" inputmode="decimal" placeholder="R$ 121.000" />
+            <input type="text" name="marketValue" inputmode="decimal" placeholder="R$ 121.000" />
           </label>
         </div>
 
@@ -423,7 +423,7 @@
         <div class="form-grid">
           <label>
             <span>Leiloeiro</span>
-            <input type="text" placeholder="Ex: Copart Brasil" />
+            <input type="text" name="auctioneer" placeholder="Ex: Copart Brasil" />
           </label>
 
           <div class="search-select-field">
@@ -468,7 +468,7 @@
 
           <label>
             <span>Data do evento</span>
-            <input type="date" />
+            <input type="date" name="eventDate" />
           </label>
 
           <div class="search-select-field">
@@ -513,32 +513,32 @@
 
           <label>
             <span>Cidade</span>
-            <input type="text" placeholder="São Paulo" />
+            <input type="text" name="city" placeholder="São Paulo" />
           </label>
 
           <label>
             <span>UF</span>
-            <input type="text" maxlength="2" placeholder="SP" />
+            <input type="text" name="state" maxlength="2" placeholder="SP" />
           </label>
 
           <label>
             <span>Lance inicial</span>
-            <input type="text" inputmode="decimal" placeholder="R$ 68.000" />
+            <input type="text" name="auctionInitialBid" inputmode="decimal" placeholder="R$ 68.000" />
           </label>
 
           <label>
             <span>Lance atual</span>
-            <input type="text" inputmode="decimal" placeholder="R$ 74.000" />
+            <input type="text" name="auctionCurrentBid" inputmode="decimal" placeholder="R$ 74.000" />
           </label>
 
           <label class="wide-field">
             <span>Endereço do pátio</span>
-            <input type="text" placeholder="Estrada Municipal, 450 - Itaquaquecetuba, SP" />
+            <input type="text" name="yardAddress" placeholder="Estrada Municipal, 450 - Itaquaquecetuba, SP" />
           </label>
 
           <label class="wide-field">
             <span>URL de origem</span>
-            <input type="url" placeholder="https://www.leilao.com.br/lote/123" />
+            <input type="url" name="sourceUrl" placeholder="https://www.leilao.com.br/lote/123" />
           </label>
         </div>
       </section>
@@ -611,6 +611,7 @@
           <label class="wide-field">
             <span>Observações</span>
             <textarea
+              name="notes"
               rows="4"
               placeholder="Perfil conservador, bom potencial para revenda se o lance ficar abaixo do recomendado."
             ></textarea>
@@ -640,9 +641,12 @@
       </section>
 
       <footer class="form-footer-actions">
+        @if (submitError()) {
+          <p class="submit-error">{{ submitError() }}</p>
+        }
         <button class="secondary-action" type="button">Salvar rascunho</button>
-        <button class="primary-action" type="submit" form="vehicle-create-form">
-          Cadastrar veículo
+        <button class="primary-action" type="submit" form="vehicle-create-form" [disabled]="submitLoading()">
+          {{ submitLoading() ? 'Salvando...' : 'Cadastrar veículo' }}
         </button>
       </footer>
     </div>

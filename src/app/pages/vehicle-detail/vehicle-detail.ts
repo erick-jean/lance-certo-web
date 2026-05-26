@@ -1,20 +1,21 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { StatusBadge, StatusBadgeTone } from '../../shared/components/status-badge/status-badge';
 import {
+  DamageType,
   EvaluationExpense,
   AuctionType,
   ExpenseCategory,
   ExpenseSource,
   FuelType,
   TransmissionType,
-  VehicleDamageType,
   VehicleStatus,
   VehicleType,
-  vehicles,
-} from '../vehicles/vehicles-data';
+  Vehicle,
+  Vehicles as VehiclesService,
+} from '../../core/services/vehicles';
 import {
   AUCTION_TYPE_LABEL,
   EXPENSE_CATEGORY_LABEL,
@@ -33,6 +34,14 @@ import {
 
 type DetailTab = 'data' | 'evaluation' | 'checklist' | 'report';
 
+const emptyVehicle: Vehicle = {
+  id: '',
+  userId: '',
+  type: 'CAR',
+  damageType: 'NONE',
+  status: 'ANALYZING',
+};
+
 @Component({
   selector: 'app-vehicle-detail',
   standalone: true,
@@ -40,9 +49,13 @@ type DetailTab = 'data' | 'evaluation' | 'checklist' | 'report';
   styleUrl: './vehicle-detail.scss',
   imports: [MatIconModule, RouterLink, FormsModule, StatusBadge],
 })
-export class VehicleDetail {
+export class VehicleDetail implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly vehiclesService = inject(VehiclesService);
 
+  protected readonly loadedVehicle = signal<Vehicle | null>(null);
+  protected readonly loading = signal(true);
+  protected readonly loadError = signal('');
   protected readonly activeImageIndex = signal(0);
   protected readonly activeTab = signal<DetailTab>('data');
   protected readonly expenseSearch = signal('');
@@ -57,14 +70,11 @@ export class VehicleDetail {
   protected readonly expenseNotes = signal('');
   protected readonly expenseIsRequired = signal(false);
 
-  protected readonly vehicle = computed(() => {
-    const id = this.route.snapshot.paramMap.get('id');
-    return vehicles.find((vehicle) => vehicle.id === id) ?? vehicles[0];
-  });
+  protected readonly vehicle = computed(() => this.loadedVehicle() ?? emptyVehicle);
 
   protected readonly imageUrls = computed(() =>
-    this.vehicle()
-      .images.map((image) => safeImageUrl(image.url))
+    (this.vehicle().images ?? [])
+      .map((image) => safeImageUrl(image.url))
       .filter(Boolean),
   );
   protected readonly activeImage = computed(() => this.imageUrls()[this.activeImageIndex()] ?? '');
@@ -92,6 +102,38 @@ export class VehicleDetail {
     this.isEditingExpense() ? 'Atualize os dados do investimento previsto.' : 'Preencha os dados do investimento realizado.',
   );
 
+  ngOnInit(): void {
+    this.loadVehicle();
+  }
+
+  protected loadVehicle(): void {
+    const vehicleId = this.route.snapshot.paramMap.get('id');
+
+    if (!vehicleId) {
+      this.loading.set(false);
+      this.loadError.set('Veiculo nao encontrado.');
+      return;
+    }
+
+    this.loading.set(true);
+    this.loadError.set('');
+
+    this.vehiclesService.getVehicle(vehicleId).subscribe({
+      next: (vehicle) => {
+        this.loadedVehicle.set(vehicle);
+        this.loading.set(false);
+        this.loadVehicleImages(vehicle.id);
+        this.loadVehicleEvaluation(vehicle.id);
+      },
+      error: (error) => {
+        console.error('Erro ao carregar veiculo', error);
+        this.loadedVehicle.set(null);
+        this.loading.set(false);
+        this.loadError.set('Nao foi possivel carregar os dados do veiculo.');
+      },
+    });
+  }
+
   protected vehicleTitle(): string {
     return vehicleTitle(this.vehicle());
   }
@@ -104,13 +146,13 @@ export class VehicleDetail {
     return VEHICLE_STATUS_LABEL[status];
   }
 
-  protected fuelTypeLabel(fuelType?: FuelType): string {
+  protected fuelTypeLabel(fuelType?: FuelType | null): string {
     if (!fuelType) return '-';
 
     return FUEL_TYPE_LABEL[fuelType];
   }
 
-  protected transmissionLabel(transmission?: TransmissionType): string {
+  protected transmissionLabel(transmission?: TransmissionType | null): string {
     if (!transmission) return '-';
 
     return TRANSMISSION_LABEL[transmission];
@@ -120,13 +162,13 @@ export class VehicleDetail {
     return VEHICLE_TYPE_LABEL[type];
   }
 
-  protected auctionTypeLabel(auctionType?: AuctionType): string {
+  protected auctionTypeLabel(auctionType?: AuctionType | null): string {
     if (!auctionType) return '-';
 
     return AUCTION_TYPE_LABEL[auctionType];
   }
 
-  protected damageLabel(damageType: VehicleDamageType): string {
+  protected damageLabel(damageType: DamageType): string {
     return VEHICLE_DAMAGE_LABEL[damageType];
   }
 
@@ -134,8 +176,8 @@ export class VehicleDetail {
     return status === 'ANALYZING' ? 'warning' : 'success';
   }
 
-  protected damageTone(damageType: VehicleDamageType): StatusBadgeTone {
-    if (damageType === 'MEDIUM' || damageType === 'HEAVY') return 'risk-medium';
+  protected damageTone(damageType: DamageType): StatusBadgeTone {
+    if (damageType === 'MEDIUM_DAMAGE' || damageType === 'HIGH_DAMAGE' || damageType === 'FLOOD') return 'risk-medium';
 
     return 'risk-low';
   }
@@ -152,11 +194,11 @@ export class VehicleDetail {
     return EXPENSE_SOURCE_LABEL[source];
   }
 
-  protected formatDate(date?: string): string {
+  protected formatDate(date?: string | null): string {
     return formatDate(date);
   }
 
-  protected formatMileage(mileage?: number): string {
+  protected formatMileage(mileage?: number | null): string {
     return formatMileage(mileage);
   }
 
@@ -182,7 +224,7 @@ export class VehicleDetail {
     this.selectedExpenseId.set(expense.id);
     this.expenseName.set(expense.name);
     this.expenseCategory.set(expense.category);
-    this.expenseAmount.set(expense.amount);
+    this.expenseAmount.set(String(expense.amount));
     this.expenseNotes.set(expense.notes ?? '');
     this.expenseIsRequired.set(expense.isRequired);
     this.isExpenseDrawerOpen.set(true);
@@ -201,6 +243,7 @@ export class VehicleDetail {
 
     const now = new Date().toISOString();
     const selectedExpenseId = this.selectedExpenseId();
+    const expenses = evaluation.expenses ?? [];
     const expenseData = {
       category: this.expenseCategory() || 'OTHER',
       name: this.expenseName() || 'Novo gasto',
@@ -211,13 +254,14 @@ export class VehicleDetail {
     };
 
     if (selectedExpenseId) {
-      const expense = evaluation.expenses.find((item) => item.id === selectedExpenseId);
+      const expense = expenses.find((item) => item.id === selectedExpenseId);
 
       if (expense) {
         Object.assign(expense, expenseData);
       }
     } else {
-      evaluation.expenses.unshift({
+      evaluation.expenses = expenses;
+      expenses.unshift({
         id: `expense-${Date.now()}`,
         evaluationId: `evaluation-${this.vehicle().id}`,
         source: 'USER',
@@ -238,7 +282,7 @@ export class VehicleDetail {
       return;
     }
 
-    evaluation.expenses = evaluation.expenses.filter((expense) => expense.id !== selectedExpenseId);
+    evaluation.expenses = (evaluation.expenses ?? []).filter((expense) => expense.id !== selectedExpenseId);
     this.expenseVersion.update((version) => version + 1);
     this.closeExpenseDrawer();
   }
@@ -261,10 +305,45 @@ export class VehicleDetail {
     this.activeImageIndex.update((index) => (index + 1) % imagesCount);
   }
 
-  private formatExpenseAmount(amount: string): string {
-    const cleanAmount = amount.trim();
-    if (!cleanAmount) return 'R$ 0,00';
+  private loadVehicleImages(vehicleId: string): void {
+    this.vehiclesService.getImages(vehicleId).subscribe({
+      next: (images) => {
+        this.loadedVehicle.update((vehicle) => (vehicle ? { ...vehicle, images } : vehicle));
+      },
+      error: () => {
+        this.loadedVehicle.update((vehicle) => (vehicle ? { ...vehicle, images: [] } : vehicle));
+      },
+    });
+  }
 
-    return cleanAmount.startsWith('R$') ? cleanAmount : `R$ ${cleanAmount}`;
+  private loadVehicleEvaluation(vehicleId: string): void {
+    this.vehiclesService.getEvaluation(vehicleId).subscribe({
+      next: (evaluation) => {
+        this.loadedVehicle.update((vehicle) =>
+          vehicle
+            ? {
+                ...vehicle,
+                evaluation: {
+                  ...evaluation,
+                  suggestedBid: evaluation.maxRecommendedBid,
+                  estimatedExpenses: evaluation.estimatedFinalCost,
+                  expenses: evaluation.evaluationExpenses ?? [],
+                },
+              }
+            : vehicle,
+        );
+      },
+      error: () => {
+        this.loadedVehicle.update((vehicle) => (vehicle ? { ...vehicle, evaluation: null } : vehicle));
+      },
+    });
+  }
+
+  private formatExpenseAmount(amount: string): number {
+    const cleanAmount = amount.trim();
+    if (!cleanAmount) return 0;
+
+    const parsed = Number(cleanAmount.replace(/[^\d,.-]/g, '').replace(/\./g, '').replace(',', '.'));
+    return Number.isFinite(parsed) ? parsed : 0;
   }
 }
