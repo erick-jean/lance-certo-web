@@ -87,7 +87,14 @@
         <button class="link-button" type="button">Esqueci minha senha</button>
       </div>
 
-      <button class="submit-button" type="submit">Entrar</button>
+      <button class="submit-button" type="submit" [disabled]="loading()">
+        @if (loading()) {
+          <span class="button-spinner" aria-hidden="true"></span>
+          Entrando...
+        } @else {
+          Entrar
+        }
+      </button>
 
       <p class="signup-text">
         Ainda não tem uma conta? <a routerLink="/criar-conta">Criar conta</a>

@@ -1,6 +1,6 @@
 .vehicles-page {
   display: grid;
-  gap: 1.75rem;
+  gap: var(--space-lg);
   max-width: 86rem;
   margin: 0 auto;
 }
@@ -49,19 +49,20 @@
   grid-template-columns: minmax(18rem, 1.8fr) repeat(3, minmax(10rem, 0.9fr)) auto;
   align-items: center;
   gap: 1rem;
-  min-height: 4.75rem;
-  border: 1px solid #c7ced9;
+  min-height: 4.5rem;
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: #ffffff;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-xs);
   padding: 1rem;
 }
 
 .search-field,
 .filter-select {
-  min-height: 2.625rem;
-  border: 1px solid #c7ced9;
-  border-radius: var(--radius-sm);
-  background: #f8fafc;
+  min-height: var(--control-height);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-subtle);
 }
 
 .search-field {
@@ -128,7 +129,7 @@
   display: flex;
   align-items: center;
   gap: 0.875rem;
-  border-left: 1px solid #c7ced9;
+  border-left: 1px solid var(--color-border);
   padding-left: 1.375rem;
 }
 
@@ -138,13 +139,14 @@
   height: 2.625rem;
   place-items: center;
   border: 0;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   background: transparent;
   color: #1d2939;
   cursor: pointer;
 
   &.active {
-    background: #e4e7ec;
+    background: var(--color-success-soft);
+    color: var(--color-action);
   }
 
   mat-icon {
@@ -155,7 +157,7 @@
 .vehicles-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.5rem;
+  gap: var(--space-md);
 
   &.list-view {
     grid-template-columns: 1fr;
@@ -210,10 +212,19 @@
 
 .vehicle-card {
   overflow: hidden;
-  border: 1px solid #c7ced9;
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: #ffffff;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-surface);
   cursor: pointer;
+  transition:
+    box-shadow var(--motion-base) ease,
+    transform var(--motion-base) var(--ease-out);
+
+  &:hover {
+    box-shadow: var(--shadow-surface-hover);
+    transform: translateY(-2px);
+  }
 }
 
 .vehicles-empty {
@@ -248,8 +259,8 @@
 
 .vehicle-photo {
   position: relative;
-  height: 12rem;
-  background: #d8dde6;
+  height: 11.5rem;
+  background: var(--color-surface-muted);
 
   img {
     width: 100%;
@@ -270,8 +281,8 @@
 
 .vehicle-body {
   display: grid;
-  gap: 1.5rem;
-  padding: 1.625rem 1.5rem 1.5rem;
+  gap: 1.25rem;
+  padding: 1.25rem;
 
   h2 {
     color: #07101d;
@@ -315,8 +326,8 @@
   align-items: end;
   justify-content: space-between;
   gap: 1rem;
-  border-top: 1px solid #e4e7ec;
-  padding-top: 1.125rem;
+  border-top: 1px solid var(--color-border);
+  padding-top: 1rem;
 
   span,
   strong {

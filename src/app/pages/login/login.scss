@@ -263,6 +263,10 @@
 }
 
 .submit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
   min-height: 2.875rem;
   border: 0;
   border-radius: var(--radius-sm);
@@ -276,6 +280,26 @@
     background: #078c67;
     box-shadow: 0 0.5rem 1rem rgb(0 122 88 / 0.18);
     transform: translateY(-1px);
+  }
+
+  &:disabled {
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+.button-spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgb(255 255 255 / 0.42);
+  border-top-color: #ffffff;
+  border-radius: 999px;
+  animation: login-spinner 720ms linear infinite;
+}
+
+@keyframes login-spinner {
+  to {
+    transform: rotate(360deg);
   }
 }
 

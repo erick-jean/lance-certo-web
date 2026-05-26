@@ -3,6 +3,13 @@
   <app-header></app-header>
 }
 
+@if (routeLoading()) {
+  <div class="route-loading" role="status" aria-live="polite">
+    <span class="route-loading__spinner" aria-hidden="true"></span>
+    <span>Carregando...</span>
+  </div>
+}
+
 <main class="app-content" [class.auth-content]="isAuthPage()">
   <router-outlet />
 </main>

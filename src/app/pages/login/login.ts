@@ -24,7 +24,7 @@ export class Login {
     this.showPassword.update((visible) => !visible);
   }
 
-  loading = false;
+  protected readonly loading = signal(false);
   errorMessage = signal('');
 
   email = '';
@@ -42,14 +42,14 @@ export class Login {
       return;
     }
 
-    this.loading = true;
+    this.loading.set(true);
     this.errorMessage.set('');
 
     this.auth
       .login(this.form.getRawValue())
       .pipe(
         finalize(() => {
-          this.loading = false;
+          this.loading.set(false);
         }),
       )
       .subscribe({

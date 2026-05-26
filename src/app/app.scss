@@ -15,6 +15,42 @@
   padding: 0;
 }
 
+.route-loading {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: 2.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.94);
+  color: var(--color-heading);
+  box-shadow: var(--shadow-surface-hover);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  padding: 0 1rem;
+  transform: translateX(-50%);
+  backdrop-filter: blur(10px);
+}
+
+.route-loading__spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-action);
+  border-radius: 999px;
+  animation: route-spinner 720ms linear infinite;
+}
+
+@keyframes route-spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (max-width: 768px) {
   .app-content {
     margin-left: 4.5rem;

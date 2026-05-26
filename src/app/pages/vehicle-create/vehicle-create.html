@@ -33,14 +33,45 @@
         </header>
 
         <div class="form-grid">
-          <label>
+          <div class="search-select-field">
             <span>Tipo de veículo</span>
-            <select [value]="vehicleType()" (change)="onVehicleTypeChange($event)">
-              <option value="">Selecionar</option>
-              <option value="cars">Carro</option>
-              <option value="motorcycles">Moto</option>
-            </select>
-          </label>
+            <div class="search-select" [class.open]="vehicleTypeDropdownOpen()">
+              <input
+                type="text"
+                [value]="vehicleTypeLabel()"
+                readonly
+                autocomplete="off"
+                (focus)="openVehicleTypeDropdown()"
+                (blur)="closeVehicleTypeDropdown()"
+                (click)="openVehicleTypeDropdown()"
+              />
+
+              <button
+                type="button"
+                aria-label="Abrir tipos de veículo"
+                (mousedown)="$event.preventDefault()"
+                (click)="openVehicleTypeDropdown()"
+              >
+                <mat-icon aria-hidden="true">expand_more</mat-icon>
+              </button>
+
+              @if (vehicleTypeDropdownOpen()) {
+                <div class="search-select__menu">
+                  @for (option of vehicleTypeOptions; track option.value) {
+                    <button
+                      type="button"
+                      class="search-select__option"
+                      [class.selected]="vehicleType() === option.value"
+                      (mousedown)="$event.preventDefault()"
+                      (click)="selectVehicleType(option.value)"
+                    >
+                      {{ option.label }}
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+          </div>
 
           <div class="search-select-field">
             <span>Marca</span>
@@ -71,14 +102,18 @@
                   @if (brandsLoading()) {
                     <div class="search-select__state">Carregando marcas...</div>
                   } @else if (brandsError()) {
-                    <div class="search-select__state search-select__state--error">{{ brandsError() }}</div>
+                    <div class="search-select__state search-select__state--error">
+                      {{ brandsError() }}
+                    </div>
                   } @else {
                     <button
                       type="button"
                       class="search-select__option"
                       [class.selected]="!selectedBrand()"
                       (mousedown)="$event.preventDefault()"
-                      (click)="brandSearch.set(''); selectedBrand.set(null); brandDropdownOpen.set(false)"
+                      (click)="
+                        brandSearch.set(''); selectedBrand.set(null); brandDropdownOpen.set(false)
+                      "
                     >
                       Selecionar
                     </button>
@@ -102,29 +137,142 @@
             </div>
           </div>
 
-          <label>
-            <span>Placa</span>
-            <input type="text" placeholder="ABC-1234" />
-          </label>
-
-          <label>
+          <div class="search-select-field">
             <span>Modelo</span>
-            <input type="text" placeholder="Ex: Civic" />
-          </label>
+            <div class="search-select" [class.open]="modelDropdownOpen()">
+              <input
+                type="text"
+                [value]="modelSearch()"
+                [disabled]="!selectedBrand() || modelsLoading()"
+                [placeholder]="modelsLoading() ? 'Carregando modelos...' : 'Selecionar'"
+                autocomplete="off"
+                (focus)="openModelDropdown()"
+                (blur)="closeModelDropdown()"
+                (input)="onModelSearch($any($event.target).value)"
+              />
 
-          <label>
-            <span>Versão</span>
-            <input type="text" placeholder="Ex: EXL" />
-          </label>
+              <button
+                type="button"
+                aria-label="Abrir modelos"
+                [disabled]="!selectedBrand() || modelsLoading()"
+                (mousedown)="$event.preventDefault()"
+                (click)="openModelDropdown()"
+              >
+                <mat-icon aria-hidden="true">expand_more</mat-icon>
+              </button>
 
-          <label>
-            <span>Ano fabricação</span>
-            <input type="number" placeholder="2020" />
-          </label>
+              @if (modelDropdownOpen()) {
+                <div class="search-select__menu">
+                  @if (modelsLoading()) {
+                    <div class="search-select__state">Carregando modelos...</div>
+                  } @else if (modelsError()) {
+                    <div class="search-select__state search-select__state--error">
+                      {{ modelsError() }}
+                    </div>
+                  } @else {
+                    <button
+                      type="button"
+                      class="search-select__option"
+                      [class.selected]="!selectedModel()"
+                      (mousedown)="$event.preventDefault()"
+                      (click)="
+                        modelSearch.set(''); selectedModel.set(null); modelDropdownOpen.set(false)
+                      "
+                    >
+                      Selecionar
+                    </button>
 
+                    @for (model of filteredModels(); track model.code) {
+                      <button
+                        type="button"
+                        class="search-select__option"
+                        [class.selected]="selectedModel()?.code === model.code"
+                        (mousedown)="$event.preventDefault()"
+                        (click)="selectModel(model)"
+                      >
+                        {{ model.name }}
+                      </button>
+                    } @empty {
+                      <div class="search-select__state">Nenhum modelo encontrado.</div>
+                    }
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="search-select-field">
+            <span>Ano FIPE</span>
+            <div class="search-select" [class.open]="yearDropdownOpen()">
+              <input
+                type="text"
+                [value]="yearSearch()"
+                [disabled]="!selectedModel() || yearsLoading()"
+                [placeholder]="yearsLoading() ? 'Carregando anos...' : 'Selecionar'"
+                autocomplete="off"
+                (focus)="openYearDropdown()"
+                (blur)="closeYearDropdown()"
+                (input)="onYearSearch($any($event.target).value)"
+              />
+
+              <button
+                type="button"
+                aria-label="Abrir anos"
+                [disabled]="!selectedModel() || yearsLoading()"
+                (mousedown)="$event.preventDefault()"
+                (click)="openYearDropdown()"
+              >
+                <mat-icon aria-hidden="true">expand_more</mat-icon>
+              </button>
+
+              @if (yearDropdownOpen()) {
+                <div class="search-select__menu">
+                  @if (yearsLoading()) {
+                    <div class="search-select__state">Carregando anos...</div>
+                  } @else if (yearsError()) {
+                    <div class="search-select__state search-select__state--error">
+                      {{ yearsError() }}
+                    </div>
+                  } @else {
+                    <button
+                      type="button"
+                      class="search-select__option"
+                      [class.selected]="!selectedYear()"
+                      (mousedown)="$event.preventDefault()"
+                      (click)="
+                        yearSearch.set(''); selectedYear.set(null); yearDropdownOpen.set(false)
+                      "
+                    >
+                      Selecionar
+                    </button>
+
+                    @for (year of filteredYears(); track year.code) {
+                      <button
+                        type="button"
+                        class="search-select__option"
+                        [class.selected]="selectedYear()?.code === year.code"
+                        (mousedown)="$event.preventDefault()"
+                        (click)="selectYear(year)"
+                      >
+                        {{ year.name }}
+                      </button>
+                    } @empty {
+                      <div class="search-select__state">Nenhum ano encontrado.</div>
+                    }
+                  }
+                </div>
+              }
+            </div>
+          </div>
+          
           <label>
             <span>Ano modelo</span>
             <input type="number" placeholder="2021" />
+          </label>
+
+          <label>
+            <span>Placa</span>
+            <input type="text" placeholder="ABC-1234" />
           </label>
 
           <label>
@@ -137,26 +285,85 @@
             <input type="number" placeholder="45200" />
           </label>
 
-          <label>
+          <div class="search-select-field">
             <span>Combustível</span>
-            <select>
-              <option value="">Selecionar</option>
-              <option>Flex</option>
-              <option>Gasolina</option>
-              <option>Diesel</option>
-              <option>Elétrico</option>
-              <option>Híbrido</option>
-            </select>
-          </label>
+            <div class="search-select" [class.open]="staticDropdownOpen() === 'fuel'">
+              <input
+                type="text"
+                [value]="staticDropdownLabel('fuel')"
+                readonly
+                autocomplete="off"
+                (focus)="openStaticDropdown('fuel')"
+                (blur)="closeStaticDropdown('fuel')"
+                (click)="openStaticDropdown('fuel')"
+              />
 
-          <label>
+              <button
+                type="button"
+                aria-label="Abrir combustíveis"
+                (mousedown)="$event.preventDefault()"
+                (click)="openStaticDropdown('fuel')"
+              >
+                <mat-icon aria-hidden="true">expand_more</mat-icon>
+              </button>
+
+              @if (staticDropdownOpen() === 'fuel') {
+                <div class="search-select__menu">
+                  @for (option of staticDropdownOptions.fuel; track option.value) {
+                    <button
+                      type="button"
+                      class="search-select__option"
+                      [class.selected]="staticDropdownValues().fuel === option.value"
+                      (mousedown)="$event.preventDefault()"
+                      (click)="selectStaticDropdownOption('fuel', option.value)"
+                    >
+                      {{ option.label }}
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="search-select-field">
             <span>Câmbio</span>
-            <select>
-              <option value="">Selecionar</option>
-              <option>Manual</option>
-              <option>Automático</option>
-            </select>
-          </label>
+            <div class="search-select" [class.open]="staticDropdownOpen() === 'transmission'">
+              <input
+                type="text"
+                [value]="staticDropdownLabel('transmission')"
+                readonly
+                autocomplete="off"
+                (focus)="openStaticDropdown('transmission')"
+                (blur)="closeStaticDropdown('transmission')"
+                (click)="openStaticDropdown('transmission')"
+              />
+
+              <button
+                type="button"
+                aria-label="Abrir câmbios"
+                (mousedown)="$event.preventDefault()"
+                (click)="openStaticDropdown('transmission')"
+              >
+                <mat-icon aria-hidden="true">expand_more</mat-icon>
+              </button>
+
+              @if (staticDropdownOpen() === 'transmission') {
+                <div class="search-select__menu">
+                  @for (option of staticDropdownOptions.transmission; track option.value) {
+                    <button
+                      type="button"
+                      class="search-select__option"
+                      [class.selected]="staticDropdownValues().transmission === option.value"
+                      (mousedown)="$event.preventDefault()"
+                      (click)="selectStaticDropdownOption('transmission', option.value)"
+                    >
+                      {{ option.label }}
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+          </div>
         </div>
       </section>
 
@@ -172,12 +379,23 @@
         <div class="form-grid three-columns">
           <label>
             <span>Código FIPE</span>
-            <input type="text" placeholder="005531-1" />
+            <input
+              type="text"
+              [value]="fipeCode()"
+              [placeholder]="fipeVehicleInfoLoading() ? 'Buscando...' : '005531-1'"
+              readonly
+            />
           </label>
 
           <label>
             <span>Valor FIPE</span>
-            <input type="text" inputmode="decimal" placeholder="R$ 125.000" />
+            <input
+              type="text"
+              inputmode="decimal"
+              [value]="fipeValue()"
+              [placeholder]="fipeVehicleInfoLoading() ? 'Buscando...' : 'R$ 125.000'"
+              readonly
+            />
           </label>
 
           <label>
@@ -185,6 +403,12 @@
             <input type="text" inputmode="decimal" placeholder="R$ 121.000" />
           </label>
         </div>
+
+        @if (fipeVehicleInfoError()) {
+          <p class="fipe-status fipe-status--error">{{ fipeVehicleInfoError() }}</p>
+        } @else if (fipeVehicleInfo()) {
+          <p class="fipe-status">Dados FIPE carregados para o ano selecionado.</p>
+        }
       </section>
 
       <section class="form-card">
@@ -202,29 +426,90 @@
             <input type="text" placeholder="Ex: Copart Brasil" />
           </label>
 
-          <label>
+          <div class="search-select-field">
             <span>Tipo de leilão</span>
-            <select>
-              <option value="">Selecionar</option>
-              <option>Online</option>
-              <option>Presencial</option>
-              <option>Híbrido</option>
-            </select>
-          </label>
+            <div class="search-select" [class.open]="staticDropdownOpen() === 'auctionType'">
+              <input
+                type="text"
+                [value]="staticDropdownLabel('auctionType')"
+                readonly
+                autocomplete="off"
+                (focus)="openStaticDropdown('auctionType')"
+                (blur)="closeStaticDropdown('auctionType')"
+                (click)="openStaticDropdown('auctionType')"
+              />
+
+              <button
+                type="button"
+                aria-label="Abrir tipos de leilão"
+                (mousedown)="$event.preventDefault()"
+                (click)="openStaticDropdown('auctionType')"
+              >
+                <mat-icon aria-hidden="true">expand_more</mat-icon>
+              </button>
+
+              @if (staticDropdownOpen() === 'auctionType') {
+                <div class="search-select__menu">
+                  @for (option of staticDropdownOptions.auctionType; track option.value) {
+                    <button
+                      type="button"
+                      class="search-select__option"
+                      [class.selected]="staticDropdownValues().auctionType === option.value"
+                      (mousedown)="$event.preventDefault()"
+                      (click)="selectStaticDropdownOption('auctionType', option.value)"
+                    >
+                      {{ option.label }}
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+          </div>
 
           <label>
             <span>Data do evento</span>
             <input type="date" />
           </label>
 
-          <label>
+          <div class="search-select-field">
             <span>Status</span>
-            <select>
-              <option>Em análise</option>
-              <option>Arrematado</option>
-              <option>Vendido</option>
-            </select>
-          </label>
+            <div class="search-select" [class.open]="staticDropdownOpen() === 'status'">
+              <input
+                type="text"
+                [value]="staticDropdownLabel('status')"
+                readonly
+                autocomplete="off"
+                (focus)="openStaticDropdown('status')"
+                (blur)="closeStaticDropdown('status')"
+                (click)="openStaticDropdown('status')"
+              />
+
+              <button
+                type="button"
+                aria-label="Abrir status"
+                (mousedown)="$event.preventDefault()"
+                (click)="openStaticDropdown('status')"
+              >
+                <mat-icon aria-hidden="true">expand_more</mat-icon>
+              </button>
+
+              @if (staticDropdownOpen() === 'status') {
+                <div class="search-select__menu">
+                  @for (option of staticDropdownOptions.status; track option.value) {
+                    <button
+                      type="button"
+                      class="search-select__option"
+                      [class.selected]="staticDropdownValues().status === option.value"
+                      (mousedown)="$event.preventDefault()"
+                      (click)="selectStaticDropdownOption('status', option.value)"
+                    >
+                      {{ option.label }}
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+          </div>
 
           <label>
             <span>Cidade</span>
@@ -268,15 +553,45 @@
         </header>
 
         <div class="form-grid">
-          <label>
+          <div class="search-select-field">
             <span>Avaria</span>
-            <select>
-              <option>Sem avaria</option>
-              <option>Avaria leve</option>
-              <option>Avaria média</option>
-              <option>Avaria grave</option>
-            </select>
-          </label>
+            <div class="search-select" [class.open]="staticDropdownOpen() === 'damage'">
+              <input
+                type="text"
+                [value]="staticDropdownLabel('damage')"
+                readonly
+                autocomplete="off"
+                (focus)="openStaticDropdown('damage')"
+                (blur)="closeStaticDropdown('damage')"
+                (click)="openStaticDropdown('damage')"
+              />
+
+              <button
+                type="button"
+                aria-label="Abrir avarias"
+                (mousedown)="$event.preventDefault()"
+                (click)="openStaticDropdown('damage')"
+              >
+                <mat-icon aria-hidden="true">expand_more</mat-icon>
+              </button>
+
+              @if (staticDropdownOpen() === 'damage') {
+                <div class="search-select__menu">
+                  @for (option of staticDropdownOptions.damage; track option.value) {
+                    <button
+                      type="button"
+                      class="search-select__option"
+                      [class.selected]="staticDropdownValues().damage === option.value"
+                      (mousedown)="$event.preventDefault()"
+                      (click)="selectStaticDropdownOption('damage', option.value)"
+                    >
+                      {{ option.label }}
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+          </div>
 
           <label>
             <span>Lance sugerido</span>
@@ -331,6 +646,5 @@
         </button>
       </footer>
     </div>
-
   </form>
 </section>
