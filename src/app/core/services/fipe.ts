@@ -1,4 +1,5 @@
 import { HttpClient } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { buildApiUrl, normalizeApiBaseUrl } from '../utils/api';
 import { environment } from '../../environments/environment';
@@ -36,8 +37,6 @@ export interface FipeVehicleInfoResponse {
   [key: string]: string | number | boolean | null | undefined;
 }
 
-
-
 @Injectable({
   providedIn: 'root',
 })
@@ -46,10 +45,10 @@ export class FipeService {
   private readonly apiUrl = normalizeApiBaseUrl(environment.apiUrl);
 
   getBrands(vehicleType: VehicleType, reference?: number): Observable<BrandsListResponse[]> {
-    const params: Record<string, string> = {};
+    let params = new HttpParams();
 
     if (reference) {
-      params['reference'] = String(reference);
+      params = params.set('reference', reference);
     }
 
     return this.http.get<BrandsListResponse[]>(

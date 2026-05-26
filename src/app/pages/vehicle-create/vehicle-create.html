@@ -6,7 +6,7 @@
     </a>
 
     <div class="topbar-actions">
-      <button class="primary-action" type="submit" form="vehicle-create-form" onclick="submit()">
+      <button class="primary-action" type="submit" form="vehicle-create-form">
         Cadastrar veículo
       </button>
     </div>
@@ -20,7 +20,7 @@
     </div>
   </header>
 
-  <form [formGroup]="form" (ngSubmit)="submit()" class="create-layout">
+  <form id="vehicle-create-form" [formGroup]="form" (ngSubmit)="submit()" class="create-layout">
     <div class="form-stack">
       <section class="form-card">
         <header>
@@ -33,27 +33,193 @@
         <div class="form-grid">
           <mat-form-field appearance="outline">
             <mat-label>Tipo de veículo</mat-label>
-            <mat-select formControlName="vehicleType">
+
+            <mat-select
+              formControlName="vehicleType"
+              panelClass="vehicle-select-panel"
+              (selectionChange)="getBrands($event.value)"
+            >
               @for (option of vehicleTypeOptions; track option.value) {
-                <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                <mat-option [value]="option.value">
+                  {{ option.label }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <!-- MARCAS -->
+          <mat-form-field appearance="outline">
+            <mat-label>Marca</mat-label>
+
+            <mat-select
+              formControlName="brand"
+              [placeholder]="brandsLoading() ? 'Buscando marcas...' : 'Selecionar marca'"
+              panelClass="vehicle-select-panel brand-select-panel"
+              (openedChange)="onBrandSelectOpenedChange($event)"
+              (selectionChange)="onBrandChange($event.value)"
+            >
+              <div
+                class="select-search-box"
+                (click)="$event.stopPropagation()"
+                (keydown)="$event.stopPropagation()"
+              >
+                <mat-icon aria-hidden="true">search</mat-icon>
+                <input
+                  type="text"
+                  placeholder="Selecione a marca"
+                  [value]="brandSearch()"
+                  (input)="brandSearch.set($any($event.target).value)"
+                  (keydown.enter)="$event.preventDefault()"
+                />
+              </div>
+
+              @if (brandsLoading()) {
+                <mat-option disabled>Buscando marcas...</mat-option>
+              }
+
+              @for (brand of filteredBrands(); track brand.code) {
+                <mat-option [value]="brand.code">
+                  {{ brand.name }}
+                </mat-option>
+              } @empty {
+                @if (!brandsLoading()) {
+                  <mat-option disabled>Nenhuma marca encontrada</mat-option>
+                }
               }
             </mat-select>
 
-            @if (form.controls.vehicleType.hasError('required')) {
-              <mat-error>Selecione o tipo de veículo</mat-error>
+            @if (brandsError()) {
+              <mat-error>{{ brandsError() }}</mat-error>
             }
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Marca</mat-label>
-            <mat-select formControlName="brand">
-              <mat-option value="toyota">Toyota</mat-option>
-              <mat-option value="honda">Honda</mat-option>
-              <mat-option value="ford">Ford</mat-option>
-            </mat-select>
+
+            @if (brandsLoading()) {
+              <mat-hint>Buscando marcas...</mat-hint>
+            }
 
             @if (form.controls.brand.hasError('required')) {
               <mat-error>Selecione a marca</mat-error>
             }
+          </mat-form-field>
+
+          <!-- MODELO -->
+          <mat-form-field appearance="outline">
+            <mat-label>Modelo</mat-label>
+
+            <mat-select
+              formControlName="model"
+              [placeholder]="modelsLoading() ? 'Buscando versões...' : 'Selecionar versão'"
+              panelClass="vehicle-select-panel model-select-panel"
+              (openedChange)="onModelSelectOpenedChange($event)"
+              (selectionChange)="onModelChange($event.value)"
+            >
+              <div
+                class="select-search-box"
+                (click)="$event.stopPropagation()"
+                (keydown)="$event.stopPropagation()"
+              >
+                <mat-icon aria-hidden="true">search</mat-icon>
+                <input
+                  type="text"
+                  placeholder="Selecione a versão"
+                  [value]="modelSearch()"
+                  (input)="modelSearch.set($any($event.target).value)"
+                  (keydown.enter)="$event.preventDefault()"
+                />
+              </div>
+
+              @if (modelsLoading()) {
+                <mat-option disabled>Buscando versões...</mat-option>
+              }
+
+              @for (model of filteredModels(); track model.code) {
+                <mat-option [value]="model.code">
+                  {{ model.name }}
+                </mat-option>
+              } @empty {
+                @if (!modelsLoading()) {
+                  <mat-option disabled>Nenhuma versão encontrada</mat-option>
+                }
+              }
+            </mat-select>
+
+            @if (modelsError()) {
+              <mat-error>{{ modelsError() }}</mat-error>
+            }
+
+            @if (modelsLoading()) {
+              <mat-hint>Buscando versões...</mat-hint>
+            }
+
+            @if (form.controls.model.hasError('required')) {
+              <mat-error>Selecione a versão</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- ANO -->
+          <mat-form-field appearance="outline">
+            <mat-label>Ano</mat-label>
+
+            <mat-select
+              formControlName="yearModel"
+              [placeholder]="yearsLoading() ? 'Buscando anos...' : 'Selecionar ano'"
+              panelClass="vehicle-select-panel year-select-panel"
+              (openedChange)="onYearSelectOpenedChange($event)"
+            >
+              <div
+                class="select-search-box"
+                (click)="$event.stopPropagation()"
+                (keydown)="$event.stopPropagation()"
+              >
+                <mat-icon aria-hidden="true">search</mat-icon>
+                <input
+                  type="text"
+                  placeholder="Selecione o ano"
+                  [value]="yearSearch()"
+                  (input)="yearSearch.set($any($event.target).value)"
+                  (keydown.enter)="$event.preventDefault()"
+                />
+              </div>
+
+              @if (yearsLoading()) {
+                <mat-option disabled>Buscando anos...</mat-option>
+              }
+
+              @for (year of filteredYears(); track year.code) {
+                <mat-option [value]="year.code">
+                  {{ getYearLabel(year) }}
+                </mat-option>
+              } @empty {
+                @if (!yearsLoading()) {
+                  <mat-option disabled>Nenhum ano encontrado</mat-option>
+                }
+              }
+            </mat-select>
+
+            @if (yearsError()) {
+              <mat-error>{{ yearsError() }}</mat-error>
+            }
+
+            @if (yearsLoading()) {
+              <mat-hint>Buscando anos...</mat-hint>
+            }
+
+            @if (form.controls.yearModel.hasError('required')) {
+              <mat-error>Selecione o ano</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Ano de fabrica&ccedil;&atilde;o</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="yearManufacture"
+              placeholder="Ex: 2023"
+            />
+
+            <!-- @if (form.controls.yearManufacture.hasError('required')) {
+              <mat-error>Informe o ano de fabrica&ccedil;&atilde;o</mat-error>
+            } -->
           </mat-form-field>
         </div>
       </section>
