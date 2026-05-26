@@ -36,7 +36,6 @@ export interface Vehicle {
   plate?: string | null;
   brand?: string | null;
   model?: string | null;
-  version?: string | null;
   yearManufacture?: number | null;
   yearModel?: number | null;
   color?: string | null;

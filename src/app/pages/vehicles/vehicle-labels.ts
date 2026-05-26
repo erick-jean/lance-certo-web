@@ -84,8 +84,8 @@ export const EXPENSE_SOURCE_LABEL: Record<string, string> = {
   DOCUMENTATION_RULE: 'Regra documental',
 };
 
-export function vehicleTitle(vehicle: Pick<Vehicle, 'brand' | 'model' | 'version'>): string {
-  return [vehicle.brand, vehicle.model, vehicle.version].filter(Boolean).join(' ');
+export function vehicleTitle(vehicle: Pick<Vehicle, 'brand' | 'model'>): string {
+  return [vehicle.brand, vehicle.model].filter(Boolean).join(' ');
 }
 
 export function vehicleSubtitle(

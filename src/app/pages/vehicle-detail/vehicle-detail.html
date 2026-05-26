@@ -14,7 +14,15 @@
   <article class="detail-card">
     <div class="vehicle-gallery">
       <div class="vehicle-photo">
-        <img [src]="activeImage()" [alt]="vehicleTitle()" />
+        @if (activeImage(); as imageUrl) {
+          <img [src]="imageUrl" [alt]="vehicleTitle()" />
+        } @else {
+          <div class="vehicle-image-placeholder" aria-hidden="true">
+            <mat-icon>directions_car</mat-icon>
+            <span>Sem imagem</span>
+          </div>
+        }
+        @if (imageUrls().length > 1) {
         <button class="gallery-control previous" type="button" aria-label="Imagem anterior" (click)="showPreviousImage()">
           <mat-icon aria-hidden="true">chevron_left</mat-icon>
         </button>
@@ -22,6 +30,7 @@
           <mat-icon aria-hidden="true">chevron_right</mat-icon>
         </button>
         <span class="gallery-count">{{ activeImageIndex() + 1 }} / {{ imageUrls().length }}</span>
+        }
       </div>
 
       <div class="badges">
@@ -109,7 +118,6 @@
       <section class="tab-info-grid">
         <div><span>Placa</span><strong>{{ vehicle().plate ?? '-' }}</strong></div>
         <div><span>Marca / Modelo</span><strong>{{ vehicle().brand ?? '-' }} / {{ vehicle().model ?? '-' }}</strong></div>
-        <div><span>Versão</span><strong>{{ vehicle().version ?? '-' }}</strong></div>
         <div><span>Ano Fab / Modelo</span><strong>{{ vehicle().yearManufacture ?? '-' }} / {{ vehicle().yearModel ?? '-' }}</strong></div>
         <div><span>Cor</span><strong>{{ vehicle().color ?? '-' }}</strong></div>
         <div><span>Combustível</span><strong>{{ fuelTypeLabel(vehicle().fuelType) }}</strong></div>

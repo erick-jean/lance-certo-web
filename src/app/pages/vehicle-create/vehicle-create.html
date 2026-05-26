@@ -1,4 +1,21 @@
 <section class="vehicle-create-page">
+  @if (fipeInfoLoading() || submitLoading) {
+    <div class="page-loading-backdrop" aria-live="polite" aria-busy="true">
+      <div class="page-loading-panel">
+        <span class="page-loading-spinner" aria-hidden="true"></span>
+        <div>
+          @if (submitLoading) {
+            <strong>Cadastrando ve&iacute;culo</strong>
+            <p>Aguarde enquanto salvamos o ve&iacute;culo no banco de dados.</p>
+          } @else {
+            <strong>Buscando dados FIPE</strong>
+            <p>Aguarde enquanto carregamos o c&oacute;digo e o valor FIPE.</p>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
   <header class="create-topbar">
     <a class="back-link" routerLink="/veiculos">
       <mat-icon aria-hidden="true">arrow_back</mat-icon>
@@ -6,8 +23,8 @@
     </a>
 
     <div class="topbar-actions">
-      <button class="primary-action" type="submit" form="vehicle-create-form">
-        Cadastrar veículo
+      <button class="primary-action" type="submit" form="vehicle-create-form" [disabled]="submitLoading">
+        {{ submitLoading ? 'Cadastrando...' : 'Cadastrar veículo' }}
       </button>
     </div>
   </header>
@@ -107,7 +124,7 @@
 
             <mat-select
               formControlName="model"
-              [placeholder]="modelsLoading() ? 'Buscando versões...' : 'Selecionar versão'"
+              [placeholder]="modelsLoading() ? 'Buscando modelos...' : 'Selecionar modelo'"
               panelClass="vehicle-select-panel model-select-panel"
               (openedChange)="onModelSelectOpenedChange($event)"
               (selectionChange)="onModelChange($event.value)"
@@ -120,7 +137,7 @@
                 <mat-icon aria-hidden="true">search</mat-icon>
                 <input
                   type="text"
-                  placeholder="Selecione a versão"
+                  placeholder="Selecione o modelo"
                   [value]="modelSearch()"
                   (input)="modelSearch.set($any($event.target).value)"
                   (keydown.enter)="$event.preventDefault()"
@@ -137,7 +154,7 @@
                 </mat-option>
               } @empty {
                 @if (!modelsLoading()) {
-                  <mat-option disabled>Nenhuma versão encontrada</mat-option>
+                  <mat-option disabled>Nenhum modelo encontrado</mat-option>
                 }
               }
             </mat-select>
@@ -151,7 +168,7 @@
             }
 
             @if (form.controls.model.hasError('required')) {
-              <mat-error>Selecione a versão</mat-error>
+              <mat-error>Selecione o modelo</mat-error>
             }
           </mat-form-field>
 
@@ -509,6 +526,17 @@
           </mat-form-field>
         </div>
       </section>
+
+      <footer class="form-footer-actions">
+        @if (submitError) {
+          <p class="submit-error">{{ submitError }}</p>
+        }
+
+        <a class="secondary-action" routerLink="/veiculos">Cancelar</a>
+        <button class="primary-action" type="submit" [disabled]="submitLoading">
+          {{ submitLoading ? 'Cadastrando...' : 'Cadastrar veículo' }}
+        </button>
+      </footer>
     </div>
   </form>
 

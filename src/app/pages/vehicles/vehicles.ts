@@ -57,7 +57,6 @@ export class Vehicles implements OnInit {
       const searchableText = [
         vehicle.brand,
         vehicle.model,
-        vehicle.version,
         vehicle.plate,
         vehicle.city,
         vehicle.state,

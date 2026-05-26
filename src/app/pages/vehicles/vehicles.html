@@ -80,7 +80,14 @@
     @for (vehicle of filteredVehicles(); track vehicle.id) {
       <a class="vehicle-card" [routerLink]="['/veiculos', vehicle.id]">
         <div class="vehicle-photo">
-          <img [src]="coverImage(vehicle)" [alt]="vehicleTitle(vehicle)" />
+          @if (coverImage(vehicle); as imageUrl) {
+            <img [src]="imageUrl" [alt]="vehicleTitle(vehicle)" />
+          } @else {
+            <div class="vehicle-image-placeholder" aria-hidden="true">
+              <mat-icon>directions_car</mat-icon>
+              <span>Sem imagem</span>
+            </div>
+          }
           <div class="badges">
             <app-status-badge [label]="statusLabel(vehicle.status)" [tone]="statusTone(vehicle.status)" />
             <app-status-badge [label]="damageLabel(vehicle.damageType)" [tone]="damageTone(vehicle.damageType)" [showDot]="true" />

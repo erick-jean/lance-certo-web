@@ -47,7 +47,6 @@ export type Vehicle = {
   plate?: string;
   brand?: string;
   model?: string;
-  version?: string;
   yearManufacture?: number;
   yearModel?: number;
   color?: string;
@@ -87,7 +86,6 @@ export const vehicles: Vehicle[] = [
     plate: 'ABC-1234',
     brand: 'Toyota',
     model: 'Corolla',
-    version: 'XEi',
     yearManufacture: 2021,
     yearModel: 2022,
     color: 'Prata',
@@ -178,7 +176,6 @@ export const vehicles: Vehicle[] = [
     plate: 'XYZ-9876',
     brand: 'Jeep',
     model: 'Compass',
-    version: 'Longitude',
     yearManufacture: 2020,
     yearModel: 2021,
     color: 'Branco',
@@ -260,7 +257,6 @@ export const vehicles: Vehicle[] = [
     plate: 'NIV-2023',
     brand: 'VW',
     model: 'Nivus',
-    version: 'Highline',
     yearManufacture: 2023,
     yearModel: 2023,
     color: 'Branco',
