@@ -1,9 +1,6 @@
 <section class="vehicle-create-page">
   @if (isPageLoading()) {
-    <app-page-loading-overlay
-      [title]="loadingTitle()"
-      [description]="loadingDescription()"
-    />
+    <app-page-loading-overlay [title]="loadingTitle()" [description]="loadingDescription()" />
   }
 
   <header class="create-topbar">
