@@ -41,7 +41,7 @@ export function buildCreateVehiclePayload({
     mileage: formValue.mileage,
     fipeCode: formValue.fipeCode,
     fipeValue: parseCurrency(formValue.fipeValue),
-    marketValue: formValue.marketValue,
+    marketValue: parseCurrency(formValue.marketValue),
     auctioneer: formValue.auctioneer,
     auctionType: (formValue.auctionType || undefined) as CreateVehicleRequest['auctionType'],
     sourceUrl: formValue.sourceUrl,
@@ -49,8 +49,8 @@ export function buildCreateVehiclePayload({
     city: formValue.city,
     state: formValue.state,
     yardAddress: formValue.yardAddress,
-    auctionInitialBid: formValue.auctionInitialBid,
-    auctionCurrentBid: formValue.auctionCurrentBid,
+    auctionInitialBid: parseCurrency(formValue.auctionInitialBid),
+    auctionCurrentBid: parseCurrency(formValue.auctionCurrentBid),
     damageType: (formValue.damageType || 'NONE') as CreateVehicleRequest['damageType'],
     status: 'ANALYZING' as CreateVehicleRequest['status'],
     notes: formValue.notes,
@@ -68,15 +68,20 @@ export function getBackendVehicleType(
   return vehicleFipeType ? typeByFipeType[vehicleFipeType] : undefined;
 }
 
-function parseCurrency(value?: string | null): number | undefined {
-  if (!value) {
+function parseCurrency(value?: string | number | null): number | undefined {
+  if (value === undefined || value === null || value === '') {
     return undefined;
+  }
+
+  if (typeof value === 'number') {
+    return Number.isFinite(value) ? value : undefined;
   }
 
   const normalized = value
     .replace(/[^\d,.-]/g, '')
     .replace(/\./g, '')
     .replace(',', '.');
+
   const parsed = Number(normalized);
 
   return Number.isFinite(parsed) ? parsed : undefined;

@@ -148,7 +148,9 @@ export class VehicleCreate {
 
   readonly getYearLabel = (year: YearsListResponse): string => this.facade.getYearLabel(year);
 
-  readonly isPageLoading = computed(() => this.identificationVm.fipeInfo.loading() || this.submitLoading());
+  readonly isPageLoading = computed(
+    () => this.identificationVm.fipeInfo.loading() || this.submitLoading(),
+  );
 
   readonly loadingTitle = computed(() =>
     this.submitLoading() ? 'Cadastrando veículo' : 'Buscando dados FIPE',

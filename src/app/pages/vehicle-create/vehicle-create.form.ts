@@ -44,19 +44,12 @@ export function createVehicleForm() {
     }),
 
     yearManufacture: new FormControl<number | null>(null, {
-      validators: [
-        Validators.required,
-        Validators.min(1900),
-        Validators.max(2099),
-        Validators.pattern(/^\d{4}$/),
-      ],
+      validators: [Validators.min(1900), Validators.max(2099), Validators.pattern(/^\d{4}$/)],
     }),
 
     fipeCode: new FormControl<string>('', { nonNullable: true }),
     fipeValue: new FormControl<string>('', { nonNullable: true }),
-    marketValue: new FormControl<number | null>(null, {
-      validators: [Validators.required],
-    }),
+    marketValue: new FormControl<number | null>(null),
     color: new FormControl<string>('', { nonNullable: true }),
     mileage: new FormControl<number | null>(null, {
       validators: [Validators.min(0)],
@@ -65,29 +58,26 @@ export function createVehicleForm() {
     transmission: new FormControl<string>('', { nonNullable: true }),
     auctioneer: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required],
     }),
     auctionType: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required],
     }),
     eventDate: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required],
+      validators: [Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)],
     }),
     city: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required],
     }),
     state: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.pattern(/^[A-Z]{2}$/)],
+      validators: [Validators.pattern(/^[A-Z]{2}$/)],
     }),
     auctionInitialBid: new FormControl<number | null>(null, {
-      validators: [Validators.required],
+      validators: [],
     }),
     auctionCurrentBid: new FormControl<number | null>(null, {
-      validators: [Validators.required],
+      validators: [],
     }),
     yardAddress: new FormControl<string>('', { nonNullable: true }),
     sourceUrl: new FormControl<string>('', {
