@@ -73,9 +73,7 @@ export class VehicleDetail implements OnInit {
   protected readonly vehicle = computed(() => this.loadedVehicle() ?? emptyVehicle);
 
   protected readonly imageUrls = computed(() =>
-    (this.vehicle().images ?? [])
-      .map((image) => safeImageUrl(image.url))
-      .filter(Boolean),
+    (this.vehicle().images ?? []).map((image) => safeImageUrl(image.url)).filter(Boolean),
   );
   protected readonly activeImage = computed(() => this.imageUrls()[this.activeImageIndex()] ?? '');
   protected readonly filteredExpenses = computed(() => {
@@ -86,7 +84,9 @@ export class VehicleDetail implements OnInit {
 
     return (this.vehicle().evaluation?.expenses ?? []).filter((expense) => {
       const matchesSearch =
-        !search || expense.name.toLowerCase().includes(search) || expense.notes?.toLowerCase().includes(search);
+        !search ||
+        expense.name.toLowerCase().includes(search) ||
+        expense.notes?.toLowerCase().includes(search);
       const matchesCategory = category === 'ALL' || expense.category === category;
       const matchesRequired =
         required === 'ALL' ||
@@ -97,9 +97,13 @@ export class VehicleDetail implements OnInit {
     });
   });
   protected readonly isEditingExpense = computed(() => this.selectedExpenseId() !== null);
-  protected readonly expenseDrawerTitle = computed(() => (this.isEditingExpense() ? 'Editar Gasto' : 'Adicionar Novo Gasto'));
+  protected readonly expenseDrawerTitle = computed(() =>
+    this.isEditingExpense() ? 'Editar Gasto' : 'Adicionar Novo Gasto',
+  );
   protected readonly expenseDrawerDescription = computed(() =>
-    this.isEditingExpense() ? 'Atualize os dados do investimento previsto.' : 'Preencha os dados do investimento realizado.',
+    this.isEditingExpense()
+      ? 'Atualize os dados do investimento previsto.'
+      : 'Preencha os dados do investimento realizado.',
   );
 
   ngOnInit(): void {
@@ -126,10 +130,10 @@ export class VehicleDetail implements OnInit {
         this.loadVehicleEvaluation(vehicle.id);
       },
       error: (error) => {
-        console.error('Erro ao carregar veiculo', error);
+        console.error('Erro ao carregar veículo', error);
         this.loadedVehicle.set(null);
         this.loading.set(false);
-        this.loadError.set('Nao foi possivel carregar os dados do veiculo.');
+        this.loadError.set('Não foi possível carregar os dados do veículo.');
       },
     });
   }
@@ -177,7 +181,8 @@ export class VehicleDetail implements OnInit {
   }
 
   protected damageTone(damageType: DamageType): StatusBadgeTone {
-    if (damageType === 'MEDIUM_DAMAGE' || damageType === 'HIGH_DAMAGE' || damageType === 'FLOOD') return 'risk-medium';
+    if (damageType === 'MEDIUM_DAMAGE' || damageType === 'HIGH_DAMAGE' || damageType === 'FLOOD')
+      return 'risk-medium';
 
     return 'risk-low';
   }
@@ -282,7 +287,9 @@ export class VehicleDetail implements OnInit {
       return;
     }
 
-    evaluation.expenses = (evaluation.expenses ?? []).filter((expense) => expense.id !== selectedExpenseId);
+    evaluation.expenses = (evaluation.expenses ?? []).filter(
+      (expense) => expense.id !== selectedExpenseId,
+    );
     this.expenseVersion.update((version) => version + 1);
     this.closeExpenseDrawer();
   }
@@ -334,7 +341,9 @@ export class VehicleDetail implements OnInit {
         );
       },
       error: () => {
-        this.loadedVehicle.update((vehicle) => (vehicle ? { ...vehicle, evaluation: null } : vehicle));
+        this.loadedVehicle.update((vehicle) =>
+          vehicle ? { ...vehicle, evaluation: null } : vehicle,
+        );
       },
     });
   }
@@ -343,7 +352,12 @@ export class VehicleDetail implements OnInit {
     const cleanAmount = amount.trim();
     if (!cleanAmount) return 0;
 
-    const parsed = Number(cleanAmount.replace(/[^\d,.-]/g, '').replace(/\./g, '').replace(',', '.'));
+    const parsed = Number(
+      cleanAmount
+        .replace(/[^\d,.-]/g, '')
+        .replace(/\./g, '')
+        .replace(',', '.'),
+    );
     return Number.isFinite(parsed) ? parsed : 0;
   }
 }

@@ -1,5 +1,3 @@
-// pages/vehicle-create/vehicle-create.form.ts
-
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { VehicleFipeType } from '../../core/types/vehicle-options.type';
 
@@ -34,6 +32,7 @@ export function createVehicleForm() {
       },
     ),
 
+    // Aceita placa antiga com hifen e Mercosul sem hifen.
     plate: new FormControl<string>('', {
       nonNullable: true,
       validators: [

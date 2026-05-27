@@ -1,12 +1,12 @@
-// pages/vehicle-create/vehicle-create.facade.ts
-
 import { computed, inject, Injectable, signal } from '@angular/core';
+import { finalize } from 'rxjs';
+
 import {
-  FipeService,
   BrandsListResponse,
+  FipeService,
+  FipeVehicleInfoResponse,
   ModelsListResponse,
   YearsListResponse,
-  FipeVehicleInfoResponse,
 } from '../../core/services/fipe';
 import { VehicleFipeType } from '../../core/types/vehicle-options.type';
 import { normalizeText } from '../../core/utils/normalize-text';
@@ -55,6 +55,7 @@ export class VehicleCreateFacade {
   });
 
   getBrands(vehicleType: VehicleFipeType | ''): void {
+    // Trocar o tipo do veiculo invalida toda a cadeia FIPE: marca, modelo, ano e valores.
     this.resetModels();
     this.resetYears();
     this.resetFipeInfo();
@@ -66,17 +67,20 @@ export class VehicleCreateFacade {
 
     this.brandsLoading.set(true);
 
-    this.fipeService.getBrands(vehicleType).subscribe({
-      next: (brands) => this.brands.set(brands),
-      error: () => {
-        this.brands.set([]);
-        this.brandsError.set('Não foi possível carregar as marcas.');
-      },
-      complete: () => this.brandsLoading.set(false),
-    });
+    this.fipeService
+      .getBrands(vehicleType)
+      .pipe(finalize(() => this.brandsLoading.set(false)))
+      .subscribe({
+        next: (brands) => this.brands.set(brands),
+        error: () => {
+          this.brands.set([]);
+          this.brandsError.set('Não foi possível carregar as marcas.');
+        },
+      });
   }
 
   getModels(vehicleType: VehicleFipeType | '', brandCode: string): void {
+    // Trocar a marca invalida modelos, anos e dados calculados da FIPE.
     this.resetModels();
     this.resetYears();
     this.resetFipeInfo();
@@ -85,17 +89,20 @@ export class VehicleCreateFacade {
 
     this.modelsLoading.set(true);
 
-    this.fipeService.getModels(vehicleType, brandCode).subscribe({
-      next: (models) => this.models.set(models),
-      error: () => {
-        this.models.set([]);
-        this.modelsError.set('NÃ£o foi possÃ­vel carregar as versÃµes.');
-      },
-      complete: () => this.modelsLoading.set(false),
-    });
+    this.fipeService
+      .getModels(vehicleType, brandCode)
+      .pipe(finalize(() => this.modelsLoading.set(false)))
+      .subscribe({
+        next: (models) => this.models.set(models),
+        error: () => {
+          this.models.set([]);
+          this.modelsError.set('Não foi possível carregar os modelos.');
+        },
+      });
   }
 
   getYears(vehicleType: VehicleFipeType | '', brandCode: string, modelCode: string): void {
+    // Trocar o modelo invalida o ano e os dados de codigo/valor FIPE.
     this.resetYears();
     this.resetFipeInfo();
 
@@ -103,14 +110,16 @@ export class VehicleCreateFacade {
 
     this.yearsLoading.set(true);
 
-    this.fipeService.getYears(vehicleType, brandCode, modelCode).subscribe({
-      next: (years) => this.years.set(years),
-      error: () => {
-        this.years.set([]);
-        this.yearsError.set('NÃ£o foi possÃ­vel carregar os anos.');
-      },
-      complete: () => this.yearsLoading.set(false),
-    });
+    this.fipeService
+      .getYears(vehicleType, brandCode, modelCode)
+      .pipe(finalize(() => this.yearsLoading.set(false)))
+      .subscribe({
+        next: (years) => this.years.set(years),
+        error: () => {
+          this.years.set([]);
+          this.yearsError.set('Não foi possível carregar os anos.');
+        },
+      });
   }
 
   getFipeVehicleInfo(
@@ -126,14 +135,15 @@ export class VehicleCreateFacade {
 
     this.fipeInfoLoading.set(true);
 
-    this.fipeService.getVehicleInfo(vehicleType, brandCode, modelCode, yearCode).subscribe({
-      next: (vehicleInfo) => onSuccess(vehicleInfo),
-      error: () => {
-        this.fipeInfoError.set('Nao foi possivel carregar os dados FIPE.');
-        this.fipeInfoLoading.set(false);
-      },
-      complete: () => this.fipeInfoLoading.set(false),
-    });
+    this.fipeService
+      .getVehicleInfo(vehicleType, brandCode, modelCode, yearCode)
+      .pipe(finalize(() => this.fipeInfoLoading.set(false)))
+      .subscribe({
+        next: (vehicleInfo) => onSuccess(vehicleInfo),
+        error: () => {
+          this.fipeInfoError.set('Não foi possível carregar os dados FIPE.');
+        },
+      });
   }
 
   resetModels(): void {

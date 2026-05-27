@@ -1,66 +1,62 @@
 import { Routes } from '@angular/router';
-import { Home } from './pages/home/home';
-import { VehicleCreate } from './pages/vehicle-create/vehicle-create';
-import { VehicleDetail } from './pages/vehicle-detail/vehicle-detail';
-import { VehicleEdit } from './pages/vehicle-edit/vehicle-edit';
-import { Vehicles } from './pages/vehicles/vehicles';
-import { Profile } from './pages/profile/profile';
-import { Finance } from './pages/finance/finance';
-import { Subscription } from './pages/subscription/subscription';
-import { Settings } from './pages/settings/settings';
-import { Login } from './pages/login/login';
-import { Register } from './pages/register/register';
+
 import { authGuard, loginGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
     path: 'login',
-    component: Login,
+    loadComponent: () => import('./pages/login/login').then((component) => component.Login),
     canActivate: [loginGuard],
   },
   {
     path: 'criar-conta',
-    component: Register,
+    loadComponent: () =>
+      import('./pages/register/register').then((component) => component.Register),
     canActivate: [loginGuard],
   },
   {
     path: 'dashboard',
-    component: Home,
+    loadComponent: () => import('./pages/home/home').then((component) => component.Home),
     canActivate: [authGuard],
   },
   {
     path: 'veiculos',
-    component: Vehicles,
+    loadComponent: () =>
+      import('./pages/vehicles/vehicles').then((component) => component.Vehicles),
     canActivate: [authGuard],
   },
   {
     path: 'veiculos/novo',
-    component: VehicleCreate,
+    loadComponent: () =>
+      import('./pages/vehicle-create/vehicle-create').then((component) => component.VehicleCreate),
     canActivate: [authGuard],
   },
   {
     path: 'veiculos/:id/editar',
-    component: VehicleEdit,
+    loadComponent: () =>
+      import('./pages/vehicle-edit/vehicle-edit').then((component) => component.VehicleEdit),
     canActivate: [authGuard],
   },
   {
     path: 'veiculos/:id',
-    component: VehicleDetail,
+    loadComponent: () =>
+      import('./pages/vehicle-detail/vehicle-detail').then((component) => component.VehicleDetail),
     canActivate: [authGuard],
   },
   {
     path: 'perfil',
-    component: Profile,
+    loadComponent: () => import('./pages/profile/profile').then((component) => component.Profile),
     canActivate: [authGuard],
   },
   {
     path: 'financeiro',
-    component: Finance,
+    loadComponent: () => import('./pages/finance/finance').then((component) => component.Finance),
     canActivate: [authGuard],
   },
   {
     path: 'assinatura',
-    component: Subscription,
+    loadComponent: () =>
+      import('./pages/subscription/subscription').then((component) => component.Subscription),
     canActivate: [authGuard],
   },
   {
@@ -73,7 +69,8 @@ export const routes: Routes = [
   },
   {
     path: 'configuracoes',
-    component: Settings,
+    loadComponent: () =>
+      import('./pages/settings/settings').then((component) => component.Settings),
     canActivate: [authGuard],
   },
   {

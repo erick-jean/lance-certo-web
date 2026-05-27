@@ -13,5 +13,5 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([authInterceptor])),
 
     provideAppInitializer(initializeAuth),
-  ]
+  ],
 };

@@ -1,19 +1,9 @@
 <section class="vehicle-create-page">
-  @if (fipeInfoLoading() || submitLoading) {
-    <div class="page-loading-backdrop" aria-live="polite" aria-busy="true">
-      <div class="page-loading-panel">
-        <span class="page-loading-spinner" aria-hidden="true"></span>
-        <div>
-          @if (submitLoading) {
-            <strong>Cadastrando ve&iacute;culo</strong>
-            <p>Aguarde enquanto salvamos o ve&iacute;culo no banco de dados.</p>
-          } @else {
-            <strong>Buscando dados FIPE</strong>
-            <p>Aguarde enquanto carregamos o c&oacute;digo e o valor FIPE.</p>
-          }
-        </div>
-      </div>
-    </div>
+  @if (isPageLoading()) {
+    <app-page-loading-overlay
+      [title]="loadingTitle()"
+      [description]="loadingDescription()"
+    />
   }
 
   <header class="create-topbar">
@@ -23,7 +13,12 @@
     </a>
 
     <div class="topbar-actions">
-      <button class="primary-action" type="submit" form="vehicle-create-form" [disabled]="submitLoading">
+      <button
+        class="primary-action"
+        type="submit"
+        form="vehicle-create-form"
+        [disabled]="submitLoading"
+      >
         {{ submitLoading ? 'Cadastrando...' : 'Cadastrar veículo' }}
       </button>
     </div>
@@ -64,7 +59,6 @@
             </mat-select>
           </mat-form-field>
 
-          <!-- MARCAS -->
           <mat-form-field appearance="outline">
             <mat-label>Marca</mat-label>
 
@@ -83,7 +77,8 @@
                 <mat-icon aria-hidden="true">search</mat-icon>
                 <input
                   type="text"
-                  placeholder="Selecione a marca"
+                  aria-label="Buscar marca"
+                  placeholder="Buscar marca"
                   [value]="brandSearch()"
                   (input)="brandSearch.set($any($event.target).value)"
                   (keydown.enter)="$event.preventDefault()"
@@ -118,7 +113,6 @@
             }
           </mat-form-field>
 
-          <!-- MODELO -->
           <mat-form-field appearance="outline">
             <mat-label>Modelo</mat-label>
 
@@ -137,7 +131,8 @@
                 <mat-icon aria-hidden="true">search</mat-icon>
                 <input
                   type="text"
-                  placeholder="Selecione o modelo"
+                  aria-label="Buscar modelo"
+                  placeholder="Buscar modelo"
                   [value]="modelSearch()"
                   (input)="modelSearch.set($any($event.target).value)"
                   (keydown.enter)="$event.preventDefault()"
@@ -145,7 +140,7 @@
               </div>
 
               @if (modelsLoading()) {
-                <mat-option disabled>Buscando versões...</mat-option>
+                <mat-option disabled>Buscando modelos...</mat-option>
               }
 
               @for (model of filteredModels(); track model.code) {
@@ -164,7 +159,7 @@
             }
 
             @if (modelsLoading()) {
-              <mat-hint>Buscando versões...</mat-hint>
+              <mat-hint>Buscando modelos...</mat-hint>
             }
 
             @if (form.controls.model.hasError('required')) {
@@ -172,7 +167,6 @@
             }
           </mat-form-field>
 
-          <!-- ANO FIPE-->
           <mat-form-field appearance="outline">
             <mat-label>Ano</mat-label>
 
@@ -191,7 +185,8 @@
                 <mat-icon aria-hidden="true">search</mat-icon>
                 <input
                   type="text"
-                  placeholder="Selecione o ano"
+                  aria-label="Buscar ano"
+                  placeholder="Buscar ano"
                   [value]="yearSearch()"
                   (input)="yearSearch.set($any($event.target).value)"
                   (keydown.enter)="$event.preventDefault()"
@@ -226,7 +221,6 @@
             }
           </mat-form-field>
 
-          <!-- PLACA -->
           <mat-form-field appearance="outline">
             <mat-label>Placa</mat-label>
             <input
@@ -239,16 +233,15 @@
             />
 
             @if (form.controls.plate.hasError('pattern')) {
-              <mat-error>Informe uma placa v&aacute;lida</mat-error>
+              <mat-error>Informe uma placa válida</mat-error>
             }
           </mat-form-field>
 
-          <!-- ANO DE FABRICAÇÃO -->
           <mat-form-field appearance="outline">
-            <mat-label>Ano de fabrica&ccedil;&atilde;o</mat-label>
+            <mat-label>Ano de fabricação</mat-label>
             <input
               matInput
-              type="number"
+              type="text"
               inputmode="numeric"
               maxlength="4"
               formControlName="yearManufacture"
@@ -264,9 +257,8 @@
             }
           </mat-form-field>
 
-          <!-- CÓDIGO FIPE -->
           <mat-form-field appearance="outline">
-            <mat-label>C&oacute;digo FIPE</mat-label>
+            <mat-label>Código FIPE</mat-label>
             <input
               matInput
               type="text"
@@ -276,7 +268,6 @@
             />
           </mat-form-field>
 
-          <!-- VALOR FIPE -->
           <mat-form-field appearance="outline">
             <mat-label>Valor FIPE</mat-label>
             <input
@@ -296,7 +287,6 @@
             }
           </mat-form-field>
 
-          <!-- VALOR DE MERCADO -->
           <mat-form-field appearance="outline">
             <mat-label>Valor de mercado</mat-label>
             <input
@@ -309,13 +299,11 @@
             />
           </mat-form-field>
 
-          <!-- COR -->
           <mat-form-field appearance="outline">
             <mat-label>Cor</mat-label>
             <input matInput type="text" formControlName="color" placeholder="Ex: Branco" />
           </mat-form-field>
 
-          <!-- QUILMETRAGEM -->
           <mat-form-field appearance="outline">
             <mat-label>Quilometragem</mat-label>
             <input
@@ -328,9 +316,8 @@
             />
           </mat-form-field>
 
-          <!-- COMBUSTÍVEL -->
           <mat-form-field appearance="outline">
-            <mat-label>Combust&iacute;vel</mat-label>
+            <mat-label>Combustível</mat-label>
             <mat-select formControlName="fuelType" panelClass="vehicle-select-panel">
               @for (option of fuelTypeOptions; track option.value) {
                 <mat-option [value]="option.value">
@@ -340,9 +327,8 @@
             </mat-select>
           </mat-form-field>
 
-          <!-- CÂMBIO -->
           <mat-form-field appearance="outline">
-            <mat-label>C&acirc;mbio</mat-label>
+            <mat-label>Câmbio</mat-label>
             <mat-select formControlName="transmission" panelClass="vehicle-select-panel">
               @for (option of transmissionOptions; track option.value) {
                 <mat-option [value]="option.value">
@@ -370,7 +356,7 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Tipo de leil&atilde;o</mat-label>
+            <mat-label>Tipo de leilão</mat-label>
             <mat-select formControlName="auctionType" panelClass="vehicle-select-panel">
               @for (option of auctionTypeOptions; track option.value) {
                 <mat-option [value]="option.value">
@@ -402,7 +388,7 @@
             />
 
             @if (form.controls.state.hasError('pattern')) {
-              <mat-error>Informe uma UF v&aacute;lida</mat-error>
+              <mat-error>Informe uma UF válida</mat-error>
             }
           </mat-form-field>
 
@@ -431,7 +417,7 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Endere&ccedil;o do p&aacute;tio</mat-label>
+            <mat-label>Endereço do pátio</mat-label>
             <input
               matInput
               type="text"
@@ -450,7 +436,7 @@
             />
 
             @if (form.controls.sourceUrl.hasError('pattern')) {
-              <mat-error>Informe uma URL v&aacute;lida</mat-error>
+              <mat-error>Informe uma URL válida</mat-error>
             }
           </mat-form-field>
         </div>
@@ -460,8 +446,8 @@
         <header>
           <mat-icon aria-hidden="true">assignment</mat-icon>
           <div>
-            <h2>An&aacute;lise inicial</h2>
-            <p>Observa&ccedil;&otilde;es e classifica&ccedil;&atilde;o visual para a primeira avalia&ccedil;&atilde;o.</p>
+            <h2>Análise inicial</h2>
+            <p>Observações e classificação visual para a primeira avaliação.</p>
           </div>
         </header>
 
@@ -497,7 +483,7 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Margem de seguran&ccedil;a</mat-label>
+            <mat-label>Margem de segurança</mat-label>
             <input
               matInput
               type="text"
@@ -516,7 +502,7 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="wide-field textarea-field">
-            <mat-label>Observa&ccedil;&otilde;es</mat-label>
+            <mat-label>Observações</mat-label>
             <textarea
               matInput
               formControlName="notes"
@@ -539,6 +525,4 @@
       </footer>
     </div>
   </form>
-
- 
 </section>

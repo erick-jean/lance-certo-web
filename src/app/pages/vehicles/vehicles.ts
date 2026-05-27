@@ -90,10 +90,10 @@ export class Vehicles implements OnInit {
         this.loading.set(false);
       },
       error: (error) => {
-        console.error('Erro ao carregar veiculos', error);
+        console.error('Erro ao carregar veículos', error);
         this.vehicles.set([]);
         this.loading.set(false);
-        this.error.set('Nao foi possivel carregar seus veiculos agora.');
+        this.error.set('Não foi possível carregar seus veículos agora.');
       },
     });
   }

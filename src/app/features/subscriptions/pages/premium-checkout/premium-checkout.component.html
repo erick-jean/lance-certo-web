@@ -80,7 +80,9 @@
           @if (cardNumberError()) {
             <span class="checkout-form__error">{{ cardNumberError() }}</span>
           } @else {
-            <span class="checkout-form__error checkout-form__error--empty" aria-hidden="true">&nbsp;</span>
+            <span class="checkout-form__error checkout-form__error--empty" aria-hidden="true"
+              >&nbsp;</span
+            >
           }
         </div>
 
@@ -112,7 +114,9 @@
           @if (expirationDateError()) {
             <span class="checkout-form__error">{{ expirationDateError() }}</span>
           } @else {
-            <span class="checkout-form__error checkout-form__error--empty" aria-hidden="true">&nbsp;</span>
+            <span class="checkout-form__error checkout-form__error--empty" aria-hidden="true"
+              >&nbsp;</span
+            >
           }
         </div>
 
@@ -128,7 +132,9 @@
             autocomplete="cc-csc"
             (input)="formatSecurityCodeInput($event)"
           />
-          <span class="checkout-form__error checkout-form__error--empty" aria-hidden="true">&nbsp;</span>
+          <span class="checkout-form__error checkout-form__error--empty" aria-hidden="true"
+            >&nbsp;</span
+          >
         </div>
 
         <div class="checkout-form__field checkout-form__field--wide">
@@ -156,7 +162,12 @@
           </div>
         </div>
 
-        <select id="form-checkout__issuer" class="checkout-form__hidden-field" tabindex="-1" aria-hidden="true"></select>
+        <select
+          id="form-checkout__issuer"
+          class="checkout-form__hidden-field"
+          tabindex="-1"
+          aria-hidden="true"
+        ></select>
         <select
           id="form-checkout__installments"
           class="checkout-form__hidden-field"
@@ -172,7 +183,11 @@
           autocomplete="off"
         />
 
-        <button class="checkout-form__submit" type="submit" [disabled]="isLoading() || !!successMessage()">
+        <button
+          class="checkout-form__submit"
+          type="submit"
+          [disabled]="isLoading() || !!successMessage()"
+        >
           {{ isLoading() ? 'Processando...' : 'Assinar agora' }}
         </button>
       </form>

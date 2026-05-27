@@ -21,7 +21,10 @@ describe('Sidebar', () => {
 
     TestBed.configureTestingModule({
       imports: [Sidebar],
-      providers: [provideRouter([{ path: 'login', component: LoginRouteStub }]), { provide: Auth, useValue: authSpy }],
+      providers: [
+        provideRouter([{ path: 'login', component: LoginRouteStub }]),
+        { provide: Auth, useValue: authSpy },
+      ],
     });
 
     const fixture = TestBed.createComponent(Sidebar);

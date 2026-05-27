@@ -7,7 +7,9 @@
 
     <div class="topbar-actions">
       <a class="secondary-action" [routerLink]="['/veiculos', vehicle().id]">Cancelar</a>
-      <button class="primary-action" type="submit" form="vehicle-edit-form">Salvar alterações</button>
+      <button class="primary-action" type="submit" form="vehicle-edit-form">
+        Salvar alterações
+      </button>
     </div>
   </header>
 
@@ -209,17 +211,29 @@
 
           <label>
             <span>Lance sugerido</span>
-            <input type="text" inputmode="decimal" [value]="vehicle().evaluation?.suggestedBid ?? ''" />
+            <input
+              type="text"
+              inputmode="decimal"
+              [value]="vehicle().evaluation?.suggestedBid ?? ''"
+            />
           </label>
 
           <label>
             <span>Lucro estimado</span>
-            <input type="text" inputmode="decimal" [value]="vehicle().evaluation?.estimatedProfit ?? ''" />
+            <input
+              type="text"
+              inputmode="decimal"
+              [value]="vehicle().evaluation?.estimatedProfit ?? ''"
+            />
           </label>
 
           <label>
             <span>Gastos estimados</span>
-            <input type="text" inputmode="decimal" [value]="vehicle().evaluation?.estimatedExpenses ?? ''" />
+            <input
+              type="text"
+              inputmode="decimal"
+              [value]="vehicle().evaluation?.estimatedExpenses ?? ''"
+            />
           </label>
 
           <label class="wide-field">
@@ -252,7 +266,9 @@
 
       <footer class="form-footer-actions">
         <a class="secondary-action" [routerLink]="['/veiculos', vehicle().id]">Cancelar</a>
-        <button class="primary-action" type="submit" form="vehicle-edit-form">Salvar alterações</button>
+        <button class="primary-action" type="submit" form="vehicle-edit-form">
+          Salvar alterações
+        </button>
       </footer>
     </div>
 

@@ -208,7 +208,10 @@ export class PremiumCheckoutComponent implements AfterViewInit, OnDestroy {
     ) as HTMLInputElement | null;
 
     if (documentNumberInput) {
-      documentNumberInput.value = this.formatDocumentNumber(documentNumberInput.value, documentType);
+      documentNumberInput.value = this.formatDocumentNumber(
+        documentNumberInput.value,
+        documentType,
+      );
     }
   }
 

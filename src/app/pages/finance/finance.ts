@@ -31,9 +31,21 @@ type MonthlyResult = {
 })
 export class Finance {
   protected readonly rows: FinanceRow[] = [
-    { vehicle: 'Honda Civic EXL', status: 'Vendido', purchase: 98500, expenses: 7800, sale: 124700 },
+    {
+      vehicle: 'Honda Civic EXL',
+      status: 'Vendido',
+      purchase: 98500,
+      expenses: 7800,
+      sale: 124700,
+    },
     { vehicle: 'Jeep Compass Longitude', status: 'Arrematado', purchase: 115000, expenses: 9500 },
-    { vehicle: 'VW Nivus Highline', status: 'Vendido', purchase: 92000, expenses: 6300, sale: 118800 },
+    {
+      vehicle: 'VW Nivus Highline',
+      status: 'Vendido',
+      purchase: 92000,
+      expenses: 6300,
+      sale: 118800,
+    },
     { vehicle: 'Fiat Uno 2018', status: 'Vendido', purchase: 21500, expenses: 2600, sale: 20000 },
     { vehicle: 'Gol 1.0 2020', status: 'Arrematado', purchase: 28000, expenses: 4200 },
   ];
@@ -79,20 +91,36 @@ export class Finance {
     });
   });
   protected readonly soldRows = computed(() => this.rows.filter((row) => row.status === 'Vendido'));
-  protected readonly purchasedRows = computed(() => this.rows.filter((row) => row.status === 'Arrematado'));
-  protected readonly totalInvested = computed(() => this.rows.reduce((total, row) => total + this.totalInvestedByRow(row), 0));
-  protected readonly totalExpenses = computed(() => this.rows.reduce((total, row) => total + row.expenses, 0));
-  protected readonly totalSold = computed(() => this.soldRows().reduce((total, row) => total + (row.sale ?? 0), 0));
-  protected readonly totalProfit = computed(() => this.rows.reduce((total, row) => total + this.resultByRow(row), 0));
+  protected readonly purchasedRows = computed(() =>
+    this.rows.filter((row) => row.status === 'Arrematado'),
+  );
+  protected readonly totalInvested = computed(() =>
+    this.rows.reduce((total, row) => total + this.totalInvestedByRow(row), 0),
+  );
+  protected readonly totalExpenses = computed(() =>
+    this.rows.reduce((total, row) => total + row.expenses, 0),
+  );
+  protected readonly totalSold = computed(() =>
+    this.soldRows().reduce((total, row) => total + (row.sale ?? 0), 0),
+  );
+  protected readonly totalProfit = computed(() =>
+    this.rows.reduce((total, row) => total + this.resultByRow(row), 0),
+  );
   protected readonly averageMargin = computed(() => {
     const margins = this.soldRows().map((row) => this.marginByRow(row));
     if (!margins.length) return 0;
 
     return margins.reduce((total, margin) => total + margin, 0) / margins.length;
   });
-  protected readonly maxProfitAbs = computed(() => Math.max(...this.soldRows().map((row) => Math.abs(this.resultByRow(row))), 1));
-  protected readonly maxCategoryExpense = computed(() => Math.max(...this.categoryExpenses.map((category) => category.value), 1));
-  protected readonly maxMonthlyResultAbs = computed(() => Math.max(...this.monthlyResults.map((month) => Math.abs(month.value)), 1));
+  protected readonly maxProfitAbs = computed(() =>
+    Math.max(...this.soldRows().map((row) => Math.abs(this.resultByRow(row))), 1),
+  );
+  protected readonly maxCategoryExpense = computed(() =>
+    Math.max(...this.categoryExpenses.map((category) => category.value), 1),
+  );
+  protected readonly maxMonthlyResultAbs = computed(() =>
+    Math.max(...this.monthlyResults.map((month) => Math.abs(month.value)), 1),
+  );
 
   protected totalInvestedByRow(row: FinanceRow): number {
     return row.purchase + row.expenses;

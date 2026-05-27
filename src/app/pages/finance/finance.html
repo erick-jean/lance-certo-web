@@ -30,7 +30,9 @@
 
       <article class="summary-card profit-card">
         <span>Lucro total</span>
-        <strong [class.negative]="totalProfit() < 0">{{ formatSignedCurrency(totalProfit()) }}</strong>
+        <strong [class.negative]="totalProfit() < 0">{{
+          formatSignedCurrency(totalProfit())
+        }}</strong>
       </article>
     </section>
 
@@ -89,12 +91,20 @@
         @for (row of filteredRows(); track row.vehicle) {
           <div class="finance-row" role="row">
             <strong role="cell">{{ row.vehicle }}</strong>
-            <span role="cell"><span class="status-pill" [class.sold]="row.status === 'Vendido'">{{ row.status }}</span></span>
+            <span role="cell"
+              ><span class="status-pill" [class.sold]="row.status === 'Vendido'">{{
+                row.status
+              }}</span></span
+            >
             <span role="cell">{{ formatCurrency(row.purchase) }}</span>
             <span role="cell">{{ formatCurrency(row.expenses) }}</span>
             <span role="cell">{{ formatCurrency(totalInvestedByRow(row)) }}</span>
             <span role="cell">{{ row.sale ? formatCurrency(row.sale) : '—' }}</span>
-            <strong role="cell" [class.positive]="resultByRow(row) > 0" [class.negative]="resultByRow(row) < 0">
+            <strong
+              role="cell"
+              [class.positive]="resultByRow(row) > 0"
+              [class.negative]="resultByRow(row) < 0"
+            >
               {{ row.sale ? formatSignedCurrency(resultByRow(row)) : 'Em aberto' }}
             </strong>
             <span role="cell">{{ row.sale ? formatPercent(marginByRow(row)) : '—' }}</span>
@@ -120,7 +130,10 @@
                 <strong>{{ formatCurrency(category.value) }}</strong>
               </div>
               <div class="bar-track">
-                <i [style.width]="barWidth(category.value, maxCategoryExpense())" [style.background]="category.color"></i>
+                <i
+                  [style.width]="barWidth(category.value, maxCategoryExpense())"
+                  [style.background]="category.color"
+                ></i>
               </div>
             </div>
           }
@@ -138,9 +151,13 @@
             <article class="month-card" [class.negative]="month.value < 0">
               <div>
                 <span>{{ month.month }}</span>
-                <mat-icon aria-hidden="true">{{ month.value < 0 ? 'trending_down' : 'trending_up' }}</mat-icon>
+                <mat-icon aria-hidden="true">{{
+                  month.value < 0 ? 'trending_down' : 'trending_up'
+                }}</mat-icon>
               </div>
-              <strong [class.negative]="month.value < 0">{{ formatSignedCurrency(month.value) }}</strong>
+              <strong [class.negative]="month.value < 0">{{
+                formatSignedCurrency(month.value)
+              }}</strong>
               <i [style.width]="barWidth(month.value, maxMonthlyResultAbs())"></i>
             </article>
           }

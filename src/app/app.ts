@@ -29,9 +29,7 @@ export class App {
     this.router.events
       .pipe(
         filter(
-          (
-            event,
-          ): event is NavigationStart | NavigationEnd | NavigationCancel | NavigationError =>
+          (event): event is NavigationStart | NavigationEnd | NavigationCancel | NavigationError =>
             event instanceof NavigationStart ||
             event instanceof NavigationEnd ||
             event instanceof NavigationCancel ||

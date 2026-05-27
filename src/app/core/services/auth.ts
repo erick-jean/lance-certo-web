@@ -31,11 +31,11 @@ export class Auth {
       .post<AuthResponse>(buildApiUrl(this.apiUrl, '/auth/login'), data, {
         withCredentials: true,
       })
-        .pipe(
-          tap((response) => {
-            this.setAccessToken(response.access_token);
-          }),
-        );
+      .pipe(
+        tap((response) => {
+          this.setAccessToken(response.access_token);
+        }),
+      );
   }
 
   refreshToken() {

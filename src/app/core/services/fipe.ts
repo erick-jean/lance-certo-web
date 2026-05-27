@@ -21,8 +21,6 @@ export interface YearsListResponse {
   name: string;
 }
 
-
-
 export interface FipeVehicleInfoResponse {
   brand?: string;
   codeFipe?: string;

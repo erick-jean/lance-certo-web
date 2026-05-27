@@ -23,21 +23,37 @@
           </div>
         }
         @if (imageUrls().length > 1) {
-        <button class="gallery-control previous" type="button" aria-label="Imagem anterior" (click)="showPreviousImage()">
-          <mat-icon aria-hidden="true">chevron_left</mat-icon>
-        </button>
-        <button class="gallery-control next" type="button" aria-label="Próxima imagem" (click)="showNextImage()">
-          <mat-icon aria-hidden="true">chevron_right</mat-icon>
-        </button>
-        <span class="gallery-count">{{ activeImageIndex() + 1 }} / {{ imageUrls().length }}</span>
+          <button
+            class="gallery-control previous"
+            type="button"
+            aria-label="Imagem anterior"
+            (click)="showPreviousImage()"
+          >
+            <mat-icon aria-hidden="true">chevron_left</mat-icon>
+          </button>
+          <button
+            class="gallery-control next"
+            type="button"
+            aria-label="Próxima imagem"
+            (click)="showNextImage()"
+          >
+            <mat-icon aria-hidden="true">chevron_right</mat-icon>
+          </button>
+          <span class="gallery-count">{{ activeImageIndex() + 1 }} / {{ imageUrls().length }}</span>
         }
       </div>
 
       <div class="badges">
-        <app-status-badge [label]="statusLabel(vehicle().status)" [tone]="statusTone(vehicle().status)" />
-        <app-status-badge [label]="damageLabel(vehicle().damageType)" [tone]="damageTone(vehicle().damageType)" [showDot]="true" />
+        <app-status-badge
+          [label]="statusLabel(vehicle().status)"
+          [tone]="statusTone(vehicle().status)"
+        />
+        <app-status-badge
+          [label]="damageLabel(vehicle().damageType)"
+          [tone]="damageTone(vehicle().damageType)"
+          [showDot]="true"
+        />
       </div>
-
     </div>
 
     <div class="detail-content">
@@ -47,7 +63,11 @@
           <p>{{ vehicleSubtitle() }}</p>
         </div>
 
-        <button class="primary-action edit-button" type="button" [routerLink]="['/veiculos', vehicle().id, 'editar']">
+        <button
+          class="primary-action edit-button"
+          type="button"
+          [routerLink]="['/veiculos', vehicle().id, 'editar']"
+        >
           <mat-icon aria-hidden="true">edit</mat-icon>
           <span>Editar</span>
         </button>
@@ -108,42 +128,121 @@
 
   <section class="detail-tabs">
     <nav class="tabs-nav" aria-label="Mais informações do veículo">
-      <button type="button" [class.active]="activeTab() === 'data'" (click)="selectTab('data')">Dados do Veículo</button>
-      <button type="button" [class.active]="activeTab() === 'evaluation'" (click)="selectTab('evaluation')">Avaliação</button>
-      <button type="button" [class.active]="activeTab() === 'checklist'" (click)="selectTab('checklist')">Checklist</button>
-      <button type="button" [class.active]="activeTab() === 'report'" (click)="selectTab('report')">Relatório</button>
+      <button type="button" [class.active]="activeTab() === 'data'" (click)="selectTab('data')">
+        Dados do Veículo
+      </button>
+      <button
+        type="button"
+        [class.active]="activeTab() === 'evaluation'"
+        (click)="selectTab('evaluation')"
+      >
+        Avaliação
+      </button>
+      <button
+        type="button"
+        [class.active]="activeTab() === 'checklist'"
+        (click)="selectTab('checklist')"
+      >
+        Checklist
+      </button>
+      <button type="button" [class.active]="activeTab() === 'report'" (click)="selectTab('report')">
+        Relatório
+      </button>
     </nav>
 
     @if (activeTab() === 'data') {
       <section class="tab-info-grid">
-        <div><span>Placa</span><strong>{{ vehicle().plate ?? '-' }}</strong></div>
-        <div><span>Marca / Modelo</span><strong>{{ vehicle().brand ?? '-' }} / {{ vehicle().model ?? '-' }}</strong></div>
-        <div><span>Ano Fab / Modelo</span><strong>{{ vehicle().yearManufacture ?? '-' }} / {{ vehicle().yearModel ?? '-' }}</strong></div>
-        <div><span>Cor</span><strong>{{ vehicle().color ?? '-' }}</strong></div>
-        <div><span>Combustível</span><strong>{{ fuelTypeLabel(vehicle().fuelType) }}</strong></div>
-        <div><span>Câmbio</span><strong>{{ transmissionLabel(vehicle().transmission) }}</strong></div>
-        <div><span>Tipo</span><strong>{{ vehicleTypeLabel(vehicle().type) }}</strong></div>
-        <div><span>Quilometragem</span><strong>{{ formatMileage(vehicle().mileage) }}</strong></div>
-        <div><span>Código FIPE</span><strong>{{ vehicle().fipeCode ?? '-' }}</strong></div>
-        <div><span>Valor FIPE</span><strong>{{ vehicle().fipeValue ?? '-' }}</strong></div>
-        <div><span>Valor mercado</span><strong>{{ vehicle().marketValue ?? '-' }}</strong></div>
-        <div><span>Leiloeiro</span><strong>{{ vehicle().auctioneer ?? '-' }}</strong></div>
-        <div><span>Tipo de leilão</span><strong>{{ auctionTypeLabel(vehicle().auctionType) }}</strong></div>
-        <div><span>Data do evento</span><strong>{{ formatDate(vehicle().eventDate) }}</strong></div>
-        <div><span>Cidade/UF</span><strong>{{ vehicle().city ?? '-' }}{{ vehicle().state ? ' / ' + vehicle().state : '' }}</strong></div>
-        <div><span>Lance inicial</span><strong>{{ vehicle().auctionInitialBid ?? '-' }}</strong></div>
-        <div><span>Lance atual</span><strong>{{ vehicle().auctionCurrentBid ?? '-' }}</strong></div>
-        <div><span>Preço de compra</span><strong>{{ vehicle().purchasePrice ?? '-' }}</strong></div>
-        <div><span>Comprado em</span><strong>{{ formatDate(vehicle().purchasedAt) }}</strong></div>
-        <div><span>Preço de venda</span><strong>{{ vehicle().soldPrice ?? '-' }}</strong></div>
-        <div><span>Vendido em</span><strong>{{ formatDate(vehicle().soldAt) }}</strong></div>
-        <div><span>Avaria</span><strong>{{ damageLabel(vehicle().damageType) }}</strong></div>
-        <div><span>Status</span><strong>{{ statusLabel(vehicle().status) }}</strong></div>
-        <div><span>Criado em</span><strong>{{ formatDate(vehicle().createdAt) }}</strong></div>
-        <div><span>Atualizado em</span><strong>{{ formatDate(vehicle().updatedAt) }}</strong></div>
-        <div class="wide-info"><span>Endereço do pátio</span><strong>{{ vehicle().yardAddress ?? '-' }}</strong></div>
-        <div class="wide-info"><span>URL de origem</span><strong>{{ vehicle().sourceUrl ?? '-' }}</strong></div>
-        <div class="wide-info"><span>Observações</span><strong>{{ vehicle().notes ?? '-' }}</strong></div>
+        <div>
+          <span>Placa</span><strong>{{ vehicle().plate ?? '-' }}</strong>
+        </div>
+        <div>
+          <span>Marca / Modelo</span
+          ><strong>{{ vehicle().brand ?? '-' }} / {{ vehicle().model ?? '-' }}</strong>
+        </div>
+        <div>
+          <span>Ano Fab / Modelo</span
+          ><strong
+            >{{ vehicle().yearManufacture ?? '-' }} / {{ vehicle().yearModel ?? '-' }}</strong
+          >
+        </div>
+        <div>
+          <span>Cor</span><strong>{{ vehicle().color ?? '-' }}</strong>
+        </div>
+        <div>
+          <span>Combustível</span><strong>{{ fuelTypeLabel(vehicle().fuelType) }}</strong>
+        </div>
+        <div>
+          <span>Câmbio</span><strong>{{ transmissionLabel(vehicle().transmission) }}</strong>
+        </div>
+        <div>
+          <span>Tipo</span><strong>{{ vehicleTypeLabel(vehicle().type) }}</strong>
+        </div>
+        <div>
+          <span>Quilometragem</span><strong>{{ formatMileage(vehicle().mileage) }}</strong>
+        </div>
+        <div>
+          <span>Código FIPE</span><strong>{{ vehicle().fipeCode ?? '-' }}</strong>
+        </div>
+        <div>
+          <span>Valor FIPE</span><strong>{{ vehicle().fipeValue ?? '-' }}</strong>
+        </div>
+        <div>
+          <span>Valor mercado</span><strong>{{ vehicle().marketValue ?? '-' }}</strong>
+        </div>
+        <div>
+          <span>Leiloeiro</span><strong>{{ vehicle().auctioneer ?? '-' }}</strong>
+        </div>
+        <div>
+          <span>Tipo de leilão</span><strong>{{ auctionTypeLabel(vehicle().auctionType) }}</strong>
+        </div>
+        <div>
+          <span>Data do evento</span><strong>{{ formatDate(vehicle().eventDate) }}</strong>
+        </div>
+        <div>
+          <span>Cidade/UF</span
+          ><strong
+            >{{ vehicle().city ?? '-' }}{{ vehicle().state ? ' / ' + vehicle().state : '' }}</strong
+          >
+        </div>
+        <div>
+          <span>Lance inicial</span><strong>{{ vehicle().auctionInitialBid ?? '-' }}</strong>
+        </div>
+        <div>
+          <span>Lance atual</span><strong>{{ vehicle().auctionCurrentBid ?? '-' }}</strong>
+        </div>
+        <div>
+          <span>Preço de compra</span><strong>{{ vehicle().purchasePrice ?? '-' }}</strong>
+        </div>
+        <div>
+          <span>Comprado em</span><strong>{{ formatDate(vehicle().purchasedAt) }}</strong>
+        </div>
+        <div>
+          <span>Preço de venda</span><strong>{{ vehicle().soldPrice ?? '-' }}</strong>
+        </div>
+        <div>
+          <span>Vendido em</span><strong>{{ formatDate(vehicle().soldAt) }}</strong>
+        </div>
+        <div>
+          <span>Avaria</span><strong>{{ damageLabel(vehicle().damageType) }}</strong>
+        </div>
+        <div>
+          <span>Status</span><strong>{{ statusLabel(vehicle().status) }}</strong>
+        </div>
+        <div>
+          <span>Criado em</span><strong>{{ formatDate(vehicle().createdAt) }}</strong>
+        </div>
+        <div>
+          <span>Atualizado em</span><strong>{{ formatDate(vehicle().updatedAt) }}</strong>
+        </div>
+        <div class="wide-info">
+          <span>Endereço do pátio</span><strong>{{ vehicle().yardAddress ?? '-' }}</strong>
+        </div>
+        <div class="wide-info">
+          <span>URL de origem</span><strong>{{ vehicle().sourceUrl ?? '-' }}</strong>
+        </div>
+        <div class="wide-info">
+          <span>Observações</span><strong>{{ vehicle().notes ?? '-' }}</strong>
+        </div>
       </section>
     }
 
@@ -181,7 +280,10 @@
 
           <label>
             <span>Categoria</span>
-            <select [ngModel]="expenseCategoryFilter()" (ngModelChange)="expenseCategoryFilter.set($event)">
+            <select
+              [ngModel]="expenseCategoryFilter()"
+              (ngModelChange)="expenseCategoryFilter.set($event)"
+            >
               <option value="ALL">Todas</option>
               <option value="DOCUMENTATION">Documentação</option>
               <option value="REPAIR">Mecânica</option>
@@ -197,7 +299,10 @@
 
           <label>
             <span>Obrigatório</span>
-            <select [ngModel]="expenseRequiredFilter()" (ngModelChange)="expenseRequiredFilter.set($event)">
+            <select
+              [ngModel]="expenseRequiredFilter()"
+              (ngModelChange)="expenseRequiredFilter.set($event)"
+            >
               <option value="ALL">Todos</option>
               <option value="REQUIRED">Sim</option>
               <option value="OPTIONAL">Não</option>
@@ -227,7 +332,11 @@
                   <small>{{ expense.notes }}</small>
                 }
               </div>
-              <span role="cell"><span [class]="expenseCategoryClass(expense.category)">{{ expenseCategoryLabel(expense.category) }}</span></span>
+              <span role="cell"
+                ><span [class]="expenseCategoryClass(expense.category)">{{
+                  expenseCategoryLabel(expense.category)
+                }}</span></span
+              >
               <span role="cell">{{ expense.isRequired ? 'Sim' : 'Não' }}</span>
               <strong role="cell">{{ expense.amount }}</strong>
             </div>
@@ -240,17 +349,32 @@
 
     @if (activeTab() === 'checklist') {
       <section class="tab-list">
-        <p>Documentação, vistoria e custos de regularização serão exibidos aqui quando a avaliação estiver integrada.</p>
+        <p>
+          Documentação, vistoria e custos de regularização serão exibidos aqui quando a avaliação
+          estiver integrada.
+        </p>
       </section>
     }
 
     @if (activeTab() === 'report') {
       <section class="tab-info-grid">
-        <div><span>Status</span><strong>{{ statusLabel(vehicle().status) }}</strong></div>
-        <div><span>Valor mercado</span><strong>{{ vehicle().marketValue ?? '-' }}</strong></div>
-        <div><span>Lucro estimado</span><strong>{{ vehicle().evaluation?.estimatedProfit ?? '-' }}</strong></div>
-        <div><span>Gastos estimados</span><strong>{{ vehicle().evaluation?.estimatedExpenses ?? '-' }}</strong></div>
-        <div class="wide-info"><span>Resumo</span><strong>{{ vehicle().notes ?? '-' }}</strong></div>
+        <div>
+          <span>Status</span><strong>{{ statusLabel(vehicle().status) }}</strong>
+        </div>
+        <div>
+          <span>Valor mercado</span><strong>{{ vehicle().marketValue ?? '-' }}</strong>
+        </div>
+        <div>
+          <span>Lucro estimado</span
+          ><strong>{{ vehicle().evaluation?.estimatedProfit ?? '-' }}</strong>
+        </div>
+        <div>
+          <span>Gastos estimados</span
+          ><strong>{{ vehicle().evaluation?.estimatedExpenses ?? '-' }}</strong>
+        </div>
+        <div class="wide-info">
+          <span>Resumo</span><strong>{{ vehicle().notes ?? '-' }}</strong>
+        </div>
       </section>
     }
   </section>
@@ -258,7 +382,11 @@
   @if (isExpenseDrawerOpen()) {
     <div class="expense-drawer-backdrop" (click)="closeExpenseDrawer()"></div>
 
-    <aside class="expense-drawer" [attr.aria-label]="expenseDrawerTitle()" (click)="$event.stopPropagation()">
+    <aside
+      class="expense-drawer"
+      [attr.aria-label]="expenseDrawerTitle()"
+      (click)="$event.stopPropagation()"
+    >
       <header class="expense-drawer-header">
         <div>
           <h2>{{ expenseDrawerTitle() }}</h2>
@@ -285,7 +413,11 @@
         <div class="form-row">
           <label>
             <span>Categoria</span>
-            <select [ngModel]="expenseCategory()" (ngModelChange)="expenseCategory.set($event)" name="expenseCategory">
+            <select
+              [ngModel]="expenseCategory()"
+              (ngModelChange)="expenseCategory.set($event)"
+              name="expenseCategory"
+            >
               <option value="">Selecionar</option>
               <option value="DOCUMENTATION">Documentação</option>
               <option value="REPAIR">Mecânica</option>
@@ -342,8 +474,12 @@
           @if (isEditingExpense()) {
             <button class="danger-action" type="button" (click)="deleteExpense()">Excluir</button>
           }
-          <button class="secondary-action" type="button" (click)="closeExpenseDrawer()">Cancelar</button>
-          <button class="primary-action" type="submit">{{ isEditingExpense() ? 'Salvar Alterações' : 'Salvar Gasto' }}</button>
+          <button class="secondary-action" type="button" (click)="closeExpenseDrawer()">
+            Cancelar
+          </button>
+          <button class="primary-action" type="submit">
+            {{ isEditingExpense() ? 'Salvar Alterações' : 'Salvar Gasto' }}
+          </button>
         </footer>
       </form>
     </aside>

@@ -23,7 +23,11 @@
     </label>
 
     <label class="filter-select">
-      <select [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)" aria-label="Filtrar por status">
+      <select
+        [ngModel]="statusFilter()"
+        (ngModelChange)="statusFilter.set($event)"
+        aria-label="Filtrar por status"
+      >
         <option value="ALL">Status</option>
         <option value="ANALYZING">Em análise</option>
         <option value="PURCHASED">Arrematado</option>
@@ -33,7 +37,11 @@
     </label>
 
     <label class="filter-select">
-      <select [ngModel]="typeFilter()" (ngModelChange)="typeFilter.set($event)" aria-label="Filtrar por tipo">
+      <select
+        [ngModel]="typeFilter()"
+        (ngModelChange)="typeFilter.set($event)"
+        aria-label="Filtrar por tipo"
+      >
         <option value="ALL">Tipo</option>
         <option value="CAR">Carro</option>
         <option value="MOTORCYCLE">Moto</option>
@@ -42,7 +50,11 @@
     </label>
 
     <label class="filter-select">
-      <select [ngModel]="locationFilter()" (ngModelChange)="locationFilter.set($event)" aria-label="Filtrar por localização">
+      <select
+        [ngModel]="locationFilter()"
+        (ngModelChange)="locationFilter.set($event)"
+        aria-label="Filtrar por localização"
+      >
         <option value="ALL">Localização</option>
         @for (location of locations(); track location) {
           <option [value]="location">{{ location }}</option>
@@ -52,11 +64,23 @@
     </label>
 
     <div class="view-actions" aria-label="Modo de visualização">
-      <button class="view-button" type="button" aria-label="Visualizar em grade" [class.active]="viewMode() === 'grid'" (click)="setViewMode('grid')">
+      <button
+        class="view-button"
+        type="button"
+        aria-label="Visualizar em grade"
+        [class.active]="viewMode() === 'grid'"
+        (click)="setViewMode('grid')"
+      >
         <mat-icon aria-hidden="true">grid_view</mat-icon>
       </button>
 
-      <button class="view-button" type="button" aria-label="Visualizar em lista" [class.active]="viewMode() === 'list'" (click)="setViewMode('list')">
+      <button
+        class="view-button"
+        type="button"
+        aria-label="Visualizar em lista"
+        [class.active]="viewMode() === 'list'"
+        (click)="setViewMode('list')"
+      >
         <mat-icon aria-hidden="true">table_rows</mat-icon>
       </button>
     </div>
@@ -76,83 +100,96 @@
       <button class="create-button" type="button" (click)="loadVehicles()">Tentar novamente</button>
     </div>
   } @else {
-    <section class="vehicles-grid" [class.list-view]="viewMode() === 'list'" aria-label="Lista de veículos">
-    @for (vehicle of filteredVehicles(); track vehicle.id) {
-      <a class="vehicle-card" [routerLink]="['/veiculos', vehicle.id]">
-        <div class="vehicle-photo">
-          @if (coverImage(vehicle); as imageUrl) {
-            <img [src]="imageUrl" [alt]="vehicleTitle(vehicle)" />
-          } @else {
-            <div class="vehicle-image-placeholder" aria-hidden="true">
-              <mat-icon>directions_car</mat-icon>
-              <span>Sem imagem</span>
+    <section
+      class="vehicles-grid"
+      [class.list-view]="viewMode() === 'list'"
+      aria-label="Lista de veículos"
+    >
+      @for (vehicle of filteredVehicles(); track vehicle.id) {
+        <a class="vehicle-card" [routerLink]="['/veiculos', vehicle.id]">
+          <div class="vehicle-photo">
+            @if (coverImage(vehicle); as imageUrl) {
+              <img [src]="imageUrl" [alt]="vehicleTitle(vehicle)" />
+            } @else {
+              <div class="vehicle-image-placeholder" aria-hidden="true">
+                <mat-icon>directions_car</mat-icon>
+                <span>Sem imagem</span>
+              </div>
+            }
+            <div class="badges">
+              <app-status-badge
+                [label]="statusLabel(vehicle.status)"
+                [tone]="statusTone(vehicle.status)"
+              />
+              <app-status-badge
+                [label]="damageLabel(vehicle.damageType)"
+                [tone]="damageTone(vehicle.damageType)"
+                [showDot]="true"
+              />
             </div>
-          }
-          <div class="badges">
-            <app-status-badge [label]="statusLabel(vehicle.status)" [tone]="statusTone(vehicle.status)" />
-            <app-status-badge [label]="damageLabel(vehicle.damageType)" [tone]="damageTone(vehicle.damageType)" [showDot]="true" />
           </div>
+
+          <div class="vehicle-body">
+            <div class="vehicle-main-info">
+              <h2>{{ vehicleTitle(vehicle) }}</h2>
+              <p>{{ vehicleSubtitle(vehicle) }}</p>
+
+              <div class="list-details" aria-label="Dados resumidos do veículo">
+                <div>
+                  <span>Placa</span>
+                  <strong>{{ vehicle.plate ?? '-' }}</strong>
+                </div>
+                <div>
+                  <span>KM</span>
+                  <strong>{{ formatMileage(vehicle.mileage) }}</strong>
+                </div>
+                <div>
+                  <span>Câmbio</span>
+                  <strong>{{ transmissionLabel(vehicle.transmission) }}</strong>
+                </div>
+                <div>
+                  <span>Combustível</span>
+                  <strong>{{ fuelTypeLabel(vehicle.fuelType) }}</strong>
+                </div>
+                <div>
+                  <span>Leiloeiro</span>
+                  <strong>{{ vehicle.auctioneer ?? '-' }}</strong>
+                </div>
+                <div>
+                  <span>Evento</span>
+                  <strong>{{ formatDate(vehicle.eventDate) }}</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="vehicle-values">
+              <div>
+                <span>FIPE</span>
+                <strong>{{ formatCurrency(vehicle.fipeValue) }}</strong>
+              </div>
+
+              <div class="highlight-value" [class.success-value]="vehicle.status === 'PURCHASED'">
+                <span>{{
+                  vehicle.status === 'PURCHASED' ? 'Lucro estimado' : 'Lance sugerido'
+                }}</span>
+                <strong>
+                  {{
+                    vehicle.status === 'PURCHASED'
+                      ? formatCurrency(vehicle.evaluation?.estimatedProfit)
+                      : formatCurrency(vehicle.evaluation?.maxRecommendedBid)
+                  }}
+                </strong>
+              </div>
+            </div>
+          </div>
+        </a>
+      } @empty {
+        <div class="vehicles-empty">
+          <mat-icon aria-hidden="true">search_off</mat-icon>
+          <h2>Nenhum veículo encontrado</h2>
+          <p>Ajuste a busca ou limpe os filtros para ver mais resultados.</p>
         </div>
-
-        <div class="vehicle-body">
-          <div class="vehicle-main-info">
-            <h2>{{ vehicleTitle(vehicle) }}</h2>
-            <p>{{ vehicleSubtitle(vehicle) }}</p>
-
-            <div class="list-details" aria-label="Dados resumidos do veículo">
-              <div>
-                <span>Placa</span>
-                <strong>{{ vehicle.plate ?? '-' }}</strong>
-              </div>
-              <div>
-                <span>KM</span>
-                <strong>{{ formatMileage(vehicle.mileage) }}</strong>
-              </div>
-              <div>
-                <span>Câmbio</span>
-                <strong>{{ transmissionLabel(vehicle.transmission) }}</strong>
-              </div>
-              <div>
-                <span>Combustível</span>
-                <strong>{{ fuelTypeLabel(vehicle.fuelType) }}</strong>
-              </div>
-              <div>
-                <span>Leiloeiro</span>
-                <strong>{{ vehicle.auctioneer ?? '-' }}</strong>
-              </div>
-              <div>
-                <span>Evento</span>
-                <strong>{{ formatDate(vehicle.eventDate) }}</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="vehicle-values">
-            <div>
-              <span>FIPE</span>
-              <strong>{{ formatCurrency(vehicle.fipeValue) }}</strong>
-            </div>
-
-            <div class="highlight-value" [class.success-value]="vehicle.status === 'PURCHASED'">
-              <span>{{ vehicle.status === 'PURCHASED' ? 'Lucro estimado' : 'Lance sugerido' }}</span>
-              <strong>
-                {{
-                  vehicle.status === 'PURCHASED'
-                    ? formatCurrency(vehicle.evaluation?.estimatedProfit)
-                    : formatCurrency(vehicle.evaluation?.maxRecommendedBid)
-                }}
-              </strong>
-            </div>
-          </div>
-        </div>
-      </a>
-    } @empty {
-      <div class="vehicles-empty">
-        <mat-icon aria-hidden="true">search_off</mat-icon>
-        <h2>Nenhum veículo encontrado</h2>
-        <p>Ajuste a busca ou limpe os filtros para ver mais resultados.</p>
-      </div>
-    }
+      }
     </section>
   }
 </section>

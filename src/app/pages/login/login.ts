@@ -1,5 +1,4 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { Auth } from '../../core/services/auth';
@@ -9,7 +8,7 @@ import { finalize } from 'rxjs';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, MatIconModule, RouterLink, ReactiveFormsModule],
+  imports: [MatIconModule, RouterLink, ReactiveFormsModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
@@ -26,9 +25,6 @@ export class Login {
 
   protected readonly loading = signal(false);
   errorMessage = signal('');
-
-  email = '';
-  password = '';
 
   form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
