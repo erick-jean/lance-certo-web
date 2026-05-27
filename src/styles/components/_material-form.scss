@@ -1,0 +1,38 @@
+.material-form {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.material-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md);
+}
+
+.material-form-field,
+.full-field {
+  width: 100%;
+}
+
+.material-form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+@media (width <= 768px) {
+  .material-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .material-form-actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+
+  .material-form-actions button,
+  .material-form-actions a {
+    width: 100%;
+  }
+}
