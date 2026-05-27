@@ -17,9 +17,9 @@ import { VehicleCreateHeaderComponent } from './components/vehicle-create-header
 import { VehicleFormActions } from './components/vehicle-form-actions/vehicle-form-actions';
 import { VehicleIdentificationForm } from './components/vehicle-identification-form/vehicle-identification-form';
 import { createVehicleForm } from './vehicle-create.form';
-import { getFipeCode, getFipeValue, getFuelTypeFromFipeYear } from './vehicle-create-fipe.helpers';
 import { VehicleCreateFacade } from './vehicle-create.facade';
 import { buildCreateVehiclePayload } from './vehicle-create-payload.mapper';
+import { VehicleCreateFormService } from './vehicle-create-form.service';
 
 @Component({
   selector: 'app-vehicle-create',
@@ -35,10 +35,11 @@ import { buildCreateVehiclePayload } from './vehicle-create-payload.mapper';
   ],
   templateUrl: './vehicle-create.html',
   styleUrl: './vehicle-create.scss',
-  providers: [VehicleCreateFacade],
+  providers: [VehicleCreateFacade, VehicleCreateFormService],
 })
 export class VehicleCreate {
   readonly facade = inject(VehicleCreateFacade);
+  private readonly formService = inject(VehicleCreateFormService);
   private readonly router = inject(Router);
   private readonly vehiclesService = inject(VehiclesService);
 
@@ -68,11 +69,12 @@ export class VehicleCreate {
   readonly damageTypeOptions = DAMAGE_TYPE_OPTIONS;
 
   /**
-   * Manipula a mudança no campo de tipo de veículo. Reseta os campos dependentes (marca, modelo, ano e informações da FIPE)
+   * Reinicia a cadeia FIPE ao alterar o tipo do veículo.
    */
   getBrands(vehicleType: VehicleFipeType | ''): void {
-    this.resetDependentFipeControls('brand');
-    this.resetFipeFields();
+    this.formService.resetDependentFipeControls(this.form, 'brand');
+    this.formService.resetFipeFields(this.form);
+
     this.facade.getBrands(vehicleType);
 
     if (vehicleType) {
@@ -91,11 +93,11 @@ export class VehicleCreate {
   }
 
   /**
-   * Manipula a mudança no campo de marca. Reseta os campos dependentes (modelo, ano e informações da FIPE)
+   * Reinicia modelo, ano e dados FIPE ao alterar a marca.
    */
   onBrandChange(brandCode: string): void {
-    this.resetDependentFipeControls('model');
-    this.resetFipeFields();
+    this.formService.resetDependentFipeControls(this.form, 'model');
+    this.formService.resetFipeFields(this.form);
 
     const vehicleType = this.form.controls.vehicleType.value;
     this.facade.getModels(vehicleType, brandCode);
@@ -115,12 +117,11 @@ export class VehicleCreate {
   }
 
   /**
-   * Manipula a mudança no campo de modelo. Reseta os campos dependentes
-   * (ano e informações da FIPE) e busca os anos disponíveis para o modelo selecionado.
+   * Reinicia ano e dados FIPE ao alterar o modelo.
    */
   onModelChange(modelCode: string): void {
-    this.resetDependentFipeControls('year');
-    this.resetFipeFields();
+    this.formService.resetDependentFipeControls(this.form, 'year');
+    this.formService.resetFipeFields(this.form);
 
     const vehicleType = this.form.controls.vehicleType.value;
     const brandCode = this.form.controls.brand.value;
@@ -142,19 +143,17 @@ export class VehicleCreate {
   }
 
   /**
-   * Manipula a mudança no campo de ano.
-   * Seleciona o tipo de combustível com base no ano escolhido e atualiza as informações do veículo.
+   * Busca os dados FIPE e tenta inferir o combustível pelo ano selecionado.
    */
   onYearChange(yearCode: string): void {
-    this.selectFuelTypeFromFipeYear(yearCode);
+    this.formService.selectFuelTypeFromFipeYear(this.form, yearCode);
 
     const vehicleType = this.form.controls.vehicleType.value;
     const brandCode = this.form.controls.brand.value;
     const modelCode = this.form.controls.model.value;
 
     this.facade.getFipeVehicleInfo(vehicleType, brandCode, modelCode, yearCode, (vehicleInfo) => {
-      this.form.controls.fipeCode.setValue(getFipeCode(vehicleInfo));
-      this.form.controls.fipeValue.setValue(getFipeValue(vehicleInfo));
+      this.formService.applyFipeVehicleInfo(this.form, vehicleInfo);
     });
   }
 
@@ -224,47 +223,5 @@ export class VehicleCreate {
     return status
       ? (messageByStatus[status] ?? 'Não foi possível cadastrar o veículo.')
       : 'Não foi possível cadastrar o veículo.';
-  }
-
-  /**
-   * Reseta os campos relacionados à FIPE (código, valor e erros) sem limpar as seleções de marca/modelo/ano.
-   */
-  private resetFipeFields(): void {
-    this.form.controls.fipeCode.reset('');
-    this.form.controls.fipeValue.reset('');
-    this.facade.resetFipeInfo();
-  }
-
-  /**
-   * Reseta e desabilita os campos dependentes de marca/modelo/ano quando uma seleção anterior é alterada.
-   */
-  private resetDependentFipeControls(from: 'brand' | 'model' | 'year'): void {
-    if (from === 'brand') {
-      this.form.controls.brand.reset('');
-      this.form.controls.brand.disable();
-    }
-
-    if (from === 'brand' || from === 'model') {
-      this.form.controls.model.reset('');
-      this.form.controls.model.disable();
-    }
-
-    this.form.controls.yearModel.reset('');
-    this.form.controls.yearModel.disable();
-  }
-
-  /**
-   * Determina o tipo de combustível com base no código do ano selecionado na FIPE e atualiza o campo de combustível do formulário.
-   */
-  private selectFuelTypeFromFipeYear(yearCode: string): void {
-    const selectedYear = this.facade.years().find((year) => year.code === yearCode);
-    const fuelType = getFuelTypeFromFipeYear(
-      selectedYear,
-      selectedYear ? this.facade.getYearLabel(selectedYear) : '',
-    );
-
-    if (fuelType) {
-      this.form.controls.fuelType.setValue(fuelType);
-    }
   }
 }
