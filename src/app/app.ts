@@ -52,6 +52,6 @@ export class App {
   }
 
   private isAuthenticationRoute(url: string): boolean {
-    return url.startsWith('/login') || url.startsWith('/criar-conta');
+    return url.startsWith('/login') || url.startsWith('/register');
   }
 }

@@ -9,8 +9,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
-import { Auth } from '../../core/services/auth';
-import { LoginHeroComponent } from './components/login-hero/login-hero';
+import { Auth } from '../../core/services/auth/auth.service';
+import { LoginHeroComponent } from '../../shared/components/login-hero/login-hero';
 
 @Component({
   selector: 'app-login',

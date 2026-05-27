@@ -1,4 +1,4 @@
-const AUTH_PATHS = new Set(['/auth/login', '/auth/refresh', '/auth/logout']);
+const AUTH_PATHS = new Set(['/auth/login', '/auth/register', '/auth/refresh', '/auth/logout']);
 
 export function normalizeApiBaseUrl(apiUrl: string): string {
   return apiUrl.trim().replace(/\/+$/, '');

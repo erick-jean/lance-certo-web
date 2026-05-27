@@ -5,101 +5,6 @@
   background: #f6f7fb;
 }
 
-.register-hero {
-  position: relative;
-  display: grid;
-  min-height: 100dvh;
-  grid-template-rows: auto 1fr auto;
-  overflow: hidden;
-  background: #0b1b32;
-  color: #ffffff;
-  padding: 2.5rem;
-
-  &::before {
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(122deg, transparent 0 50%, rgb(255 255 255 / 0.055) 50% 66%, transparent 66%),
-      radial-gradient(circle at 12% 8%, rgb(21 94 239 / 0.18), transparent 32%),
-      radial-gradient(circle at 92% 88%, rgb(0 122 88 / 0.18), transparent 30%);
-    content: '';
-  }
-}
-
-.brand-mark,
-.hero-copy,
-.hero-insight {
-  position: relative;
-  z-index: 1;
-}
-
-.brand-mark {
-  display: inline-flex;
-  width: 14rem;
-  align-items: center;
-  border-radius: var(--radius-md);
-  background: rgb(255 255 255 / 0.94);
-  padding: 0.5rem 0.75rem;
-  box-shadow: 0 1rem 2rem rgb(0 0 0 / 0.18);
-
-  img {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-  }
-}
-
-.hero-copy {
-  align-self: center;
-  max-width: 28rem;
-  margin-top: 2rem;
-
-  h1 {
-    color: #ffffff;
-    font-size: 2.75rem;
-    font-weight: var(--font-weight-bold);
-    line-height: 1.08;
-  }
-
-  p {
-    color: #b8c8de;
-    font-size: var(--font-size-sm);
-    line-height: var(--line-height-relaxed);
-    margin-top: 1.25rem;
-  }
-}
-
-.hero-insight {
-  display: grid;
-  gap: 0.5rem;
-  max-width: 25rem;
-  border: 1px solid rgb(255 255 255 / 0.12);
-  border-radius: var(--radius-lg);
-  background: rgb(255 255 255 / 0.07);
-  padding: 1.25rem;
-  backdrop-filter: blur(6px);
-
-  > span {
-    color: #34d399;
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-bold);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  strong {
-    color: #ffffff;
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-bold);
-    line-height: 1.25;
-  }
-
-  p {
-    color: #b8c8de;
-    font-size: var(--font-size-sm);
-  }
-}
-
 .register-panel {
   display: grid;
   min-height: 100dvh;
@@ -112,9 +17,7 @@
 }
 
 .register-card {
-  display: grid;
   width: min(100%, 28rem);
-  gap: 1rem;
   border: 1px solid #e4e7ec;
   border-radius: var(--radius-lg);
   background: #ffffff;
@@ -150,111 +53,85 @@
     font-size: var(--font-size-sm);
     margin-top: 0.35rem;
   }
-
-  label {
-    display: grid;
-    gap: 0.45rem;
-  }
-
-  label > span {
-    color: #07101d;
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-bold);
-  }
 }
 
-.form-row {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-}
-
-.input-field {
-  display: flex;
-  align-items: center;
-  min-height: 2.875rem;
-  border: 1px solid #c7ced9;
+.form-alert {
+  border: 1px solid rgb(220 38 38 / 0.24);
   border-radius: var(--radius-sm);
-  background: #ffffff;
-  color: #667085;
-  padding: 0 0.75rem;
-
-  &:focus-within {
-    border-color: #007a58;
-    box-shadow: 0 0 0 3px rgb(0 122 88 / 0.14);
-  }
-
-  > mat-icon {
-    width: 1.125rem;
-    height: 1.125rem;
-    color: #667085;
-    font-size: 1.125rem;
-  }
-
-  input {
-    width: 100%;
-    min-width: 0;
-    border: 0;
-    outline: 0;
-    background: transparent;
-    color: #07101d;
-    font-size: var(--font-size-sm);
-    padding: 0 0.5rem;
-  }
-
-  button {
-    display: grid;
-    width: 1.5rem;
-    height: 1.5rem;
-    place-items: center;
-    border: 0;
-    background: transparent;
-    color: #667085;
-    cursor: pointer;
-    padding: 0;
-
-    mat-icon {
-      width: 1.125rem;
-      height: 1.125rem;
-      font-size: 1.125rem;
-    }
-  }
+  background: rgb(220 38 38 / 0.08);
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  padding: 0.75rem;
 }
 
-.terms-check {
-  display: flex !important;
-  align-items: flex-start;
-  gap: 0.5rem !important;
-  margin-top: 0.25rem;
+.terms-field {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: -0.25rem;
+}
 
-  input {
-    width: 0.875rem;
-    min-height: 0.875rem;
-    margin-top: 0.2rem;
-    accent-color: #007a58;
-  }
-
-  span {
-    color: #475467 !important;
-    font-size: var(--font-size-xs) !important;
-    font-weight: var(--font-weight-regular) !important;
-  }
+.checkbox-error {
+  color: var(--color-danger);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  padding-left: 0.25rem;
 }
 
 .submit-button {
-  min-height: 2.875rem;
-  border: 0;
+  width: 100%;
+  min-height: 3rem;
   border-radius: var(--radius-sm);
-  background: #007a58;
-  color: #ffffff;
-  cursor: pointer;
+  background: #007a58 !important;
+  color: #ffffff !important;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
 
-  &:hover {
-    background: #078c67;
+  &:not(:disabled):hover {
+    background: #078c67 !important;
     box-shadow: 0 0.5rem 1rem rgb(0 122 88 / 0.18);
     transform: translateY(-1px);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.72;
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+.button-content,
+:host ::ng-deep .submit-button .mdc-button__label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.button-content mat-spinner {
+  --mdc-circular-progress-active-indicator-color: #ffffff;
+}
+
+:host ::ng-deep {
+  .register-card {
+    .mat-mdc-form-field {
+      --mdc-outlined-text-field-container-shape: var(--radius-sm);
+      --mdc-outlined-text-field-focus-outline-color: #007a58;
+      --mdc-outlined-text-field-hover-outline-color: #98a2b3;
+      --mdc-outlined-text-field-label-text-color: #667085;
+      --mdc-outlined-text-field-input-text-color: #07101d;
+      --mdc-outlined-text-field-outline-color: #c7ced9;
+    }
+
+    .mat-mdc-form-field-icon-prefix,
+    .mat-mdc-form-field-icon-suffix {
+      color: #667085;
+    }
+
+    .mat-mdc-text-field-wrapper {
+      background: #ffffff;
+    }
   }
 }
 
@@ -272,10 +149,6 @@
 @media (max-width: 900px) {
   .register-page {
     grid-template-columns: 1fr;
-  }
-
-  .register-hero {
-    display: none;
   }
 
   .register-panel {
@@ -299,9 +172,5 @@
     border: 0;
     box-shadow: none;
     padding: 1.5rem;
-  }
-
-  .form-row {
-    grid-template-columns: 1fr;
   }
 }

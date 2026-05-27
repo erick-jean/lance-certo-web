@@ -10,10 +10,15 @@ export const routes: Routes = [
     canActivate: [loginGuard],
   },
   {
-    path: 'criar-conta',
+    path: 'register',
     loadComponent: () =>
-      import('./pages/register/register').then((component) => component.Register),
+      import('./pages/register/register').then((component) => component.RegisterComponent),
     canActivate: [loginGuard],
+  },
+  {
+    path: 'criar-conta',
+    redirectTo: 'register',
+    pathMatch: 'full',
   },
   {
     path: 'dashboard',

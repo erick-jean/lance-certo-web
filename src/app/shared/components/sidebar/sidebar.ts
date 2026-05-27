@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { Auth } from '../../../core/services/auth';
+import { Auth } from '../../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-sidebar',

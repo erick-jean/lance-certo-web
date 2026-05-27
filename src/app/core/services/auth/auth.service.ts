@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, finalize, shareReplay, tap } from 'rxjs';
 
-import { environment } from '../../environments/environment';
-import { buildApiUrl, normalizeApiBaseUrl } from '../utils/api';
+import { environment } from '../../../environments/environment';
+import { buildApiUrl, normalizeApiBaseUrl } from '../../utils/api';
 
 interface LoginRequest {
   email: string;

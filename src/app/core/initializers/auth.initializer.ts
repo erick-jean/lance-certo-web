@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { catchError, of } from 'rxjs';
 
-import { Auth } from '../services/auth';
+import { Auth } from '../services/auth/auth.service';
 
 export function initializeAuth() {
   const authService = inject(Auth);
