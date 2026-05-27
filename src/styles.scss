@@ -293,7 +293,8 @@ h3,
   animation: auth-form-enter 320ms var(--ease-out) both;
 }
 
-.register-success-dialog-panel {
+.register-success-dialog-panel,
+.vehicle-create-error-dialog-panel {
   --mdc-dialog-container-color: var(--color-surface);
 
   .mat-mdc-dialog-surface {

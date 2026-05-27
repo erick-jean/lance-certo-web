@@ -1,5 +1,6 @@
 import { Component, inject, ChangeDetectionStrategy, computed, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 import { AUCTION_TYPE_OPTIONS } from '../../core/constants/auction-type-options';
@@ -13,6 +14,10 @@ import { VehicleFipeType } from '../../core/types/vehicle-options.type';
 import { PageLoadingOverlay } from '../../shared/components/page-loading-overlay/page-loading-overlay';
 import { VehicleAnalysisFormComponent } from './components/vehicle-analysis-form/vehicle-analysis-form';
 import { VehicleAuctionFormComponent } from './components/vehicle-auction-form/vehicle-auction-form';
+import {
+  VehicleCreateErrorDialogComponent,
+  VehicleCreateErrorDialogData,
+} from './components/vehicle-create-error-dialog/vehicle-create-error-dialog';
 import { VehicleCreateHeaderComponent } from './components/vehicle-create-header/vehicle-create-header.component';
 import { VehicleFormActionsComponent } from './components/vehicle-form-actions/vehicle-form-actions';
 import { VehicleIdentificationFormComponent } from './components/vehicle-identification-form/vehicle-identification-form';
@@ -29,6 +34,7 @@ import { VehicleIdentificationVm } from './models/vehicle-identification.vm';
   standalone: true,
   imports: [
     ReactiveFormsModule,
+    MatDialogModule,
     PageLoadingOverlay,
     VehicleCreateHeaderComponent,
     VehicleIdentificationFormComponent,
@@ -45,6 +51,7 @@ export class VehicleCreate {
   readonly facade = inject(VehicleCreateFacade);
   private readonly formService = inject(VehicleCreateFormService);
   private readonly router = inject(Router);
+  private readonly dialog = inject(MatDialog);
   private readonly vehiclesService = inject(VehiclesService);
 
   readonly form = createVehicleForm();
@@ -196,8 +203,10 @@ export class VehicleCreate {
           void this.router.navigate(['/veiculos', vehicle.id]);
         },
         error: (error: HttpErrorResponse) => {
-          console.error('Erro ao cadastrar veículo', error);
-          this.submitError.set(this.getCreateVehicleErrorMessage(error.status));
+          const dialogData = this.buildCreateVehicleErrorDialog(error);
+
+          this.submitError.set(dialogData.message);
+          this.openCreateVehicleErrorDialog(dialogData);
         },
       });
   }
@@ -218,6 +227,50 @@ export class VehicleCreate {
     return status
       ? (messageByStatus[status] ?? 'Não foi possível cadastrar o veículo.')
       : 'Não foi possível cadastrar o veículo.';
+  }
+
+  private openCreateVehicleErrorDialog(data: VehicleCreateErrorDialogData): void {
+    this.dialog.open(VehicleCreateErrorDialogComponent, {
+      data,
+      autoFocus: 'dialog',
+      panelClass: 'vehicle-create-error-dialog-panel',
+    });
+  }
+
+  private buildCreateVehicleErrorDialog(error: HttpErrorResponse): VehicleCreateErrorDialogData {
+    const message =
+      this.getApiErrorMessage(error) || this.getCreateVehicleErrorMessage(error.status);
+
+    if (error.status === 403) {
+      return {
+        title: 'Limite do plano grátis atingido',
+        message,
+        icon: 'workspace_premium',
+        actionLabel: 'Ver assinatura',
+        actionRoute: '/assinatura',
+      };
+    }
+
+    return {
+      title: 'Não foi possível cadastrar o veículo',
+      message,
+      icon: 'error_outline',
+    };
+  }
+
+  private getApiErrorMessage(error: HttpErrorResponse): string {
+    const responseError = error.error as { message?: unknown } | null;
+    const message = responseError?.message;
+
+    if (typeof message === 'string') {
+      return message;
+    }
+
+    if (Array.isArray(message)) {
+      return message.filter((item): item is string => typeof item === 'string').join(' ');
+    }
+
+    return '';
   }
 
   // VM para gerenciamento do estado da identificação do veículo e dados FIPE.

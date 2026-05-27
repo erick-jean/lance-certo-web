@@ -4,7 +4,7 @@ import { Observable, finalize, shareReplay, tap } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { buildApiUrl, normalizeApiBaseUrl } from '../../utils/api';
-import { RegisterRequest, RegisterResponse, AuthResponse, LoginRequest } from './auth.models';
+import { RegisterRequest, RegisterResponse, LoginResponse, LoginRequest } from './auth.models';
 
 const ACCESS_TOKEN_STORAGE_KEY = 'lance_certo_access_token';
 
@@ -14,13 +14,13 @@ export class Auth {
   private readonly apiUrl = normalizeApiBaseUrl(environment.apiUrl);
 
   private readonly accessToken = signal<string | null>(this.getStoredAccessToken());
-  private refreshInFlight$?: Observable<AuthResponse>;
+  private refreshInFlight$?: Observable<LoginResponse>;
 
   readonly isAuthenticated = computed(() => !!this.accessToken());
 
   login(data: LoginRequest) {
     return this.http
-      .post<AuthResponse>(buildApiUrl(this.apiUrl, '/auth/login'), data, {
+      .post<LoginResponse>(buildApiUrl(this.apiUrl, '/auth/login'), data, {
         withCredentials: true,
       })
       .pipe(
@@ -37,7 +37,7 @@ export class Auth {
   refreshToken() {
     if (!this.refreshInFlight$) {
       this.refreshInFlight$ = this.http
-        .post<AuthResponse>(
+        .post<LoginResponse>(
           buildApiUrl(this.apiUrl, '/auth/refresh'),
           {},
           {

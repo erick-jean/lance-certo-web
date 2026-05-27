@@ -1,0 +1,26 @@
+<section class="error-dialog">
+  <div class="error-accent" aria-hidden="true"></div>
+
+  <div class="error-icon" aria-hidden="true">
+    <mat-icon>{{ data.icon }}</mat-icon>
+  </div>
+
+  <div class="error-copy">
+    <span>Cadastro não concluído</span>
+    <h2 mat-dialog-title>{{ data.title }}</h2>
+
+    <mat-dialog-content>
+      <p>{{ data.message }}</p>
+    </mat-dialog-content>
+  </div>
+
+  <mat-dialog-actions align="center">
+    <button mat-stroked-button class="secondary-action" mat-dialog-close>Entendi</button>
+
+    @if (data.actionRoute && data.actionLabel) {
+      <a mat-flat-button class="primary-action" [routerLink]="data.actionRoute" mat-dialog-close>
+        {{ data.actionLabel }}
+      </a>
+    }
+  </mat-dialog-actions>
+</section>

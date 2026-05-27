@@ -1,0 +1,108 @@
+.error-dialog {
+  position: relative;
+  display: grid;
+  width: min(28rem, 86vw);
+  justify-items: center;
+  gap: 1rem;
+  padding: 1.5rem 1.5rem 1.25rem;
+  text-align: center;
+}
+
+.error-accent {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 0.25rem;
+  background: linear-gradient(90deg, var(--color-warning), var(--color-danger));
+}
+
+.error-icon {
+  display: grid;
+  width: 3.5rem;
+  height: 3.5rem;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--color-warning-soft);
+  color: #b65700;
+  box-shadow: 0 0.75rem 1.5rem rgb(246 164 64 / 0.16);
+
+  mat-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 1.75rem;
+  }
+}
+
+.error-copy {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.error-copy > span {
+  color: #b65700;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+h2 {
+  color: var(--color-heading);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  margin: 0;
+}
+
+mat-dialog-content {
+  padding: 0;
+}
+
+mat-dialog-actions {
+  width: 100%;
+  gap: 0.75rem;
+  justify-content: center;
+  padding: 0.25rem 0 0;
+}
+
+.primary-action,
+.secondary-action {
+  min-width: 8rem;
+  min-height: var(--control-height);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-bold);
+}
+
+.primary-action {
+  background: var(--color-action) !important;
+  color: var(--color-surface) !important;
+
+  &:hover {
+    background: var(--color-action-hover) !important;
+    box-shadow: 0 0.5rem 1rem rgb(0 122 88 / 0.18);
+    transform: translateY(-1px);
+  }
+}
+
+.secondary-action {
+  border-color: var(--color-border-strong) !important;
+  color: var(--color-heading) !important;
+}
+
+@media (max-width: 480px) {
+  mat-dialog-actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+
+  .primary-action,
+  .secondary-action {
+    width: 100%;
+  }
+}
