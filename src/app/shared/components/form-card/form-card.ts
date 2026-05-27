@@ -8,7 +8,7 @@ import { MatIcon } from '@angular/material/icon';
   templateUrl: './form-card.html',
   styleUrl: './form-card.scss',
 })
-export class FormCard {
+export class FormCardComponent {
   @Input({ required: true }) icon = '';
   @Input({ required: true }) title = '';
   @Input({ required: true }) description = '';

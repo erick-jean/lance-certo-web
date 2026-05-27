@@ -7,7 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 
 import { DropdownOption } from '../../../../core/types/dropdown-option.type';
 import { VehicleCreateForm } from '../../vehicle-create.form';
-import { FormCard } from '../../../../shared/components/form-card/form-card';
+import { FormCardComponent } from '../../../../shared/components/form-card/form-card';
 import { PercentMaskDirective } from '../../../../shared/directives/percent-mask.directive';
 
 @Component({
@@ -19,7 +19,7 @@ import { PercentMaskDirective } from '../../../../shared/directives/percent-mask
     MatInputModule,
     MatSelectModule,
     MatOptionModule,
-    FormCard,
+    FormCardComponent,
     PercentMaskDirective,
   ],
   templateUrl: './vehicle-analysis-form.html',

@@ -20,7 +20,7 @@ import {
 } from '../../../../core/services/fipe';
 import { DropdownOption } from '../../../../core/types/dropdown-option.type';
 import { VehicleFipeType } from '../../../../core/types/vehicle-options.type';
-import { FormCard } from '../../../../shared/components/form-card/form-card';
+import { FormCardComponent } from '../../../../shared/components/form-card/form-card';
 import { SearchableSelectComponent } from '../../../../shared/components/searchable-select/searchable-select';
 import { CurrencyMaskDirective } from '../../../../shared/directives/currency-mask.directive';
 import { DigitsOnlyDirective } from '../../../../shared/directives/digits-only.directive';
@@ -36,7 +36,7 @@ import { VehicleCreateForm } from '../../vehicle-create.form';
     MatInputModule,
     MatSelectModule,
     MatOptionModule,
-    FormCard,
+    FormCardComponent,
     SearchableSelectComponent,
     CurrencyMaskDirective,
     DigitsOnlyDirective,

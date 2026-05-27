@@ -38,7 +38,7 @@ export class SearchableSelectComponent {
   @Input() optionValueFn?: (item: any) => unknown;
 
   @Output() openedChange = new EventEmitter<boolean>();
-  @Output() selectionChange = new EventEmitter<unknown>();
+  @Output() selectionChange = new EventEmitter<string>();
   @Output() searchChange = new EventEmitter<string>();
 
   get selectPlaceholder(): string {
@@ -70,6 +70,10 @@ export class SearchableSelectComponent {
   }
 
   trackByOption = (_index: number, item: unknown): unknown => this.getOptionValue(item);
+
+  emitSelectionChange(value: unknown): void {
+    this.selectionChange.emit(String(value ?? ''));
+  }
 
   private isObjectRecord(item: unknown): item is Record<string, unknown> {
     return item !== null && typeof item === 'object';

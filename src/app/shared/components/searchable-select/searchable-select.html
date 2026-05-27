@@ -6,7 +6,7 @@
     [placeholder]="selectPlaceholder"
     [panelClass]="panelClass"
     (openedChange)="openedChange.emit($event)"
-    (selectionChange)="selectionChange.emit($event.value)"
+    (selectionChange)="emitSelectionChange($event.value)"
   >
     <div
       class="select-search-box"

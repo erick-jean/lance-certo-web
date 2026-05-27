@@ -41,7 +41,7 @@
       [error]="brandsError()"
       [searchValue]="brandSearch()"
       (openedChange)="brandOpenedChange.emit($event)"
-      (selectionChange)="brandChange.emit($any($event))"
+      (selectionChange)="brandChange.emit($event)"
       (searchChange)="brandSearch.set($event)"
     />
 
@@ -61,7 +61,7 @@
       [error]="modelsError()"
       [searchValue]="modelSearch()"
       (openedChange)="modelOpenedChange.emit($event)"
-      (selectionChange)="modelChange.emit($any($event))"
+      (selectionChange)="modelChange.emit($event)"
       (searchChange)="modelSearch.set($event)"
     />
 
@@ -81,7 +81,7 @@
       [searchValue]="yearSearch()"
       [optionLabelFn]="getYearLabel"
       (openedChange)="yearOpenedChange.emit($event)"
-      (selectionChange)="yearChange.emit($any($event))"
+      (selectionChange)="yearChange.emit($event)"
       (searchChange)="yearSearch.set($event)"
     />
 
