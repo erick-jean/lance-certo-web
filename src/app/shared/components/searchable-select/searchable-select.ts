@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatOptionModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
 @Component({
@@ -12,11 +13,13 @@ import { MatSelectModule } from '@angular/material/select';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatIconModule,
+    MatInputModule,
     MatSelectModule,
     MatOptionModule,
   ],
   templateUrl: './searchable-select.html',
   styleUrl: './searchable-select.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchableSelectComponent {
   @Input({ required: true }) control!: FormControl;
@@ -73,6 +76,11 @@ export class SearchableSelectComponent {
 
   emitSelectionChange(value: unknown): void {
     this.selectionChange.emit(String(value ?? ''));
+  }
+
+  emitSearchChange(event: Event): void {
+    const input = event.target as HTMLInputElement | null;
+    this.searchChange.emit(input?.value ?? '');
   }
 
   private isObjectRecord(item: unknown): item is Record<string, unknown> {

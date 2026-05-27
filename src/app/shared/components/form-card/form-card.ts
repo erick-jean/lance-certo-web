@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
@@ -7,6 +7,7 @@ import { MatIcon } from '@angular/material/icon';
   imports: [MatIcon],
   templateUrl: './form-card.html',
   styleUrl: './form-card.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormCardComponent {
   @Input({ required: true }) icon = '';

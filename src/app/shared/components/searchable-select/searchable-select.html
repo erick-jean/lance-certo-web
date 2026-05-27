@@ -15,11 +15,12 @@
     >
       <mat-icon aria-hidden="true">search</mat-icon>
       <input
+        matInput
         type="text"
         [attr.aria-label]="searchPlaceholder"
         [placeholder]="searchPlaceholder"
         [value]="searchValue"
-        (input)="searchChange.emit($any($event.target).value)"
+        (input)="emitSearchChange($event)"
         (keydown.enter)="$event.preventDefault()"
       />
     </div>

@@ -41,7 +41,7 @@
       [error]="vm.brands.error()"
       [searchValue]="vm.brands.search()"
       (openedChange)="brandOpenedChange.emit($event)"
-      (selectionChange)="brandChange.emit($any($event))"
+      (selectionChange)="brandChange.emit($event)"
       (searchChange)="vm.brands.search.set($event)"
     />
 
@@ -61,7 +61,7 @@
       [error]="vm.models.error()"
       [searchValue]="vm.models.search()"
       (openedChange)="modelOpenedChange.emit($event)"
-      (selectionChange)="modelChange.emit($any($event))"
+      (selectionChange)="modelChange.emit($event)"
       (searchChange)="vm.models.search.set($event)"
     />
 
@@ -81,7 +81,7 @@
       [searchValue]="vm.years.search()"
       [optionLabelFn]="vm.years.optionLabelFn"
       (openedChange)="yearOpenedChange.emit($event)"
-      (selectionChange)="yearChange.emit($any($event))"
+      (selectionChange)="yearChange.emit($event)"
       (searchChange)="vm.years.search.set($event)"
     />
 

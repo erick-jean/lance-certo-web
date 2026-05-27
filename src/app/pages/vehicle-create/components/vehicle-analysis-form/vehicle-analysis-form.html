@@ -30,6 +30,7 @@
         formControlName="desiredProfitMarginPercent"
         placeholder="15"
       />
+      <span matTextSuffix>%</span>
 
       @if (form.controls.desiredProfitMarginPercent.hasError('required')) {
         <mat-error>Informe a margem de lucro</mat-error>
@@ -53,6 +54,7 @@
         formControlName="safetyMarginPercent"
         placeholder="2"
       />
+      <span matTextSuffix>%</span>
 
       @if (form.controls.safetyMarginPercent.hasError('required')) {
         <mat-error>Informe a margem de segurança</mat-error>
