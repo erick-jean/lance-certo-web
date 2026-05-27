@@ -1,13 +1,15 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
-import { MATERIAL_FORM_IMPORTS } from '../../shared/material/material-form.imports';
-import { LoginHeroComponent } from '../../shared/components/login-hero/login-hero';
 import { RegisterRequest } from '../../core/services/auth/auth.models';
-import { RegisterApiService } from './services/register-api.service';
+import { Auth } from '../../core/services/auth/auth.service';
+import { LoginHeroComponent } from '../../shared/components/login-hero/login-hero';
+import { MATERIAL_FORM_IMPORTS } from '../../shared/material/material-form.imports';
+import { RegisterSuccessDialogComponent } from './components/register-success-dialog/register-success-dialog';
 import { passwordMatchValidator } from './validators/password-match.validator';
 
 type RegisterControlName = 'name' | 'email' | 'password' | 'confirmPassword' | 'termsAccepted';
@@ -15,14 +17,15 @@ type RegisterControlName = 'name' | 'email' | 'password' | 'confirmPassword' | '
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [RouterLink, LoginHeroComponent, ...MATERIAL_FORM_IMPORTS],
+  imports: [RouterLink, LoginHeroComponent, MatDialogModule, ...MATERIAL_FORM_IMPORTS],
   templateUrl: './register.html',
   styleUrl: './register.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterComponent {
   private readonly fb = inject(FormBuilder);
-  private readonly registerApi = inject(RegisterApiService);
+  private readonly auth = inject(Auth);
+  private readonly dialog = inject(MatDialog);
   private readonly router = inject(Router);
 
   protected readonly loading = signal(false);
@@ -65,14 +68,12 @@ export class RegisterComponent {
 
     this.loading.set(true);
 
-    this.registerApi
+    this.auth
       .register(this.buildRegisterPayload())
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: () => {
-          void this.router.navigate(['/login'], {
-            queryParams: { registered: 'true' },
-          });
+          this.openSuccessDialog();
         },
         error: (error: HttpErrorResponse) => {
           this.errorMessage.set(this.getRegisterErrorMessage(error.status));
@@ -108,6 +109,19 @@ export class RegisterComponent {
       email: formValue.email.trim().toLowerCase(),
       password: formValue.password,
     };
+  }
+
+  private openSuccessDialog(): void {
+    const dialogRef = this.dialog.open(RegisterSuccessDialogComponent, {
+      disableClose: true,
+      autoFocus: 'dialog',
+      panelClass: 'register-success-dialog-panel',
+    });
+
+    // O redirecionamento fica condicionado ao clique no Ok para garantir que o usuário leia o retorno.
+    dialogRef.afterClosed().subscribe(() => {
+      void this.router.navigate(['/login']);
+    });
   }
 
   /**

@@ -36,6 +36,7 @@ export class LoginComponent {
 
   protected readonly loading = signal(false);
   protected readonly showPassword = signal(false);
+  protected readonly authSwitching = signal(false);
   protected readonly errorMessage = signal('');
 
   protected readonly form = this.fb.nonNullable.group({
@@ -92,6 +93,20 @@ export class LoginComponent {
 
   protected togglePassword(): void {
     this.showPassword.update((visible) => !visible);
+  }
+
+  protected goToRegister(event: Event): void {
+    event.preventDefault();
+
+    if (this.authSwitching()) {
+      return;
+    }
+
+    this.authSwitching.set(true);
+
+    window.setTimeout(() => {
+      void this.router.navigate(['/register']);
+    }, 180);
   }
 
   protected hasError(controlName: 'email' | 'password', errorName: string): boolean {

@@ -6,7 +6,13 @@
       <img src="/logo.png" alt="Lance Certo" />
     </div>
 
-    <form class="login-card" [formGroup]="form" (ngSubmit)="login()" novalidate>
+    <form
+      class="login-card"
+      [class.is-switching]="authSwitching()"
+      [formGroup]="form"
+      (ngSubmit)="login()"
+      novalidate
+    >
       <header>
         <span>Acesso seguro</span>
         <h2>Bem-vindo de volta</h2>
@@ -88,7 +94,7 @@
 
       <p class="signup-text">
         Ainda não tem uma conta?
-        <a routerLink="/register">Criar conta</a>
+        <a href="/register" (click)="goToRegister($event)">Criar conta</a>
       </p>
     </form>
   </main>

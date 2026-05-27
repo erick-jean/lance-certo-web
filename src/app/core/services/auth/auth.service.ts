@@ -4,15 +4,7 @@ import { Observable, finalize, shareReplay, tap } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { buildApiUrl, normalizeApiBaseUrl } from '../../utils/api';
-
-interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-interface AuthResponse {
-  access_token: string;
-}
+import { RegisterRequest, RegisterResponse, AuthResponse, LoginRequest } from './auth.models';
 
 const ACCESS_TOKEN_STORAGE_KEY = 'lance_certo_access_token';
 
@@ -36,6 +28,10 @@ export class Auth {
           this.setAccessToken(response.access_token);
         }),
       );
+  }
+
+  register(payload: RegisterRequest): Observable<RegisterResponse> {
+    return this.http.post<RegisterResponse>(buildApiUrl(this.apiUrl, '/auth/register'), payload);
   }
 
   refreshToken() {
