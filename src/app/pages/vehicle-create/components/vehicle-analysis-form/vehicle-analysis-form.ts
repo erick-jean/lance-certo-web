@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
@@ -20,7 +19,6 @@ export interface PercentInputEvent {
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    MatIconModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -28,7 +26,7 @@ export interface PercentInputEvent {
     FormCard,
   ],
   templateUrl: './vehicle-analysis-form.html',
-  styleUrl: '../vehicle-form-section.scss',
+  styleUrl: './vehicle-analysis-form.scss',
 })
 export class VehicleAnalysisForm {
   @Input({ required: true }) form!: VehicleCreateForm;

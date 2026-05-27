@@ -3,9 +3,10 @@ import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-form-card',
+  standalone: true,
   imports: [MatIcon],
   templateUrl: './form-card.html',
-  styleUrl: './form-card.css',
+  styleUrl: './form-card.scss',
 })
 export class FormCard {
   @Input({ required: true }) icon = '';

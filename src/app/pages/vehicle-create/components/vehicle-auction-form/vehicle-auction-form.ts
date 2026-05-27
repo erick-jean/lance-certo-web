@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
@@ -15,7 +14,6 @@ import { FormCard } from '../../../../shared/components/form-card/form-card';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    MatIconModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -23,7 +21,7 @@ import { FormCard } from '../../../../shared/components/form-card/form-card';
     FormCard,
   ],
   templateUrl: './vehicle-auction-form.html',
-  styleUrl: '../vehicle-form-section.scss',
+  styleUrl: './vehicle-auction-form.scss',
 })
 export class VehicleAuctionForm {
   @Input({ required: true }) form!: VehicleCreateForm;

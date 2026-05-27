@@ -29,7 +29,7 @@ import { FormCard } from '../../../../shared/components/form-card/form-card';
     FormCard,
   ],
   templateUrl: './vehicle-identification-form.html',
-  styleUrl: '../vehicle-form-section.scss',
+  styleUrl: './vehicle-identification-form.scss',
 })
 export class VehicleIdentificationForm {
   @Input({ required: true }) form!: VehicleCreateForm;
