@@ -51,11 +51,13 @@
       <mat-label>UF</mat-label>
       <input
         matInput
+        appUppercase
         type="text"
         formControlName="state"
         placeholder="MS"
         maxlength="2"
-        (input)="stateInput.emit($event)"
+        [maxLength]="2"
+        [lettersOnly]="true"
       />
 
       @if (form.controls.state.hasError('required')) {
@@ -71,11 +73,11 @@
       <mat-label>Lance inicial</mat-label>
       <input
         matInput
+        appCurrencyMask
         type="text"
         inputmode="decimal"
         formControlName="auctionInitialBid"
         placeholder="R$ 85.000"
-        (input)="auctionInitialBidInput.emit($event)"
       />
 
       @if (form.controls.auctionInitialBid.hasError('required')) {
@@ -87,11 +89,11 @@
       <mat-label>Lance atual</mat-label>
       <input
         matInput
+        appCurrencyMask
         type="text"
         inputmode="decimal"
         formControlName="auctionCurrentBid"
         placeholder="R$ 92.000"
-        (input)="auctionCurrentBidInput.emit($event)"
       />
 
       @if (form.controls.auctionCurrentBid.hasError('required')) {

@@ -24,11 +24,11 @@
       <mat-label>Porcentagem de lucro</mat-label>
       <input
         matInput
+        appPercentMask
         type="text"
         inputmode="numeric"
         formControlName="desiredProfitMarginPercent"
         placeholder="15"
-        (input)="percentInput.emit({ event: $event, controlName: 'desiredProfitMarginPercent' })"
       />
 
       @if (form.controls.desiredProfitMarginPercent.hasError('required')) {
@@ -47,11 +47,11 @@
       <mat-label>Margem de segurança</mat-label>
       <input
         matInput
+        appPercentMask
         type="text"
         inputmode="numeric"
         formControlName="safetyMarginPercent"
         placeholder="2"
-        (input)="percentInput.emit({ event: $event, controlName: 'safetyMarginPercent' })"
       />
 
       @if (form.controls.safetyMarginPercent.hasError('required')) {

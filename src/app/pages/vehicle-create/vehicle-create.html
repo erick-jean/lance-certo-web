@@ -34,25 +34,11 @@
         (modelChange)="onModelChange($event)"
         (yearOpenedChange)="onYearSelectOpenedChange($event)"
         (yearChange)="onYearChange($event)"
-        (plateInput)="formatPlate($event)"
-        (yearManufactureInput)="onlyFourDigits($event)"
-        (marketValueInput)="formatMarketValue($event)"
-        (mileageInput)="formatMileage($event)"
       />
 
-      <app-vehicle-auction-form
-        [form]="form"
-        [auctionTypeOptions]="auctionTypeOptions"
-        (stateInput)="formatState($event)"
-        (auctionInitialBidInput)="formatAuctionInitialBid($event)"
-        (auctionCurrentBidInput)="formatAuctionCurrentBid($event)"
-      />
+      <app-vehicle-auction-form [form]="form" [auctionTypeOptions]="auctionTypeOptions" />
 
-      <app-vehicle-analysis-form
-        [form]="form"
-        [damageTypeOptions]="damageTypeOptions"
-        (percentInput)="formatPercent($event.event, $event.controlName)"
-      />
+      <app-vehicle-analysis-form [form]="form" [damageTypeOptions]="damageTypeOptions" />
 
       <app-vehicle-form-actions [submitLoading]="submitLoading" [submitError]="submitError" />
     </div>

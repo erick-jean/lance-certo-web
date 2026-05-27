@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -8,6 +8,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { DropdownOption } from '../../../../core/types/dropdown-option.type';
 import { VehicleCreateForm } from '../../vehicle-create.form';
 import { FormCard } from '../../../../shared/components/form-card/form-card';
+import { CurrencyMaskDirective } from '../../../../shared/directives/currency-mask.directive';
+import { UppercaseDirective } from '../../../../shared/directives/uppercase.directive';
 
 @Component({
   selector: 'app-vehicle-auction-form',
@@ -19,6 +21,8 @@ import { FormCard } from '../../../../shared/components/form-card/form-card';
     MatSelectModule,
     MatOptionModule,
     FormCard,
+    CurrencyMaskDirective,
+    UppercaseDirective,
   ],
   templateUrl: './vehicle-auction-form.html',
   styleUrl: './vehicle-auction-form.scss',
@@ -26,8 +30,4 @@ import { FormCard } from '../../../../shared/components/form-card/form-card';
 export class VehicleAuctionForm {
   @Input({ required: true }) form!: VehicleCreateForm;
   @Input({ required: true }) auctionTypeOptions: DropdownOption[] = [];
-
-  @Output() stateInput = new EventEmitter<Event>();
-  @Output() auctionInitialBidInput = new EventEmitter<Event>();
-  @Output() auctionCurrentBidInput = new EventEmitter<Event>();
 }

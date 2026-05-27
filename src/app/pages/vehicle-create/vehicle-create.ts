@@ -10,12 +10,6 @@ import { VEHICLE_TYPE_OPTIONS } from '../../core/constants/vehicle-type-options'
 import { YearsListResponse } from '../../core/services/fipe';
 import { Vehicles as VehiclesService } from '../../core/services/vehicles';
 import { VehicleFipeType } from '../../core/types/vehicle-options.type';
-import {
-  formatCurrencyBRL,
-  formatPlateValue,
-  formatStateValue,
-  onlyDigits,
-} from '../../core/utils/form-formatters';
 import { PageLoadingOverlay } from '../../shared/components/page-loading-overlay/page-loading-overlay';
 import { VehicleAnalysisForm } from './components/vehicle-analysis-form/vehicle-analysis-form';
 import { VehicleAuctionForm } from './components/vehicle-auction-form/vehicle-auction-form';
@@ -164,88 +158,6 @@ export class VehicleCreate {
     });
   }
 
-  /**
-   * Formata o campo de placa enquanto o usuário digita, aplicando a máscara de placa brasileira (ex: "ABC1D23").
-   */
-  formatPlate(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const value = formatPlateValue(input.value);
-
-    input.value = value;
-    this.form.controls.plate.setValue(value);
-  }
-
-  /**
-   * Restringe o campo de ano de fabricação para aceitar apenas dígitos e limitar
-   * a 4 caracteres, garantindo que o usuário insira um ano válido.
-   */
-  onlyFourDigits(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const value = onlyDigits(input.value, 4);
-
-    input.value = value;
-    this.form.controls.yearManufacture.setValue(value ? Number(value) : null);
-  }
-
-  /**
-   * Normaliza campos monetários.
-   * Aplica máscara de moeda brasileira no input e atualiza o FormControl
-   * com o valor numérico correspondente.
-   */
-
-  formatMarketValue(event: Event): void {
-    this.formatCurrencyControl(event, 'marketValue');
-  }
-
-  formatAuctionInitialBid(event: Event): void {
-    this.formatCurrencyControl(event, 'auctionInitialBid');
-  }
-
-  formatAuctionCurrentBid(event: Event): void {
-    this.formatCurrencyControl(event, 'auctionCurrentBid');
-  }
-
-  /**
-   * Normaliza o campo de quilometragem.
-   * Mantém apenas dígitos no input e salva o valor numérico no FormControl.
-   */
-  formatMileage(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const value = onlyDigits(input.value);
-
-    input.value = value;
-    this.form.controls.mileage.setValue(value ? Number(value) : null);
-  }
-
-  /**
-   * Formata o campo de estado para garantir que apenas letras sejam inseridas e
-   * aplicando a formatação de placa (ex: "SP" para São Paulo).
-   */
-  formatState(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const value = formatStateValue(input.value);
-
-    input.value = value;
-    this.form.controls.state.setValue(value);
-  }
-
-  /**
-   * Normaliza campos percentuais do formulário.
-   * Mantém apenas números, limita o valor a 100 e atualiza o FormControl
-   * com um número limpo, sem o símbolo de porcentagem.
-   */
-  formatPercent(
-    event: Event,
-    controlName: 'desiredProfitMarginPercent' | 'safetyMarginPercent',
-  ): void {
-    const input = event.target as HTMLInputElement;
-    const digits = onlyDigits(input.value, 3);
-    const value = digits ? Math.min(Number(digits), 100) : null;
-
-    input.value = value === null ? '' : String(value);
-    this.form.controls[controlName].setValue(value);
-  }
-
   readonly getYearLabel = (year: YearsListResponse): string => this.facade.getYearLabel(year);
 
   isPageLoading(): boolean {
@@ -294,28 +206,6 @@ export class VehicleCreate {
         this.submitError = this.getCreateVehicleErrorMessage(error?.status);
       },
     });
-  }
-
-  /**
-   * Formata os campos de valor monetário (valor de mercado, lance inicial e lance atual)
-   * garantindo que apenas dígitos sejam inseridos e aplicando a formatação de moeda brasileira.
-   */
-  private formatCurrencyControl(
-    event: Event,
-    controlName: 'marketValue' | 'auctionInitialBid' | 'auctionCurrentBid',
-  ): void {
-    const input = event.target as HTMLInputElement;
-    const digits = onlyDigits(input.value);
-
-    if (!digits) {
-      input.value = '';
-      this.form.controls[controlName].setValue('');
-      return;
-    }
-
-    const value = formatCurrencyBRL(Number(digits));
-    input.value = value;
-    this.form.controls[controlName].setValue(value);
   }
 
   /**

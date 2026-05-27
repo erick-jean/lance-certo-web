@@ -89,11 +89,11 @@
       <mat-label>Placa</mat-label>
       <input
         matInput
+        appPlateMask
         type="text"
         formControlName="plate"
         placeholder="ABC-1234"
         maxlength="8"
-        (input)="plateInput.emit($event)"
       />
 
       @if (form.controls.plate.hasError('required')) {
@@ -109,12 +109,13 @@
       <mat-label>Ano de fabricação</mat-label>
       <input
         matInput
+        appDigitsOnly
         type="text"
         inputmode="numeric"
         maxlength="4"
+        [maxDigits]="4"
         formControlName="yearManufacture"
         placeholder="Ex: 2023"
-        (input)="yearManufactureInput.emit($event)"
       />
 
       @if (form.controls.yearManufacture.hasError('required')) {
@@ -157,11 +158,11 @@
       <mat-label>Valor de mercado</mat-label>
       <input
         matInput
+        appCurrencyMask
         type="text"
         inputmode="decimal"
         formControlName="marketValue"
         placeholder="R$ 121.000"
-        (input)="marketValueInput.emit($event)"
       />
 
       @if (form.controls.marketValue.hasError('required')) {
@@ -178,11 +179,11 @@
       <mat-label>Quilometragem</mat-label>
       <input
         matInput
+        appDigitsOnly
         type="text"
         inputmode="numeric"
         formControlName="mileage"
         placeholder="45200"
-        (input)="mileageInput.emit($event)"
       />
     </mat-form-field>
 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -8,11 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { DropdownOption } from '../../../../core/types/dropdown-option.type';
 import { VehicleCreateForm } from '../../vehicle-create.form';
 import { FormCard } from '../../../../shared/components/form-card/form-card';
-
-export interface PercentInputEvent {
-  event: Event;
-  controlName: 'desiredProfitMarginPercent' | 'safetyMarginPercent';
-}
+import { PercentMaskDirective } from '../../../../shared/directives/percent-mask.directive';
 
 @Component({
   selector: 'app-vehicle-analysis-form',
@@ -24,6 +20,7 @@ export interface PercentInputEvent {
     MatSelectModule,
     MatOptionModule,
     FormCard,
+    PercentMaskDirective,
   ],
   templateUrl: './vehicle-analysis-form.html',
   styleUrl: './vehicle-analysis-form.scss',
@@ -31,6 +28,4 @@ export interface PercentInputEvent {
 export class VehicleAnalysisForm {
   @Input({ required: true }) form!: VehicleCreateForm;
   @Input({ required: true }) damageTypeOptions: DropdownOption[] = [];
-
-  @Output() percentInput = new EventEmitter<PercentInputEvent>();
 }
