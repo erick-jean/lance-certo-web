@@ -36,13 +36,13 @@
       optionValueKey="code"
       optionLabelKey="name"
       [control]="form.controls.brand"
-      [items]="filteredBrands()"
-      [loading]="brandsLoading()"
-      [error]="brandsError()"
-      [searchValue]="brandSearch()"
+      [items]="vm.brands.items()"
+      [loading]="vm.brands.loading()"
+      [error]="vm.brands.error()"
+      [searchValue]="vm.brands.search()"
       (openedChange)="brandOpenedChange.emit($event)"
-      (selectionChange)="brandChange.emit($event)"
-      (searchChange)="brandSearch.set($event)"
+      (selectionChange)="brandChange.emit($any($event))"
+      (searchChange)="vm.brands.search.set($event)"
     />
 
     <app-searchable-select
@@ -56,13 +56,13 @@
       optionValueKey="code"
       optionLabelKey="name"
       [control]="form.controls.model"
-      [items]="filteredModels()"
-      [loading]="modelsLoading()"
-      [error]="modelsError()"
-      [searchValue]="modelSearch()"
+      [items]="vm.models.items()"
+      [loading]="vm.models.loading()"
+      [error]="vm.models.error()"
+      [searchValue]="vm.models.search()"
       (openedChange)="modelOpenedChange.emit($event)"
-      (selectionChange)="modelChange.emit($event)"
-      (searchChange)="modelSearch.set($event)"
+      (selectionChange)="modelChange.emit($any($event))"
+      (searchChange)="vm.models.search.set($event)"
     />
 
     <app-searchable-select
@@ -75,14 +75,14 @@
       panelClass="vehicle-select-panel year-select-panel"
       optionValueKey="code"
       [control]="form.controls.yearModel"
-      [items]="filteredYears()"
-      [loading]="yearsLoading()"
-      [error]="yearsError()"
-      [searchValue]="yearSearch()"
-      [optionLabelFn]="getYearLabel"
+      [items]="vm.years.items()"
+      [loading]="vm.years.loading()"
+      [error]="vm.years.error()"
+      [searchValue]="vm.years.search()"
+      [optionLabelFn]="vm.years.optionLabelFn"
       (openedChange)="yearOpenedChange.emit($event)"
-      (selectionChange)="yearChange.emit($event)"
-      (searchChange)="yearSearch.set($event)"
+      (selectionChange)="yearChange.emit($any($event))"
+      (searchChange)="vm.years.search.set($event)"
     />
 
     <mat-form-field appearance="outline">
@@ -141,16 +141,16 @@
         matInput
         type="text"
         formControlName="fipeValue"
-        [placeholder]="fipeInfoLoading() ? 'Buscando valor FIPE...' : 'R$ 125.000'"
+        [placeholder]="vm.fipeInfo.loading() ? 'Buscando valor FIPE...' : 'R$ 125.000'"
         readonly
       />
 
-      @if (fipeInfoLoading()) {
+      @if (vm.fipeInfo.loading()) {
         <mat-hint>Buscando valor FIPE...</mat-hint>
       }
 
-      @if (fipeInfoError()) {
-        <mat-error>{{ fipeInfoError() }}</mat-error>
+      @if (vm.fipeInfo.error()) {
+        <mat-error>{{ vm.fipeInfo.error() }}</mat-error>
       }
     </mat-form-field>
 

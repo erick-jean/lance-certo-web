@@ -22,6 +22,7 @@ import { buildCreateVehiclePayload } from './vehicle-create-payload.mapper';
 import { VehicleCreateFormService } from './vehicle-create-form.service';
 import { finalize } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { VehicleIdentificationVm } from './models/vehicle-identification.vm';
 
 @Component({
   selector: 'app-vehicle-create',
@@ -50,21 +51,6 @@ export class VehicleCreate {
   readonly submitLoading = signal(false);
   readonly submitError = signal('');
 
-  readonly brandsLoading = this.facade.brandsLoading;
-  readonly brandsError = this.facade.brandsError;
-  readonly brandSearch = this.facade.brandSearch;
-  readonly filteredBrands = this.facade.filteredBrands;
-  readonly modelsLoading = this.facade.modelsLoading;
-  readonly modelsError = this.facade.modelsError;
-  readonly modelSearch = this.facade.modelSearch;
-  readonly filteredModels = this.facade.filteredModels;
-  readonly yearsLoading = this.facade.yearsLoading;
-  readonly yearsError = this.facade.yearsError;
-  readonly yearSearch = this.facade.yearSearch;
-  readonly filteredYears = this.facade.filteredYears;
-  readonly fipeInfoLoading = this.facade.fipeInfoLoading;
-  readonly fipeInfoError = this.facade.fipeInfoError;
-
   readonly vehicleTypeOptions = VEHICLE_TYPE_OPTIONS;
   readonly fuelTypeOptions = FUEL_TYPE_OPTIONS;
   readonly transmissionOptions = TRANSMISSION_OPTIONS;
@@ -91,7 +77,7 @@ export class VehicleCreate {
    */
   onBrandSelectOpenedChange(opened: boolean): void {
     if (!opened) {
-      this.brandSearch.set('');
+      this.identificationVm.brands.search.set('');
     }
   }
 
@@ -115,7 +101,7 @@ export class VehicleCreate {
    */
   onModelSelectOpenedChange(opened: boolean): void {
     if (!opened) {
-      this.modelSearch.set('');
+      this.identificationVm.models.search.set('');
     }
   }
 
@@ -141,7 +127,7 @@ export class VehicleCreate {
    */
   onYearSelectOpenedChange(opened: boolean): void {
     if (!opened) {
-      this.yearSearch.set('');
+      this.identificationVm.years.search.set('');
     }
   }
 
@@ -162,7 +148,7 @@ export class VehicleCreate {
 
   readonly getYearLabel = (year: YearsListResponse): string => this.facade.getYearLabel(year);
 
-  readonly isPageLoading = computed(() => this.fipeInfoLoading() || this.submitLoading());
+  readonly isPageLoading = computed(() => this.identificationVm.fipeInfo.loading() || this.submitLoading());
 
   readonly loadingTitle = computed(() =>
     this.submitLoading() ? 'Cadastrando veículo' : 'Buscando dados FIPE',
@@ -231,4 +217,34 @@ export class VehicleCreate {
       ? (messageByStatus[status] ?? 'Não foi possível cadastrar o veículo.')
       : 'Não foi possível cadastrar o veículo.';
   }
+
+  // VM para gerenciamento do estado da identificação do veículo e dados FIPE.
+  readonly identificationVm: VehicleIdentificationVm = {
+    brands: {
+      items: this.facade.filteredBrands,
+      loading: this.facade.brandsLoading,
+      error: this.facade.brandsError,
+      search: this.facade.brandSearch,
+    },
+
+    models: {
+      items: this.facade.filteredModels,
+      loading: this.facade.modelsLoading,
+      error: this.facade.modelsError,
+      search: this.facade.modelSearch,
+    },
+
+    years: {
+      items: this.facade.filteredYears,
+      loading: this.facade.yearsLoading,
+      error: this.facade.yearsError,
+      search: this.facade.yearSearch,
+      optionLabelFn: (year) => this.facade.getYearLabel(year),
+    },
+
+    fipeInfo: {
+      loading: this.facade.fipeInfoLoading,
+      error: this.facade.fipeInfoError,
+    },
+  };
 }
