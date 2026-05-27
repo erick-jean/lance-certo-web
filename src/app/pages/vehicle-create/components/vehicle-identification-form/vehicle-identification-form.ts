@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, Output, Signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  Signal,
+  WritableSignal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -36,8 +44,9 @@ import { VehicleCreateForm } from '../../vehicle-create.form';
   ],
   templateUrl: './vehicle-identification-form.html',
   styleUrl: './vehicle-identification-form.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VehicleIdentificationForm {
+export class VehicleIdentificationFormComponent {
   @Input({ required: true }) form!: VehicleCreateForm;
   @Input({ required: true }) vehicleTypeOptions: DropdownOption<VehicleFipeType>[] = [];
   @Input({ required: true }) fuelTypeOptions: DropdownOption[] = [];

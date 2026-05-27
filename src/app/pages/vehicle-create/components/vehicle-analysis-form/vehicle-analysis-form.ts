@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -24,8 +24,9 @@ import { PercentMaskDirective } from '../../../../shared/directives/percent-mask
   ],
   templateUrl: './vehicle-analysis-form.html',
   styleUrl: './vehicle-analysis-form.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VehicleAnalysisForm {
+export class VehicleAnalysisFormComponent {
   @Input({ required: true }) form!: VehicleCreateForm;
   @Input({ required: true }) damageTypeOptions: DropdownOption[] = [];
 }

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy, computed, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -11,15 +11,17 @@ import { YearsListResponse } from '../../core/services/fipe';
 import { Vehicles as VehiclesService } from '../../core/services/vehicles';
 import { VehicleFipeType } from '../../core/types/vehicle-options.type';
 import { PageLoadingOverlay } from '../../shared/components/page-loading-overlay/page-loading-overlay';
-import { VehicleAnalysisForm } from './components/vehicle-analysis-form/vehicle-analysis-form';
-import { VehicleAuctionForm } from './components/vehicle-auction-form/vehicle-auction-form';
+import { VehicleAnalysisFormComponent } from './components/vehicle-analysis-form/vehicle-analysis-form';
+import { VehicleAuctionFormComponent } from './components/vehicle-auction-form/vehicle-auction-form';
 import { VehicleCreateHeaderComponent } from './components/vehicle-create-header/vehicle-create-header.component';
-import { VehicleFormActions } from './components/vehicle-form-actions/vehicle-form-actions';
-import { VehicleIdentificationForm } from './components/vehicle-identification-form/vehicle-identification-form';
+import { VehicleFormActionsComponent } from './components/vehicle-form-actions/vehicle-form-actions';
+import { VehicleIdentificationFormComponent } from './components/vehicle-identification-form/vehicle-identification-form';
 import { createVehicleForm } from './vehicle-create.form';
 import { VehicleCreateFacade } from './vehicle-create.facade';
 import { buildCreateVehiclePayload } from './vehicle-create-payload.mapper';
 import { VehicleCreateFormService } from './vehicle-create-form.service';
+import { finalize } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-vehicle-create',
@@ -28,14 +30,15 @@ import { VehicleCreateFormService } from './vehicle-create-form.service';
     ReactiveFormsModule,
     PageLoadingOverlay,
     VehicleCreateHeaderComponent,
-    VehicleIdentificationForm,
-    VehicleAuctionForm,
-    VehicleAnalysisForm,
-    VehicleFormActions,
+    VehicleIdentificationFormComponent,
+    VehicleAuctionFormComponent,
+    VehicleAnalysisFormComponent,
+    VehicleFormActionsComponent,
   ],
   templateUrl: './vehicle-create.html',
   styleUrl: './vehicle-create.scss',
   providers: [VehicleCreateFacade, VehicleCreateFormService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VehicleCreate {
   readonly facade = inject(VehicleCreateFacade);
@@ -44,8 +47,8 @@ export class VehicleCreate {
   private readonly vehiclesService = inject(VehiclesService);
 
   readonly form = createVehicleForm();
-  submitLoading = false;
-  submitError = '';
+  readonly submitLoading = signal(false);
+  readonly submitError = signal('');
 
   readonly brandsLoading = this.facade.brandsLoading;
   readonly brandsError = this.facade.brandsError;
@@ -159,27 +162,30 @@ export class VehicleCreate {
 
   readonly getYearLabel = (year: YearsListResponse): string => this.facade.getYearLabel(year);
 
-  isPageLoading(): boolean {
-    return this.fipeInfoLoading() || this.submitLoading;
-  }
+  readonly isPageLoading = computed(() => this.fipeInfoLoading() || this.submitLoading());
 
-  loadingTitle(): string {
-    return this.submitLoading ? 'Cadastrando veículo' : 'Buscando dados FIPE';
-  }
+  readonly loadingTitle = computed(() =>
+    this.submitLoading() ? 'Cadastrando veículo' : 'Buscando dados FIPE',
+  );
 
-  loadingDescription(): string {
-    return this.submitLoading
+  readonly loadingDescription = computed(() => {
+    return this.submitLoading()
       ? 'Aguarde enquanto salvamos o veículo no banco de dados.'
       : 'Aguarde enquanto carregamos o código e o valor FIPE.';
-  }
+  });
 
   submit(): void {
-    this.submitError = '';
+    this.submitError.set('');
+
+    if (this.submitLoading()) {
+      return;
+    }
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
+
     const payload = buildCreateVehiclePayload({
       formValue: this.form.getRawValue(),
       brands: this.facade.brands(),
@@ -188,23 +194,24 @@ export class VehicleCreate {
     });
 
     if (!payload.type) {
-      this.submitError = 'Tipo de veículo inválido para cadastro.';
+      this.submitError.set('Tipo de veículo inválido para cadastro.');
       return;
     }
 
-    this.submitLoading = true;
+    this.submitLoading.set(true);
 
-    this.vehiclesService.createVehicle(payload).subscribe({
-      next: (vehicle) => {
-        this.submitLoading = false;
-        void this.router.navigate(['/veiculos', vehicle.id]);
-      },
-      error: (error) => {
-        console.error('Erro ao cadastrar veículo', error);
-        this.submitLoading = false;
-        this.submitError = this.getCreateVehicleErrorMessage(error?.status);
-      },
-    });
+    this.vehiclesService
+      .createVehicle(payload)
+      .pipe(finalize(() => this.submitLoading.set(false)))
+      .subscribe({
+        next: (vehicle) => {
+          void this.router.navigate(['/veiculos', vehicle.id]);
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Erro ao cadastrar veículo', error);
+          this.submitError.set(this.getCreateVehicleErrorMessage(error.status));
+        },
+      });
   }
 
   /**

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -27,7 +27,7 @@ import { UppercaseDirective } from '../../../../shared/directives/uppercase.dire
   templateUrl: './vehicle-auction-form.html',
   styleUrl: './vehicle-auction-form.scss',
 })
-export class VehicleAuctionForm {
+export class VehicleAuctionFormComponent {
   @Input({ required: true }) form!: VehicleCreateForm;
   @Input({ required: true }) auctionTypeOptions: DropdownOption[] = [];
 }
