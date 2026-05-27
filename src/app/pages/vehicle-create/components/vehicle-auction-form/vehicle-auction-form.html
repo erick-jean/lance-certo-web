@@ -1,0 +1,126 @@
+<app-form-card
+  [formGroup]="form"
+  icon="gavel"
+  title="Leilão"
+  description="Origem, localização e valores do lote."
+>
+  <div class="form-grid">
+    <mat-form-field appearance="outline">
+      <mat-label>Leiloeiro</mat-label>
+      <input matInput type="text" formControlName="auctioneer" placeholder="Ex: Copart" />
+
+      @if (form.controls.auctioneer.hasError('required')) {
+        <mat-error>Informe o leiloeiro</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Tipo de leilão</mat-label>
+      <mat-select formControlName="auctionType" panelClass="vehicle-select-panel">
+        @for (option of auctionTypeOptions; track option.value) {
+          <mat-option [value]="option.value">
+            {{ option.label }}
+          </mat-option>
+        }
+      </mat-select>
+
+      @if (form.controls.auctionType.hasError('required')) {
+        <mat-error>Selecione o tipo de leilão</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Data do evento</mat-label>
+      <input matInput type="date" formControlName="eventDate" />
+
+      @if (form.controls.eventDate.hasError('required')) {
+        <mat-error>Informe a data do evento</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Cidade</mat-label>
+      <input matInput type="text" formControlName="city" placeholder="Campo Grande" />
+
+      @if (form.controls.city.hasError('required')) {
+        <mat-error>Informe a cidade</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>UF</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="state"
+        placeholder="MS"
+        maxlength="2"
+        (input)="stateInput.emit($event)"
+      />
+
+      @if (form.controls.state.hasError('required')) {
+        <mat-error>Informe a UF</mat-error>
+      }
+
+      @if (form.controls.state.hasError('pattern')) {
+        <mat-error>Informe uma UF válida</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Lance inicial</mat-label>
+      <input
+        matInput
+        type="text"
+        inputmode="decimal"
+        formControlName="auctionInitialBid"
+        placeholder="R$ 85.000"
+        (input)="auctionInitialBidInput.emit($event)"
+      />
+
+      @if (form.controls.auctionInitialBid.hasError('required')) {
+        <mat-error>Informe o lance inicial</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Lance atual</mat-label>
+      <input
+        matInput
+        type="text"
+        inputmode="decimal"
+        formControlName="auctionCurrentBid"
+        placeholder="R$ 92.000"
+        (input)="auctionCurrentBidInput.emit($event)"
+      />
+
+      @if (form.controls.auctionCurrentBid.hasError('required')) {
+        <mat-error>Informe o lance atual</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Endereço do pátio</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="yardAddress"
+        placeholder="Av. Gury Marques, 5500"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>URL de origem</mat-label>
+      <input
+        matInput
+        type="url"
+        formControlName="sourceUrl"
+        placeholder="https://copart.com/lote/123"
+      />
+
+      @if (form.controls.sourceUrl.hasError('pattern')) {
+        <mat-error>Informe uma URL válida</mat-error>
+      }
+    </mat-form-field>
+  </div>
+</app-form-card>

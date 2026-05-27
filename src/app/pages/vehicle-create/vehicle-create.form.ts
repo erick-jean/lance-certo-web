@@ -1,6 +1,8 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { VehicleFipeType } from '../../core/types/vehicle-options.type';
 
+export type VehicleCreateForm = ReturnType<typeof createVehicleForm>;
+
 export function createVehicleForm() {
   return new FormGroup({
     vehicleType: new FormControl<VehicleFipeType | ''>('', {
@@ -42,39 +44,68 @@ export function createVehicleForm() {
     }),
 
     yearManufacture: new FormControl<number | null>(null, {
-      validators: [Validators.min(1900), Validators.max(2099), Validators.pattern(/^\d{4}$/)],
+      validators: [
+        Validators.required,
+        Validators.min(1900),
+        Validators.max(2099),
+        Validators.pattern(/^\d{4}$/),
+      ],
     }),
 
     fipeCode: new FormControl<string>('', { nonNullable: true }),
     fipeValue: new FormControl<string>('', { nonNullable: true }),
-    marketValue: new FormControl<string>('', { nonNullable: true }),
+    marketValue: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
     color: new FormControl<string>('', { nonNullable: true }),
     mileage: new FormControl<number | null>(null, {
       validators: [Validators.min(0)],
     }),
     fuelType: new FormControl<string>('', { nonNullable: true }),
     transmission: new FormControl<string>('', { nonNullable: true }),
-    auctioneer: new FormControl<string>('', { nonNullable: true }),
-    auctionType: new FormControl<string>('', { nonNullable: true }),
-    eventDate: new FormControl<string>('', { nonNullable: true }),
-    city: new FormControl<string>('', { nonNullable: true }),
+    auctioneer: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    auctionType: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    eventDate: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    city: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
     state: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.pattern(/^[A-Z]{2}$/)],
+      validators: [Validators.required, Validators.pattern(/^[A-Z]{2}$/)],
     }),
-    auctionInitialBid: new FormControl<string>('', { nonNullable: true }),
-    auctionCurrentBid: new FormControl<string>('', { nonNullable: true }),
+    auctionInitialBid: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    auctionCurrentBid: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
     yardAddress: new FormControl<string>('', { nonNullable: true }),
     sourceUrl: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.pattern(/^https?:\/\/.+/)],
     }),
-    damageType: new FormControl<string>('NONE', { nonNullable: true }),
+    damageType: new FormControl<string>('NONE', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
     desiredProfitMarginPercent: new FormControl<number | null>(null, {
-      validators: [Validators.min(0), Validators.max(100)],
+      validators: [Validators.required, Validators.min(0), Validators.max(100)],
     }),
     safetyMarginPercent: new FormControl<number | null>(null, {
-      validators: [Validators.min(0), Validators.max(100)],
+      validators: [Validators.required, Validators.min(0), Validators.max(100)],
     }),
     notes: new FormControl<string>('', { nonNullable: true }),
   });

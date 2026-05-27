@@ -1,0 +1,313 @@
+<app-form-card
+  [formGroup]="form"
+  icon="directions_car"
+  title="Identificação"
+  description="Dados usados para reconhecer o veículo no fluxo de análise."
+>
+  <div class="form-grid">
+    <mat-form-field appearance="outline">
+      <mat-label>Tipo de veículo</mat-label>
+
+      <mat-select
+        formControlName="vehicleType"
+        panelClass="vehicle-select-panel"
+        (selectionChange)="vehicleTypeChange.emit($event.value)"
+      >
+        @for (option of vehicleTypeOptions; track option.value) {
+          <mat-option [value]="option.value">
+            {{ option.label }}
+          </mat-option>
+        }
+      </mat-select>
+
+      @if (form.controls.vehicleType.hasError('required')) {
+        <mat-error>Selecione o tipo de veículo</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Marca</mat-label>
+
+      <mat-select
+        formControlName="brand"
+        [placeholder]="brandsLoading() ? 'Buscando marcas...' : 'Selecionar marca'"
+        panelClass="vehicle-select-panel brand-select-panel"
+        (openedChange)="brandOpenedChange.emit($event)"
+        (selectionChange)="brandChange.emit($event.value)"
+      >
+        <div
+          class="select-search-box"
+          (click)="$event.stopPropagation()"
+          (keydown)="$event.stopPropagation()"
+        >
+          <mat-icon aria-hidden="true">search</mat-icon>
+          <input
+            type="text"
+            aria-label="Buscar marca"
+            placeholder="Buscar marca"
+            [value]="brandSearch()"
+            (input)="brandSearch.set($any($event.target).value)"
+            (keydown.enter)="$event.preventDefault()"
+          />
+        </div>
+
+        @if (brandsLoading()) {
+          <mat-option disabled>Buscando marcas...</mat-option>
+        }
+
+        @for (brand of filteredBrands(); track brand.code) {
+          <mat-option [value]="brand.code">
+            {{ brand.name }}
+          </mat-option>
+        } @empty {
+          @if (!brandsLoading()) {
+            <mat-option disabled>Nenhuma marca encontrada</mat-option>
+          }
+        }
+      </mat-select>
+
+      @if (brandsError()) {
+        <mat-error>{{ brandsError() }}</mat-error>
+      }
+
+      @if (brandsLoading()) {
+        <mat-hint>Buscando marcas...</mat-hint>
+      }
+
+      @if (form.controls.brand.hasError('required')) {
+        <mat-error>Selecione a marca</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Modelo</mat-label>
+
+      <mat-select
+        formControlName="model"
+        [placeholder]="modelsLoading() ? 'Buscando modelos...' : 'Selecionar modelo'"
+        panelClass="vehicle-select-panel model-select-panel"
+        (openedChange)="modelOpenedChange.emit($event)"
+        (selectionChange)="modelChange.emit($event.value)"
+      >
+        <div
+          class="select-search-box"
+          (click)="$event.stopPropagation()"
+          (keydown)="$event.stopPropagation()"
+        >
+          <mat-icon aria-hidden="true">search</mat-icon>
+          <input
+            type="text"
+            aria-label="Buscar modelo"
+            placeholder="Buscar modelo"
+            [value]="modelSearch()"
+            (input)="modelSearch.set($any($event.target).value)"
+            (keydown.enter)="$event.preventDefault()"
+          />
+        </div>
+
+        @if (modelsLoading()) {
+          <mat-option disabled>Buscando modelos...</mat-option>
+        }
+
+        @for (model of filteredModels(); track model.code) {
+          <mat-option [value]="model.code">
+            {{ model.name }}
+          </mat-option>
+        } @empty {
+          @if (!modelsLoading()) {
+            <mat-option disabled>Nenhum modelo encontrado</mat-option>
+          }
+        }
+      </mat-select>
+
+      @if (modelsError()) {
+        <mat-error>{{ modelsError() }}</mat-error>
+      }
+
+      @if (modelsLoading()) {
+        <mat-hint>Buscando modelos...</mat-hint>
+      }
+
+      @if (form.controls.model.hasError('required')) {
+        <mat-error>Selecione o modelo</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Ano</mat-label>
+
+      <mat-select
+        formControlName="yearModel"
+        [placeholder]="yearsLoading() ? 'Buscando anos...' : 'Selecionar ano'"
+        panelClass="vehicle-select-panel year-select-panel"
+        (openedChange)="yearOpenedChange.emit($event)"
+        (selectionChange)="yearChange.emit($event.value)"
+      >
+        <div
+          class="select-search-box"
+          (click)="$event.stopPropagation()"
+          (keydown)="$event.stopPropagation()"
+        >
+          <mat-icon aria-hidden="true">search</mat-icon>
+          <input
+            type="text"
+            aria-label="Buscar ano"
+            placeholder="Buscar ano"
+            [value]="yearSearch()"
+            (input)="yearSearch.set($any($event.target).value)"
+            (keydown.enter)="$event.preventDefault()"
+          />
+        </div>
+
+        @if (yearsLoading()) {
+          <mat-option disabled>Buscando anos...</mat-option>
+        }
+
+        @for (year of filteredYears(); track year.code) {
+          <mat-option [value]="year.code">
+            {{ getYearLabel(year) }}
+          </mat-option>
+        } @empty {
+          @if (!yearsLoading()) {
+            <mat-option disabled>Nenhum ano encontrado</mat-option>
+          }
+        }
+      </mat-select>
+
+      @if (yearsError()) {
+        <mat-error>{{ yearsError() }}</mat-error>
+      }
+
+      @if (yearsLoading()) {
+        <mat-hint>Buscando anos...</mat-hint>
+      }
+
+      @if (form.controls.yearModel.hasError('required')) {
+        <mat-error>Selecione o ano</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Placa</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="plate"
+        placeholder="ABC-1234"
+        maxlength="8"
+        (input)="plateInput.emit($event)"
+      />
+
+      @if (form.controls.plate.hasError('required')) {
+        <mat-error>Informe a placa</mat-error>
+      }
+
+      @if (form.controls.plate.hasError('pattern')) {
+        <mat-error>Informe uma placa válida</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Ano de fabricação</mat-label>
+      <input
+        matInput
+        type="text"
+        inputmode="numeric"
+        maxlength="4"
+        formControlName="yearManufacture"
+        placeholder="Ex: 2023"
+        (input)="yearManufactureInput.emit($event)"
+      />
+
+      @if (form.controls.yearManufacture.hasError('required')) {
+        <mat-error>Informe o ano de fabricação</mat-error>
+      }
+
+      @if (
+        form.controls.yearManufacture.hasError('min') ||
+        form.controls.yearManufacture.hasError('max')
+      ) {
+        <mat-error>Informe um ano válido</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Código FIPE</mat-label>
+      <input matInput type="text" formControlName="fipeCode" placeholder="005531-1" readonly />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Valor FIPE</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="fipeValue"
+        [placeholder]="fipeInfoLoading() ? 'Buscando valor FIPE...' : 'R$ 125.000'"
+        readonly
+      />
+
+      @if (fipeInfoLoading()) {
+        <mat-hint>Buscando valor FIPE...</mat-hint>
+      }
+
+      @if (fipeInfoError()) {
+        <mat-error>{{ fipeInfoError() }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Valor de mercado</mat-label>
+      <input
+        matInput
+        type="text"
+        inputmode="decimal"
+        formControlName="marketValue"
+        placeholder="R$ 121.000"
+        (input)="marketValueInput.emit($event)"
+      />
+
+      @if (form.controls.marketValue.hasError('required')) {
+        <mat-error>Informe o valor de mercado</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Cor</mat-label>
+      <input matInput type="text" formControlName="color" placeholder="Ex: Branco" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Quilometragem</mat-label>
+      <input
+        matInput
+        type="text"
+        inputmode="numeric"
+        formControlName="mileage"
+        placeholder="45200"
+        (input)="mileageInput.emit($event)"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Combustível</mat-label>
+      <mat-select formControlName="fuelType" panelClass="vehicle-select-panel">
+        @for (option of fuelTypeOptions; track option.value) {
+          <mat-option [value]="option.value">
+            {{ option.label }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Câmbio</mat-label>
+      <mat-select formControlName="transmission" panelClass="vehicle-select-panel">
+        @for (option of transmissionOptions; track option.value) {
+          <mat-option [value]="option.value">
+            {{ option.label }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+</app-form-card>

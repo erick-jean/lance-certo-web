@@ -1,0 +1,47 @@
+.form-card {
+  display: grid;
+  gap: var(--space-lg);
+  position: relative;
+  padding: var(--space-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-surface);
+
+  &:focus-within {
+    z-index: 30;
+  }
+
+  > header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.875rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 1rem;
+
+    mat-icon {
+      display: grid;
+      width: 2.5rem;
+      height: 2.5rem;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: var(--radius-md);
+      background: var(--color-success-soft);
+      color: var(--color-action);
+      font-size: 1.35rem;
+      padding: 0.55rem;
+    }
+
+    h2 {
+      color: #07101d;
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-bold);
+    }
+
+    p {
+      color: #667085;
+      font-size: var(--font-size-sm);
+      margin-top: 0.2rem;
+    }
+  }
+}

@@ -1,0 +1,25 @@
+<header class="create-topbar">
+  <a class="back-link" routerLink="/veiculos">
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    <span>Voltar para veículos</span>
+  </a>
+
+  <div class="topbar-actions">
+    <button
+      class="primary-action"
+      type="submit"
+      form="vehicle-create-form"
+      [disabled]="submitLoading"
+    >
+      {{ submitLoading ? 'Cadastrando...' : 'Cadastrar veículo' }}
+    </button>
+  </div>
+</header>
+
+<header class="page-heading">
+  <div>
+    <span>Novo veículo</span>
+    <h1>Cadastrar veículo</h1>
+    <p>Informe os dados principais do veículo, valores de referência e informações do leilão.</p>
+  </div>
+</header>

@@ -61,11 +61,8 @@ export const routes: Routes = [
   },
   {
     path: 'assinatura/premium',
-    loadComponent: () =>
-      import('./features/subscriptions/pages/premium-checkout/premium-checkout.component').then(
-        (component) => component.PremiumCheckoutComponent,
-      ),
-    canActivate: [authGuard],
+    redirectTo: 'assinatura',
+    pathMatch: 'full',
   },
   {
     path: 'configuracoes',

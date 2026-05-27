@@ -1,11 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { Router } from '@angular/router';
 
 import { AUCTION_TYPE_OPTIONS } from '../../core/constants/auction-type-options';
 import { DAMAGE_TYPE_OPTIONS } from '../../core/constants/damage-type-options';
@@ -22,6 +17,11 @@ import {
   onlyDigits,
 } from '../../core/utils/form-formatters';
 import { PageLoadingOverlay } from '../../shared/components/page-loading-overlay/page-loading-overlay';
+import { VehicleAnalysisForm } from './components/vehicle-analysis-form/vehicle-analysis-form';
+import { VehicleAuctionForm } from './components/vehicle-auction-form/vehicle-auction-form';
+import { VehicleCreateHeaderComponent } from './components/vehicle-create-header/vehicle-create-header.component';
+import { VehicleFormActions } from './components/vehicle-form-actions/vehicle-form-actions';
+import { VehicleIdentificationForm } from './components/vehicle-identification-form/vehicle-identification-form';
 import { createVehicleForm } from './vehicle-create.form';
 import { getFipeCode, getFipeValue, getFuelTypeFromFipeYear } from './vehicle-create-fipe.helpers';
 import { VehicleCreateFacade } from './vehicle-create.facade';
@@ -32,13 +32,12 @@ import { buildCreateVehiclePayload } from './vehicle-create-payload.mapper';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatIconModule,
-    RouterLink,
     PageLoadingOverlay,
+    VehicleCreateHeaderComponent,
+    VehicleIdentificationForm,
+    VehicleAuctionForm,
+    VehicleAnalysisForm,
+    VehicleFormActions,
   ],
   templateUrl: './vehicle-create.html',
   styleUrl: './vehicle-create.scss',
@@ -247,9 +246,7 @@ export class VehicleCreate {
     this.form.controls[controlName].setValue(value);
   }
 
-  getYearLabel(year: YearsListResponse): string {
-    return this.facade.getYearLabel(year);
-  }
+  readonly getYearLabel = (year: YearsListResponse): string => this.facade.getYearLabel(year);
 
   isPageLoading(): boolean {
     return this.fipeInfoLoading() || this.submitLoading;
