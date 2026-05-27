@@ -1,11 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [MatIconModule, RouterLink],
+  imports: [MatButtonModule, MatIconModule, RouterLink],
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })

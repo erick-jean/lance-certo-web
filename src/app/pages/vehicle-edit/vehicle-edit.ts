@@ -1,6 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import {
   AuctionType,
@@ -23,7 +24,7 @@ import {
 @Component({
   selector: 'app-vehicle-edit',
   standalone: true,
-  imports: [FormsModule, MatIconModule, RouterLink],
+  imports: [FormsModule, MatButtonModule, MatIconModule, RouterLink],
   templateUrl: './vehicle-edit.html',
   styleUrl: '../vehicle-create/vehicle-create.scss',
 })

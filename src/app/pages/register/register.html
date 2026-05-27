@@ -74,7 +74,12 @@
             placeholder="••••••••"
             autocomplete="new-password"
           />
-          <button type="button" aria-label="Mostrar ou ocultar senha" (click)="togglePassword()">
+          <button
+            mat-icon-button
+            type="button"
+            aria-label="Mostrar ou ocultar senha"
+            (click)="togglePassword()"
+          >
             <mat-icon aria-hidden="true">{{
               showPassword() ? 'visibility_off' : 'visibility'
             }}</mat-icon>
@@ -87,7 +92,7 @@
         <span>Li e aceito os termos de uso e a política de privacidade.</span>
       </label>
 
-      <button class="submit-button" type="submit">Criar conta</button>
+      <button mat-flat-button class="submit-button" type="submit">Criar conta</button>
 
       <p class="signin-text">Já tem uma conta? <a routerLink="/login">Entrar</a></p>
     </form>

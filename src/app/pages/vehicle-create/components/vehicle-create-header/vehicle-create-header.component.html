@@ -6,12 +6,18 @@
 
   <div class="topbar-actions">
     <button
+      mat-flat-button
       class="primary-action"
       type="submit"
       form="vehicle-create-form"
-      [disabled]="submitLoading"
+      [disabled]="submitLoading || formInvalid"
     >
-      {{ submitLoading ? 'Cadastrando...' : 'Cadastrar veículo' }}
+      @if (submitLoading) {
+        <mat-spinner diameter="18" aria-hidden="true" />
+        Cadastrando...
+      } @else {
+        Cadastrar veículo
+      }
     </button>
   </div>
 </header>

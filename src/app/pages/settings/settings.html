@@ -5,7 +5,9 @@
       <p>Ajuste preferências da plataforma, notificações e parâmetros de análise.</p>
     </div>
 
-    <button class="primary-action" type="submit" form="settings-form">Salvar alterações</button>
+    <button mat-flat-button class="primary-action" type="submit" form="settings-form">
+      Salvar alterações
+    </button>
   </header>
 
   <form id="settings-form" class="settings-layout">
@@ -170,7 +172,7 @@
               <strong>Tabela FIPE</strong>
               <span>Buscar referências de preço automaticamente.</span>
             </div>
-            <button type="button">Conectar</button>
+            <button mat-stroked-button type="button">Conectar</button>
           </article>
 
           <article>
@@ -179,7 +181,7 @@
               <strong>Emissão de relatórios</strong>
               <span>Exportar análises para PDF e planilha.</span>
             </div>
-            <button type="button">Configurar</button>
+            <button mat-stroked-button type="button">Configurar</button>
           </article>
         </div>
       </section>
@@ -194,14 +196,16 @@
         </header>
 
         <div class="danger-actions">
-          <button class="secondary-action" type="button">Exportar meus dados</button>
-          <button class="danger-action" type="button">Excluir conta</button>
+          <button mat-stroked-button class="secondary-action" type="button">
+            Exportar meus dados
+          </button>
+          <button mat-stroked-button class="danger-action" type="button">Excluir conta</button>
         </div>
       </section>
 
       <footer class="form-footer-actions">
-        <button class="secondary-action" type="button">Cancelar</button>
-        <button class="primary-action" type="submit">Salvar alterações</button>
+        <button mat-stroked-button class="secondary-action" type="button">Cancelar</button>
+        <button mat-flat-button class="primary-action" type="submit">Salvar alterações</button>
       </footer>
     </div>
   </form>

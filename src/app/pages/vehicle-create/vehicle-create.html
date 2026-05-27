@@ -3,7 +3,7 @@
     <app-page-loading-overlay [title]="loadingTitle()" [description]="loadingDescription()" />
   }
 
-  <app-vehicle-create-header [submitLoading]="submitLoading()" />
+  <app-vehicle-create-header [submitLoading]="submitLoading()" [formInvalid]="form.invalid" />
 
   <form id="vehicle-create-form" [formGroup]="form" (ngSubmit)="submit()" class="create-layout">
     <div class="form-stack">
@@ -26,7 +26,11 @@
 
       <app-vehicle-analysis-form [form]="form" [damageTypeOptions]="damageTypeOptions" />
 
-      <app-vehicle-form-actions [submitLoading]="submitLoading()" [submitError]="submitError()" />
+      <app-vehicle-form-actions
+        [submitLoading]="submitLoading()"
+        [submitError]="submitError()"
+        [formInvalid]="form.invalid"
+      />
     </div>
   </form>
 </section>

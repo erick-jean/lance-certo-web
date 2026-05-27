@@ -5,13 +5,20 @@
       <p>Gerencie seus dados, preferências e segurança da conta.</p>
     </div>
 
-    <button class="primary-action" type="submit" form="profile-form">Salvar alterações</button>
+    <button mat-flat-button class="primary-action" type="submit" form="profile-form">
+      Salvar alterações
+    </button>
   </header>
 
   <form id="profile-form" class="profile-layout">
     <aside class="profile-summary">
       <section class="identity-card">
-        <button class="avatar-control" type="button" aria-label="Alterar foto do perfil">
+        <button
+          mat-icon-button
+          class="avatar-control"
+          type="button"
+          aria-label="Alterar foto do perfil"
+        >
           <mat-icon aria-hidden="true">person</mat-icon>
           <span>
             <mat-icon aria-hidden="true">photo_camera</mat-icon>
@@ -164,8 +171,8 @@
       </section>
 
       <footer class="form-footer-actions">
-        <button class="secondary-action" type="button">Cancelar</button>
-        <button class="primary-action" type="submit">Salvar alterações</button>
+        <button mat-stroked-button class="secondary-action" type="button">Cancelar</button>
+        <button mat-flat-button class="primary-action" type="submit">Salvar alterações</button>
       </footer>
     </div>
   </form>

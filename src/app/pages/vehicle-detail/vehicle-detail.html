@@ -6,8 +6,10 @@
     </a>
 
     <div class="detail-actions">
-      <button class="secondary-action" type="button">Criar avaliação</button>
-      <button class="primary-action" type="button">{{ primaryActionLabel() }}</button>
+      <button mat-stroked-button class="secondary-action" type="button">Criar avaliação</button>
+      <button mat-flat-button class="primary-action" type="button">
+        {{ primaryActionLabel() }}
+      </button>
     </div>
   </header>
 
@@ -254,7 +256,12 @@
             <p>Custos previstos para regularização, reparos e preparação do veículo.</p>
           </div>
 
-          <button class="add-expense-button" type="button" (click)="openExpenseDrawer()">
+          <button
+            mat-flat-button
+            class="add-expense-button"
+            type="button"
+            (click)="openExpenseDrawer()"
+          >
             <mat-icon aria-hidden="true">add</mat-icon>
             <span>Adicionar gasto</span>
           </button>
@@ -393,7 +400,7 @@
           <p>{{ expenseDrawerDescription() }}</p>
         </div>
 
-        <button type="button" aria-label="Fechar" (click)="closeExpenseDrawer()">
+        <button mat-icon-button type="button" aria-label="Fechar" (click)="closeExpenseDrawer()">
           <mat-icon aria-hidden="true">close</mat-icon>
         </button>
       </header>
@@ -472,12 +479,24 @@
 
         <footer class="expense-drawer-actions">
           @if (isEditingExpense()) {
-            <button class="danger-action" type="button" (click)="deleteExpense()">Excluir</button>
+            <button
+              mat-stroked-button
+              class="danger-action"
+              type="button"
+              (click)="deleteExpense()"
+            >
+              Excluir
+            </button>
           }
-          <button class="secondary-action" type="button" (click)="closeExpenseDrawer()">
+          <button
+            mat-stroked-button
+            class="secondary-action"
+            type="button"
+            (click)="closeExpenseDrawer()"
+          >
             Cancelar
           </button>
-          <button class="primary-action" type="submit">
+          <button mat-flat-button class="primary-action" type="submit">
             {{ isEditingExpense() ? 'Salvar Alterações' : 'Salvar Gasto' }}
           </button>
         </footer>

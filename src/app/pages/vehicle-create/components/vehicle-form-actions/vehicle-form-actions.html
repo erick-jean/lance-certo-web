@@ -3,8 +3,18 @@
     <p class="submit-error">{{ submitError }}</p>
   }
 
-  <a class="secondary-action" routerLink="/veiculos">Cancelar</a>
-  <button class="primary-action" type="submit" [disabled]="submitLoading">
-    {{ submitLoading ? 'Cadastrando...' : 'Cadastrar veículo' }}
+  <a mat-stroked-button class="secondary-action" routerLink="/veiculos">Cancelar</a>
+  <button
+    mat-flat-button
+    class="primary-action"
+    type="submit"
+    [disabled]="submitLoading || formInvalid"
+  >
+    @if (submitLoading) {
+      <mat-spinner diameter="18" aria-hidden="true" />
+      Cadastrando...
+    } @else {
+      Cadastrar veículo
+    }
   </button>
 </footer>

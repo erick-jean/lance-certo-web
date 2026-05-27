@@ -35,4 +35,17 @@
   border: 1px solid #007a58;
   background: #007a58;
   color: #ffffff;
+
+  mat-spinner {
+    display: inline-flex;
+    flex: 0 0 auto;
+    --mdc-circular-progress-active-indicator-color: #ffffff;
+  }
+}
+
+:host ::ng-deep .primary-action .mdc-button__label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }

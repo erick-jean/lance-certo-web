@@ -1,6 +1,7 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { StatusBadge, StatusBadgeTone } from '../../shared/components/status-badge/status-badge';
 import {
@@ -47,7 +48,7 @@ const emptyVehicle: Vehicle = {
   standalone: true,
   templateUrl: './vehicle-detail.html',
   styleUrl: './vehicle-detail.scss',
-  imports: [MatIconModule, RouterLink, FormsModule, StatusBadge],
+  imports: [MatButtonModule, MatIconModule, RouterLink, FormsModule, StatusBadge],
 })
 export class VehicleDetail implements OnInit {
   private readonly route = inject(ActivatedRoute);
