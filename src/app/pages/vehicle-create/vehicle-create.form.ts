@@ -54,8 +54,7 @@ export function createVehicleForm() {
 
     fipeCode: new FormControl<string>('', { nonNullable: true }),
     fipeValue: new FormControl<string>('', { nonNullable: true }),
-    marketValue: new FormControl<string>('', {
-      nonNullable: true,
+    marketValue: new FormControl<number | null>(null, {
       validators: [Validators.required],
     }),
     color: new FormControl<string>('', { nonNullable: true }),
@@ -84,12 +83,10 @@ export function createVehicleForm() {
       nonNullable: true,
       validators: [Validators.required, Validators.pattern(/^[A-Z]{2}$/)],
     }),
-    auctionInitialBid: new FormControl<string>('', {
-      nonNullable: true,
+    auctionInitialBid: new FormControl<number | null>(null, {
       validators: [Validators.required],
     }),
-    auctionCurrentBid: new FormControl<string>('', {
-      nonNullable: true,
+    auctionCurrentBid: new FormControl<number | null>(null, {
       validators: [Validators.required],
     }),
     yardAddress: new FormControl<string>('', { nonNullable: true }),
