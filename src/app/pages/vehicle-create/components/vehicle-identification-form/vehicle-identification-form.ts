@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output, Signal, WritableSignal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
@@ -13,20 +12,21 @@ import {
 } from '../../../../core/services/fipe';
 import { DropdownOption } from '../../../../core/types/dropdown-option.type';
 import { VehicleFipeType } from '../../../../core/types/vehicle-options.type';
-import { VehicleCreateForm } from '../../vehicle-create.form';
 import { FormCard } from '../../../../shared/components/form-card/form-card';
+import { SearchableSelectComponent } from '../../../../shared/components/searchable-select/searchable-select';
+import { VehicleCreateForm } from '../../vehicle-create.form';
 
 @Component({
   selector: 'app-vehicle-identification-form',
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    MatIconModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
     MatOptionModule,
     FormCard,
+    SearchableSelectComponent,
   ],
   templateUrl: './vehicle-identification-form.html',
   styleUrl: './vehicle-identification-form.scss',

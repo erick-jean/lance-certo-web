@@ -1,0 +1,53 @@
+<mat-form-field appearance="outline">
+  <mat-label>{{ label }}</mat-label>
+
+  <mat-select
+    [formControl]="control"
+    [placeholder]="selectPlaceholder"
+    [panelClass]="panelClass"
+    (openedChange)="openedChange.emit($event)"
+    (selectionChange)="selectionChange.emit($event.value)"
+  >
+    <div
+      class="select-search-box"
+      (click)="$event.stopPropagation()"
+      (keydown)="$event.stopPropagation()"
+    >
+      <mat-icon aria-hidden="true">search</mat-icon>
+      <input
+        type="text"
+        [attr.aria-label]="searchPlaceholder"
+        [placeholder]="searchPlaceholder"
+        [value]="searchValue"
+        (input)="searchChange.emit($any($event.target).value)"
+        (keydown.enter)="$event.preventDefault()"
+      />
+    </div>
+
+    @if (loading) {
+      <mat-option disabled>{{ loadingText }}</mat-option>
+    }
+
+    @for (item of items; track trackByOption($index, item)) {
+      <mat-option [value]="getOptionValue(item)">
+        {{ getOptionLabel(item) }}
+      </mat-option>
+    } @empty {
+      @if (!loading) {
+        <mat-option disabled>{{ emptyText }}</mat-option>
+      }
+    }
+  </mat-select>
+
+  @if (error) {
+    <mat-error>{{ error }}</mat-error>
+  }
+
+  @if (loading) {
+    <mat-hint>{{ loadingText }}</mat-hint>
+  }
+
+  @if (requiredErrorText && control.hasError('required')) {
+    <mat-error>{{ requiredErrorText }}</mat-error>
+  }
+</mat-form-field>

@@ -25,167 +25,65 @@
       }
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Marca</mat-label>
+    <app-searchable-select
+      label="Marca"
+      placeholder="Selecionar marca"
+      searchPlaceholder="Buscar marca"
+      loadingText="Buscando marcas..."
+      emptyText="Nenhuma marca encontrada"
+      requiredErrorText="Selecione a marca"
+      panelClass="vehicle-select-panel brand-select-panel"
+      optionValueKey="code"
+      optionLabelKey="name"
+      [control]="form.controls.brand"
+      [items]="filteredBrands()"
+      [loading]="brandsLoading()"
+      [error]="brandsError()"
+      [searchValue]="brandSearch()"
+      (openedChange)="brandOpenedChange.emit($event)"
+      (selectionChange)="brandChange.emit($any($event))"
+      (searchChange)="brandSearch.set($event)"
+    />
 
-      <mat-select
-        formControlName="brand"
-        [placeholder]="brandsLoading() ? 'Buscando marcas...' : 'Selecionar marca'"
-        panelClass="vehicle-select-panel brand-select-panel"
-        (openedChange)="brandOpenedChange.emit($event)"
-        (selectionChange)="brandChange.emit($event.value)"
-      >
-        <div
-          class="select-search-box"
-          (click)="$event.stopPropagation()"
-          (keydown)="$event.stopPropagation()"
-        >
-          <mat-icon aria-hidden="true">search</mat-icon>
-          <input
-            type="text"
-            aria-label="Buscar marca"
-            placeholder="Buscar marca"
-            [value]="brandSearch()"
-            (input)="brandSearch.set($any($event.target).value)"
-            (keydown.enter)="$event.preventDefault()"
-          />
-        </div>
+    <app-searchable-select
+      label="Modelo"
+      placeholder="Selecionar modelo"
+      searchPlaceholder="Buscar modelo"
+      loadingText="Buscando modelos..."
+      emptyText="Nenhum modelo encontrado"
+      requiredErrorText="Selecione o modelo"
+      panelClass="vehicle-select-panel model-select-panel"
+      optionValueKey="code"
+      optionLabelKey="name"
+      [control]="form.controls.model"
+      [items]="filteredModels()"
+      [loading]="modelsLoading()"
+      [error]="modelsError()"
+      [searchValue]="modelSearch()"
+      (openedChange)="modelOpenedChange.emit($event)"
+      (selectionChange)="modelChange.emit($any($event))"
+      (searchChange)="modelSearch.set($event)"
+    />
 
-        @if (brandsLoading()) {
-          <mat-option disabled>Buscando marcas...</mat-option>
-        }
-
-        @for (brand of filteredBrands(); track brand.code) {
-          <mat-option [value]="brand.code">
-            {{ brand.name }}
-          </mat-option>
-        } @empty {
-          @if (!brandsLoading()) {
-            <mat-option disabled>Nenhuma marca encontrada</mat-option>
-          }
-        }
-      </mat-select>
-
-      @if (brandsError()) {
-        <mat-error>{{ brandsError() }}</mat-error>
-      }
-
-      @if (brandsLoading()) {
-        <mat-hint>Buscando marcas...</mat-hint>
-      }
-
-      @if (form.controls.brand.hasError('required')) {
-        <mat-error>Selecione a marca</mat-error>
-      }
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Modelo</mat-label>
-
-      <mat-select
-        formControlName="model"
-        [placeholder]="modelsLoading() ? 'Buscando modelos...' : 'Selecionar modelo'"
-        panelClass="vehicle-select-panel model-select-panel"
-        (openedChange)="modelOpenedChange.emit($event)"
-        (selectionChange)="modelChange.emit($event.value)"
-      >
-        <div
-          class="select-search-box"
-          (click)="$event.stopPropagation()"
-          (keydown)="$event.stopPropagation()"
-        >
-          <mat-icon aria-hidden="true">search</mat-icon>
-          <input
-            type="text"
-            aria-label="Buscar modelo"
-            placeholder="Buscar modelo"
-            [value]="modelSearch()"
-            (input)="modelSearch.set($any($event.target).value)"
-            (keydown.enter)="$event.preventDefault()"
-          />
-        </div>
-
-        @if (modelsLoading()) {
-          <mat-option disabled>Buscando modelos...</mat-option>
-        }
-
-        @for (model of filteredModels(); track model.code) {
-          <mat-option [value]="model.code">
-            {{ model.name }}
-          </mat-option>
-        } @empty {
-          @if (!modelsLoading()) {
-            <mat-option disabled>Nenhum modelo encontrado</mat-option>
-          }
-        }
-      </mat-select>
-
-      @if (modelsError()) {
-        <mat-error>{{ modelsError() }}</mat-error>
-      }
-
-      @if (modelsLoading()) {
-        <mat-hint>Buscando modelos...</mat-hint>
-      }
-
-      @if (form.controls.model.hasError('required')) {
-        <mat-error>Selecione o modelo</mat-error>
-      }
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Ano</mat-label>
-
-      <mat-select
-        formControlName="yearModel"
-        [placeholder]="yearsLoading() ? 'Buscando anos...' : 'Selecionar ano'"
-        panelClass="vehicle-select-panel year-select-panel"
-        (openedChange)="yearOpenedChange.emit($event)"
-        (selectionChange)="yearChange.emit($event.value)"
-      >
-        <div
-          class="select-search-box"
-          (click)="$event.stopPropagation()"
-          (keydown)="$event.stopPropagation()"
-        >
-          <mat-icon aria-hidden="true">search</mat-icon>
-          <input
-            type="text"
-            aria-label="Buscar ano"
-            placeholder="Buscar ano"
-            [value]="yearSearch()"
-            (input)="yearSearch.set($any($event.target).value)"
-            (keydown.enter)="$event.preventDefault()"
-          />
-        </div>
-
-        @if (yearsLoading()) {
-          <mat-option disabled>Buscando anos...</mat-option>
-        }
-
-        @for (year of filteredYears(); track year.code) {
-          <mat-option [value]="year.code">
-            {{ getYearLabel(year) }}
-          </mat-option>
-        } @empty {
-          @if (!yearsLoading()) {
-            <mat-option disabled>Nenhum ano encontrado</mat-option>
-          }
-        }
-      </mat-select>
-
-      @if (yearsError()) {
-        <mat-error>{{ yearsError() }}</mat-error>
-      }
-
-      @if (yearsLoading()) {
-        <mat-hint>Buscando anos...</mat-hint>
-      }
-
-      @if (form.controls.yearModel.hasError('required')) {
-        <mat-error>Selecione o ano</mat-error>
-      }
-    </mat-form-field>
+    <app-searchable-select
+      label="Ano"
+      placeholder="Selecionar ano"
+      searchPlaceholder="Buscar ano"
+      loadingText="Buscando anos..."
+      emptyText="Nenhum ano encontrado"
+      requiredErrorText="Selecione o ano"
+      panelClass="vehicle-select-panel year-select-panel"
+      optionValueKey="code"
+      [control]="form.controls.yearModel"
+      [items]="filteredYears()"
+      [loading]="yearsLoading()"
+      [error]="yearsError()"
+      [searchValue]="yearSearch()"
+      [optionLabelFn]="getYearLabel"
+      (openedChange)="yearOpenedChange.emit($event)"
+      (selectionChange)="yearChange.emit($any($event))"
+      (searchChange)="yearSearch.set($event)"
+    />
 
     <mat-form-field appearance="outline">
       <mat-label>Placa</mat-label>
