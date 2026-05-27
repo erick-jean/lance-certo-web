@@ -5,7 +5,8 @@ import { authGuard, loginGuard } from './core/guards/auth.guard';
 export const routes: Routes = [
   {
     path: 'login',
-    loadComponent: () => import('./pages/login/login').then((component) => component.Login),
+    loadComponent: () =>
+      import('./pages/login/login').then((component) => component.LoginComponent),
     canActivate: [loginGuard],
   },
   {

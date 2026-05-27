@@ -1,75 +1,100 @@
-import { Component, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
-import { Auth } from '../../core/services/auth';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
+
+import { Auth } from '../../core/services/auth';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [MatIconModule, RouterLink, ReactiveFormsModule],
+  imports: [
+    MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    RouterLink,
+    ReactiveFormsModule,
+  ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Login {
+export class LoginComponent {
   private readonly auth = inject(Auth);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
 
-  protected readonly showPassword = signal(false);
-
-  protected togglePassword(): void {
-    this.showPassword.update((visible) => !visible);
-  }
-
   protected readonly loading = signal(false);
-  errorMessage = signal('');
+  protected readonly showPassword = signal(false);
+  protected readonly errorMessage = signal('');
 
-  form = this.fb.nonNullable.group({
+  protected readonly form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
-    //rememberMe: [false],
   });
 
-  login(): void {
+  protected login(): void {
+    this.errorMessage.set('');
+
+    if (this.loading()) {
+      return;
+    }
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
+    const credentials = {
+      ...this.form.getRawValue(),
+      email: this.form.controls.email.value.trim().toLowerCase(),
+    };
+
     this.loading.set(true);
-    this.errorMessage.set('');
 
     this.auth
-      .login(this.form.getRawValue())
-      .pipe(
-        finalize(() => {
-          this.loading.set(false);
-        }),
-      )
+      .login(credentials)
+      .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: () => {
-          this.router.navigate(['/dashboard']);
+          void this.router.navigate(['/dashboard']);
         },
-        error: (err) => {
-          if (err.status === 401) {
-            this.errorMessage.set('E-mail ou senha inválidos');
-            return;
-          }
-
-          if (err.status === 400) {
-            this.errorMessage.set('Dados inválidos.');
-            return;
-          }
-
-          if (err.status === 429) {
-            this.errorMessage.set('Muitas tentativas de login. Tente novamente mais tarde.');
-            return;
-          }
-
-          this.errorMessage.set('Erro ao realizar login. Tente novamente.');
+        error: (error: HttpErrorResponse) => {
+          this.errorMessage.set(this.getLoginErrorMessage(error.status));
         },
       });
+  }
+
+  /**
+   * Mantém a mensagem de credenciais genérica para reduzir enumeração de usuários.
+   */
+  private getLoginErrorMessage(status: number): string {
+    if (status === 400 || status === 401) {
+      return 'E-mail ou senha inválidos.';
+    }
+
+    if (status === 429) {
+      return 'Muitas tentativas de login. Tente novamente mais tarde.';
+    }
+
+    return 'Não foi possível entrar agora. Tente novamente.';
+  }
+
+  protected togglePassword(): void {
+    this.showPassword.update((visible) => !visible);
+  }
+
+  protected hasError(controlName: 'email' | 'password', errorName: string): boolean {
+    const control = this.form.controls[controlName];
+
+    return control.hasError(errorName) && (control.touched || control.dirty);
   }
 }
