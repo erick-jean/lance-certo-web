@@ -10,6 +10,7 @@ import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { Auth } from '../../core/services/auth';
+import { LoginHeroComponent } from './components/login-hero/login-hero';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +21,7 @@ import { Auth } from '../../core/services/auth';
     MatIconModule,
     MatInputModule,
     MatProgressSpinnerModule,
+    LoginHeroComponent,
     RouterLink,
     ReactiveFormsModule,
   ],

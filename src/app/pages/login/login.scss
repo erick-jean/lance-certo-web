@@ -5,101 +5,6 @@
   background: #f6f7fb;
 }
 
-.login-hero {
-  position: relative;
-  display: grid;
-  min-height: 100dvh;
-  grid-template-rows: auto 1fr auto;
-  overflow: hidden;
-  background: #0b1b32;
-  color: #ffffff;
-  padding: 2.5rem;
-
-  &::before {
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(122deg, transparent 0 50%, rgb(255 255 255 / 0.055) 50% 66%, transparent 66%),
-      radial-gradient(circle at 12% 8%, rgb(21 94 239 / 0.18), transparent 32%),
-      radial-gradient(circle at 92% 88%, rgb(0 122 88 / 0.18), transparent 30%);
-    content: '';
-  }
-}
-
-.brand-mark,
-.hero-copy,
-.hero-insight {
-  position: relative;
-  z-index: 1;
-}
-
-.brand-mark {
-  display: inline-flex;
-  width: 14rem;
-  align-items: center;
-  border-radius: var(--radius-md);
-  background: rgb(255 255 255 / 0.94);
-  padding: 0.5rem 0.75rem;
-  box-shadow: 0 1rem 2rem rgb(0 0 0 / 0.18);
-
-  img {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-  }
-}
-
-.hero-copy {
-  align-self: center;
-  max-width: 28rem;
-  margin-top: 2rem;
-
-  h1 {
-    color: #ffffff;
-    font-size: 2.75rem;
-    font-weight: var(--font-weight-bold);
-    line-height: 1.08;
-  }
-
-  p {
-    color: #b8c8de;
-    font-size: var(--font-size-sm);
-    line-height: var(--line-height-relaxed);
-    margin-top: 1.25rem;
-  }
-}
-
-.hero-insight {
-  display: grid;
-  gap: 0.5rem;
-  max-width: 25rem;
-  border: 1px solid rgb(255 255 255 / 0.12);
-  border-radius: var(--radius-lg);
-  background: rgb(255 255 255 / 0.07);
-  padding: 1.25rem;
-  backdrop-filter: blur(6px);
-
-  > span {
-    color: #34d399;
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-bold);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  strong {
-    color: #ffffff;
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-bold);
-    line-height: 1.25;
-  }
-
-  p {
-    color: #b8c8de;
-    font-size: var(--font-size-sm);
-  }
-}
-
 .login-panel {
   display: grid;
   min-height: 100dvh;
@@ -264,10 +169,6 @@
 @media (max-width: 900px) {
   .login-page {
     grid-template-columns: 1fr;
-  }
-
-  .login-hero {
-    display: none;
   }
 
   .login-panel {
