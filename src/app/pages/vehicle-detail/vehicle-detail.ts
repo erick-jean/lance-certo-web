@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, HostListener, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -63,6 +63,7 @@ export class VehicleDetail implements OnInit {
   protected readonly expenseCategoryFilter = signal<'ALL' | ExpenseCategory>('ALL');
   protected readonly expenseRequiredFilter = signal<'ALL' | 'REQUIRED' | 'OPTIONAL'>('ALL');
   protected readonly isExpenseDrawerOpen = signal(false);
+  protected readonly lightboxOpen = signal(false);
   protected readonly selectedExpenseId = signal<string | null>(null);
   protected readonly expenseVersion = signal(0);
   protected readonly expenseName = signal('');
@@ -293,6 +294,28 @@ export class VehicleDetail implements OnInit {
     );
     this.expenseVersion.update((version) => version + 1);
     this.closeExpenseDrawer();
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  protected onKeydown(event: KeyboardEvent): void {
+    if (!this.lightboxOpen()) return;
+
+    if (event.key === 'Escape') {
+      this.closeLightbox();
+    } else if (event.key === 'ArrowLeft') {
+      this.showPreviousImage();
+    } else if (event.key === 'ArrowRight') {
+      this.showNextImage();
+    }
+  }
+
+  protected openLightbox(): void {
+    if (!this.activeImage()) return;
+    this.lightboxOpen.set(true);
+  }
+
+  protected closeLightbox(): void {
+    this.lightboxOpen.set(false);
   }
 
   protected selectImage(index: number): void {

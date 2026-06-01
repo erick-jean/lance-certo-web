@@ -17,7 +17,13 @@
     <div class="vehicle-gallery">
       <div class="vehicle-photo">
         @if (activeImage(); as imageUrl) {
-          <img [src]="imageUrl" [alt]="vehicleTitle()" />
+          <img
+            [src]="imageUrl"
+            [alt]="vehicleTitle()"
+            class="clickable-photo"
+            (click)="openLightbox()"
+            title="Clique para ampliar"
+          />
         } @else {
           <div class="vehicle-image-placeholder" aria-hidden="true">
             <mat-icon>directions_car</mat-icon>
@@ -385,6 +391,38 @@
       </section>
     }
   </section>
+
+  @if (lightboxOpen()) {
+    <div class="lightbox-backdrop" (click)="closeLightbox()" aria-label="Fechar visualização" role="button" tabindex="-1">
+      <div class="lightbox-container" (click)="$event.stopPropagation()">
+        <button class="lightbox-close" type="button" aria-label="Fechar" (click)="closeLightbox()">
+          <mat-icon aria-hidden="true">close</mat-icon>
+        </button>
+
+        <img class="lightbox-image" [src]="activeImage()" [alt]="vehicleTitle()" />
+
+        @if (imageUrls().length > 1) {
+          <button
+            class="lightbox-control previous"
+            type="button"
+            aria-label="Imagem anterior"
+            (click)="showPreviousImage()"
+          >
+            <mat-icon aria-hidden="true">chevron_left</mat-icon>
+          </button>
+          <button
+            class="lightbox-control next"
+            type="button"
+            aria-label="Próxima imagem"
+            (click)="showNextImage()"
+          >
+            <mat-icon aria-hidden="true">chevron_right</mat-icon>
+          </button>
+          <span class="lightbox-count">{{ activeImageIndex() + 1 }} / {{ imageUrls().length }}</span>
+        }
+      </div>
+    </div>
+  }
 
   @if (isExpenseDrawerOpen()) {
     <div class="expense-drawer-backdrop" (click)="closeExpenseDrawer()"></div>

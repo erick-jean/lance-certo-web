@@ -722,6 +722,138 @@
   }
 }
 
+.clickable-photo {
+  cursor: zoom-in;
+  transition: filter 160ms ease;
+
+  &:hover {
+    filter: brightness(0.92);
+  }
+}
+
+.lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  background: rgb(7 16 29 / 0.88);
+  backdrop-filter: blur(6px);
+  animation: lightbox-in 180ms ease-out;
+  cursor: zoom-out;
+}
+
+.lightbox-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: calc(100vw - 4rem);
+  max-height: calc(100vh - 4rem);
+  cursor: default;
+}
+
+.lightbox-image {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100vh - 4rem);
+  border-radius: var(--radius-md);
+  box-shadow: 0 2rem 4rem rgb(7 16 29 / 0.64);
+  object-fit: contain;
+  user-select: none;
+}
+
+.lightbox-close {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 10001;
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.14);
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+
+  mat-icon {
+    font-size: 1.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  &:hover {
+    background: rgb(255 255 255 / 0.28);
+  }
+}
+
+.lightbox-control {
+  position: fixed;
+  top: 50%;
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.14);
+  color: #ffffff;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: background-color 160ms ease;
+
+  mat-icon {
+    font-size: 1.75rem;
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  &.previous {
+    left: 1.25rem;
+  }
+
+  &.next {
+    right: 1.25rem;
+  }
+
+  &:hover {
+    background: rgb(255 255 255 / 0.28);
+  }
+}
+
+.lightbox-count {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3.5rem;
+  min-height: 1.75rem;
+  border-radius: 999px;
+  background: rgb(7 16 29 / 0.64);
+  color: #ffffff;
+  font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--font-weight-bold);
+  padding: 0.25rem 0.875rem;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes drawer-in {
   from {
     opacity: 0;
