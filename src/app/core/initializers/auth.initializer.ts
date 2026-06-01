@@ -12,7 +12,8 @@ export function initializeAuth() {
 
   return authService.refreshToken().pipe(
     catchError(() => {
-      authService.clearSession();
+      // On init failure (e.g. backend cold start, network error), keep the existing
+      // token in sessionStorage — the interceptor handles 401s when requests are made.
       return of(null);
     }),
   );
