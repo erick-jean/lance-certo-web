@@ -438,13 +438,19 @@ export class VehicleDetail implements OnInit {
 
         // 404 = avaliação não existe ainda → propor criação
         if (err.status === 404) {
-          this.openCreateEvaluationDialog(vehicleId);
+          this._openCreateEvaluationDialog(vehicleId);
         }
       },
     });
   }
 
-  private openCreateEvaluationDialog(vehicleId: string): void {
+  protected openCreateEvaluationDialog(vehicleId?: string): void {
+    const id = vehicleId ?? this.vehicle().id;
+    if (!id) return;
+    this._openCreateEvaluationDialog(id);
+  }
+
+  private _openCreateEvaluationDialog(vehicleId: string): void {
     const ref = this.dialog.open<CreateEvaluationDialogComponent, CreateEvaluationDialogData, boolean>(
       CreateEvaluationDialogComponent,
       {

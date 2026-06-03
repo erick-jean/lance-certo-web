@@ -17,10 +17,12 @@
         <span>{{ deleting() ? 'Excluindo...' : 'Excluir' }}</span>
       </button>
 
-      <button class="topbar-btn topbar-btn--evaluate" type="button">
-        <mat-icon aria-hidden="true">analytics</mat-icon>
-        <span>Criar avaliação</span>
-      </button>
+      @if (!vehicle().evaluation) {
+        <button class="topbar-btn topbar-btn--evaluate" type="button" (click)="openCreateEvaluationDialog()">
+          <mat-icon aria-hidden="true">analytics</mat-icon>
+          <span>Criar avaliação</span>
+        </button>
+      }
 
       <button class="topbar-btn topbar-btn--primary" type="button">
         <mat-icon aria-hidden="true">{{ vehicle().status === 'PURCHASED' ? 'sell' : 'gavel' }}</mat-icon>
