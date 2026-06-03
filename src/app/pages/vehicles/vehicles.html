@@ -22,68 +22,39 @@
       />
     </label>
 
-    <label class="filter-select">
-      <select
-        [ngModel]="statusFilter()"
-        (ngModelChange)="statusFilter.set($event)"
-        aria-label="Filtrar por status"
-      >
-        <option value="ALL">Status</option>
-        <option value="ANALYZING">Em análise</option>
-        <option value="PURCHASED">Arrematado</option>
-        <option value="SOLD">Vendido</option>
-      </select>
-      <mat-icon aria-hidden="true">expand_more</mat-icon>
-    </label>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="filter-field">
+      <mat-label>Status</mat-label>
+      <mat-select [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)">
+        <mat-option value="ALL">Todos</mat-option>
+        <mat-option value="ANALYZING">Em análise</mat-option>
+        <mat-option value="PURCHASED">Arrematado</mat-option>
+        <mat-option value="SOLD">Vendido</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-    <label class="filter-select">
-      <select
-        [ngModel]="typeFilter()"
-        (ngModelChange)="typeFilter.set($event)"
-        aria-label="Filtrar por tipo"
-      >
-        <option value="ALL">Tipo</option>
-        <option value="CAR">Carro</option>
-        <option value="MOTORCYCLE">Moto</option>
-      </select>
-      <mat-icon aria-hidden="true">expand_more</mat-icon>
-    </label>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="filter-field">
+      <mat-label>Tipo</mat-label>
+      <mat-select [ngModel]="typeFilter()" (ngModelChange)="typeFilter.set($event)">
+        <mat-option value="ALL">Todos</mat-option>
+        <mat-option value="CAR">Carro</mat-option>
+        <mat-option value="MOTORCYCLE">Moto</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-    <label class="filter-select">
-      <select
-        [ngModel]="locationFilter()"
-        (ngModelChange)="locationFilter.set($event)"
-        aria-label="Filtrar por localização"
-      >
-        <option value="ALL">Localização</option>
-        @for (location of locations(); track location) {
-          <option [value]="location">{{ location }}</option>
-        }
-      </select>
-      <mat-icon aria-hidden="true">expand_more</mat-icon>
-    </label>
-
-    <div class="view-actions" aria-label="Modo de visualização">
-      <button
-        class="view-button"
-        type="button"
-        aria-label="Visualizar em grade"
-        [class.active]="viewMode() === 'grid'"
-        (click)="setViewMode('grid')"
-      >
+    <mat-button-toggle-group
+      class="view-toggle"
+      [value]="viewMode()"
+      (change)="setViewMode($event.value)"
+      hideSingleSelectionIndicator
+      aria-label="Modo de visualização"
+    >
+      <mat-button-toggle value="grid" aria-label="Visualizar em grade">
         <mat-icon aria-hidden="true">grid_view</mat-icon>
-      </button>
-
-      <button
-        class="view-button"
-        type="button"
-        aria-label="Visualizar em lista"
-        [class.active]="viewMode() === 'list'"
-        (click)="setViewMode('list')"
-      >
+      </mat-button-toggle>
+      <mat-button-toggle value="list" aria-label="Visualizar em lista">
         <mat-icon aria-hidden="true">table_rows</mat-icon>
-      </button>
-    </div>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
   </section>
 
   @if (loading()) {
