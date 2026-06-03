@@ -22,32 +22,36 @@
       />
     </label>
 
-    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="filter-field">
-      <mat-label>Status</mat-label>
-      <mat-select
-        [ngModel]="statusFilter()"
-        (ngModelChange)="statusFilter.set($event)"
-        panelClass="vehicle-select-panel"
-      >
-        <mat-option value="ALL">Todos</mat-option>
-        <mat-option value="ANALYZING">Em análise</mat-option>
-        <mat-option value="PURCHASED">Arrematado</mat-option>
-        <mat-option value="SOLD">Vendido</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <!-- form-grid wrapper: display:contents keeps it invisible to the grid layout
+         but the class makes _material-overrides.scss selectors match -->
+    <div class="form-grid filters-form-grid">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Status</mat-label>
+        <mat-select
+          [ngModel]="statusFilter()"
+          (ngModelChange)="statusFilter.set($event)"
+          panelClass="vehicle-select-panel"
+        >
+          <mat-option value="ALL">Todos</mat-option>
+          <mat-option value="ANALYZING">Em análise</mat-option>
+          <mat-option value="PURCHASED">Arrematado</mat-option>
+          <mat-option value="SOLD">Vendido</mat-option>
+        </mat-select>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="filter-field">
-      <mat-label>Tipo</mat-label>
-      <mat-select
-        [ngModel]="typeFilter()"
-        (ngModelChange)="typeFilter.set($event)"
-        panelClass="vehicle-select-panel"
-      >
-        <mat-option value="ALL">Todos</mat-option>
-        <mat-option value="CAR">Carro</mat-option>
-        <mat-option value="MOTORCYCLE">Moto</mat-option>
-      </mat-select>
-    </mat-form-field>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Tipo</mat-label>
+        <mat-select
+          [ngModel]="typeFilter()"
+          (ngModelChange)="typeFilter.set($event)"
+          panelClass="vehicle-select-panel"
+        >
+          <mat-option value="ALL">Todos</mat-option>
+          <mat-option value="CAR">Carro</mat-option>
+          <mat-option value="MOTORCYCLE">Moto</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
 
     <mat-button-toggle-group
       class="view-toggle"

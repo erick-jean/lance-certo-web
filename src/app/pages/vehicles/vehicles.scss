@@ -1,3 +1,5 @@
+@use '../../shared/styles/material-overrides';
+
 .vehicles-page {
   display: grid;
   gap: var(--space-lg);
@@ -92,87 +94,10 @@
   }
 }
 
-// mat-form-field dos filtros — mesmos tokens do _material-overrides.scss/.form-grid
-.filter-field {
-  width: 100%;
-
-  --mdc-outlined-text-field-container-shape: var(--radius-md);
-  --mdc-outlined-text-field-outline-color: #d6dde7;
-  --mdc-outlined-text-field-hover-outline-color: #b8c1cf;
-  --mdc-outlined-text-field-focus-outline-color: var(--color-action);
-  --mdc-outlined-text-field-label-text-color: #667085;
-  --mdc-outlined-text-field-hover-label-text-color: #667085;
-  --mdc-outlined-text-field-focus-label-text-color: var(--color-action);
-  --mdc-outlined-text-field-input-text-color: #101828;
-  --mat-form-field-container-height: 3.5rem;
-  --mat-form-field-container-vertical-padding: 0;
-  --mat-form-field-container-text-size: var(--font-size-sm);
-  --mat-form-field-outlined-label-text-size: var(--font-size-xs);
-
-  ::ng-deep {
-    .mat-mdc-text-field-wrapper {
-      height: 3.5rem;
-      background: #ffffff;
-      border-radius: var(--radius-md);
-      box-shadow: none;
-    }
-
-    .mat-mdc-form-field-flex,
-    .mat-mdc-form-field-infix {
-      min-height: 3.5rem;
-    }
-
-    .mat-mdc-form-field-infix {
-      display: flex;
-      align-items: center;
-      padding-top: 0;
-      padding-bottom: 0;
-    }
-
-    .mat-mdc-select-trigger {
-      min-height: 3.5rem;
-    }
-
-    .mat-mdc-select-value {
-      color: #101828;
-      font-size: var(--font-size-sm);
-    }
-
-    .mat-mdc-select-arrow {
-      color: #667085;
-    }
-
-    .mdc-notched-outline__leading,
-    .mdc-notched-outline__notch,
-    .mdc-notched-outline__trailing {
-      border-color: #d6dde7;
-      border-width: 1px;
-    }
-
-    &:hover .mdc-notched-outline__leading,
-    &:hover .mdc-notched-outline__notch,
-    &:hover .mdc-notched-outline__trailing {
-      border-color: #b8c1cf;
-    }
-
-    .mat-focused .mdc-notched-outline__leading,
-    .mat-focused .mdc-notched-outline__notch,
-    .mat-focused .mdc-notched-outline__trailing {
-      border-color: var(--color-action);
-      border-width: 1.5px;
-    }
-
-    .mdc-floating-label {
-      color: #667085;
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-medium);
-      letter-spacing: 0;
-    }
-
-    .mdc-floating-label--float-above {
-      color: #475467;
-    }
-  }
+// Wrapper transparente ao layout — cada mat-form-field fica como item direto do grid,
+// mas a classe .form-grid mantém os seletores de _material-overrides.scss funcionando.
+.filters-form-grid {
+  display: contents;
 }
 
 // mat-button-toggle-group para grade/lista
