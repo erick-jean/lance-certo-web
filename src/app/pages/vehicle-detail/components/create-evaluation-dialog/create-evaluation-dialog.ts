@@ -5,10 +5,10 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { Vehicles as VehiclesService } from '../../../../core/services/vehicles';
+import { PageLoadingOverlay } from '../../../../shared/components/page-loading-overlay/page-loading-overlay';
 import { PercentMaskDirective } from '../../../../shared/directives/percent-mask.directive';
 
 export interface CreateEvaluationDialogData {
@@ -26,7 +26,7 @@ export interface CreateEvaluationDialogData {
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
-    MatProgressSpinnerModule,
+    PageLoadingOverlay,
     PercentMaskDirective,
   ],
   templateUrl: './create-evaluation-dialog.html',

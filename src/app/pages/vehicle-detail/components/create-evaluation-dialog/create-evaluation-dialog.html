@@ -1,3 +1,7 @@
+@if (loading()) {
+  <app-page-loading-overlay title="Criando avaliação" description="Calculando lance máximo recomendado e nível de risco." />
+}
+
 <section class="evaluation-dialog">
   <div class="evaluation-accent" aria-hidden="true"></div>
 
@@ -73,13 +77,7 @@
   </div>
 
   <mat-dialog-actions align="center">
-    <button
-      mat-stroked-button
-      class="cancel-action"
-      type="button"
-      [disabled]="loading()"
-      mat-dialog-close
-    >
+    <button mat-stroked-button class="cancel-action" type="button" mat-dialog-close>
       Agora não
     </button>
 
@@ -87,15 +85,10 @@
       mat-flat-button
       class="confirm-action"
       type="button"
-      [disabled]="loading()"
       (click)="submit()"
     >
-      @if (loading()) {
-        <mat-spinner diameter="16" />
-      } @else {
-        <mat-icon aria-hidden="true">analytics</mat-icon>
-      }
-      <span>{{ loading() ? 'Criando...' : 'Criar avaliação' }}</span>
+      <mat-icon aria-hidden="true">analytics</mat-icon>
+      <span>Criar avaliação</span>
     </button>
   </mat-dialog-actions>
 </section>
