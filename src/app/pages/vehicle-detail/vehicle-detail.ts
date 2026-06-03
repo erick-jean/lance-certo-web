@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
 import { StatusBadge, StatusBadgeTone } from '../../shared/components/status-badge/status-badge';
 import {
   DamageType,
@@ -26,14 +27,13 @@ import {
   VEHICLE_DAMAGE_LABEL,
   VEHICLE_STATUS_LABEL,
   VEHICLE_TYPE_LABEL,
+  formatCurrency,
   formatDate,
   formatMileage,
   safeImageUrl,
   vehicleSubtitle,
   vehicleTitle,
 } from '../vehicles/vehicle-labels';
-
-type DetailTab = 'data' | 'evaluation' | 'checklist' | 'report';
 
 const emptyVehicle: Vehicle = {
   id: '',
@@ -48,7 +48,7 @@ const emptyVehicle: Vehicle = {
   standalone: true,
   templateUrl: './vehicle-detail.html',
   styleUrl: './vehicle-detail.scss',
-  imports: [MatButtonModule, MatIconModule, RouterLink, FormsModule, StatusBadge],
+  imports: [MatButtonModule, MatIconModule, MatTabsModule, RouterLink, FormsModule, StatusBadge],
 })
 export class VehicleDetail implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -58,7 +58,6 @@ export class VehicleDetail implements OnInit {
   protected readonly loading = signal(true);
   protected readonly loadError = signal('');
   protected readonly activeImageIndex = signal(0);
-  protected readonly activeTab = signal<DetailTab>('data');
   protected readonly expenseSearch = signal('');
   protected readonly expenseCategoryFilter = signal<'ALL' | ExpenseCategory>('ALL');
   protected readonly expenseRequiredFilter = signal<'ALL' | 'REQUIRED' | 'OPTIONAL'>('ALL');
@@ -148,6 +147,10 @@ export class VehicleDetail implements OnInit {
     return vehicleSubtitle(this.vehicle());
   }
 
+  protected formatCurrency(value?: number | null): string {
+    return formatCurrency(value);
+  }
+
   protected statusLabel(status: VehicleStatus): string {
     return VEHICLE_STATUS_LABEL[status];
   }
@@ -211,10 +214,6 @@ export class VehicleDetail implements OnInit {
 
   protected primaryActionLabel(): string {
     return this.vehicle().status === 'PURCHASED' ? 'Vender veículo' : 'Marcar como arrematado';
-  }
-
-  protected selectTab(tab: DetailTab): void {
-    this.activeTab.set(tab);
   }
 
   protected openExpenseDrawer(): void {

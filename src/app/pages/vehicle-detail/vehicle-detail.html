@@ -84,19 +84,19 @@
       <section class="metrics-grid" aria-label="Resumo financeiro">
         <div class="metric-card fipe-card">
           <span>FIPE</span>
-          <strong>{{ vehicle().fipeValue ?? '-' }}</strong>
+          <strong>{{ formatCurrency(vehicle().fipeValue) }}</strong>
         </div>
         <div class="metric-card bid-card">
           <span>Lance sugerido</span>
-          <strong>{{ vehicle().evaluation?.suggestedBid ?? '-' }}</strong>
+          <strong>{{ formatCurrency(vehicle().evaluation?.suggestedBid) }}</strong>
         </div>
         <div class="metric-card profit-card">
           <span>Lucro estimado</span>
-          <strong>{{ vehicle().evaluation?.estimatedProfit ?? '-' }}</strong>
+          <strong>{{ formatCurrency(vehicle().evaluation?.estimatedProfit) }}</strong>
         </div>
         <div class="metric-card expense-card">
           <span>Gastos estimados</span>
-          <strong>{{ vehicle().evaluation?.estimatedExpenses ?? '-' }}</strong>
+          <strong>{{ formatCurrency(vehicle().evaluation?.estimatedExpenses) }}</strong>
         </div>
       </section>
 
@@ -134,44 +134,20 @@
     </div>
   </article>
 
-  <section class="detail-tabs">
-    <nav class="tabs-nav" aria-label="Mais informações do veículo">
-      <button type="button" [class.active]="activeTab() === 'data'" (click)="selectTab('data')">
-        Dados do Veículo
-      </button>
-      <button
-        type="button"
-        [class.active]="activeTab() === 'evaluation'"
-        (click)="selectTab('evaluation')"
-      >
-        Avaliação
-      </button>
-      <button
-        type="button"
-        [class.active]="activeTab() === 'checklist'"
-        (click)="selectTab('checklist')"
-      >
-        Checklist
-      </button>
-      <button type="button" [class.active]="activeTab() === 'report'" (click)="selectTab('report')">
-        Relatório
-      </button>
-    </nav>
+  <mat-tab-group class="detail-tabs" animationDuration="120ms">
 
-    @if (activeTab() === 'data') {
-      <section class="tab-info-grid">
+    <mat-tab label="Dados do Veículo">
+      <section class="tab-panel tab-info-grid">
         <div>
           <span>Placa</span><strong>{{ vehicle().plate ?? '-' }}</strong>
         </div>
         <div>
-          <span>Marca / Modelo</span
-          ><strong>{{ vehicle().brand ?? '-' }} / {{ vehicle().model ?? '-' }}</strong>
+          <span>Marca / Modelo</span>
+          <strong>{{ vehicle().brand ?? '-' }} / {{ vehicle().model ?? '-' }}</strong>
         </div>
         <div>
-          <span>Ano Fab / Modelo</span
-          ><strong
-            >{{ vehicle().yearManufacture ?? '-' }} / {{ vehicle().yearModel ?? '-' }}</strong
-          >
+          <span>Ano Fab / Modelo</span>
+          <strong>{{ vehicle().yearManufacture ?? '-' }} / {{ vehicle().yearModel ?? '-' }}</strong>
         </div>
         <div>
           <span>Cor</span><strong>{{ vehicle().color ?? '-' }}</strong>
@@ -192,10 +168,10 @@
           <span>Código FIPE</span><strong>{{ vehicle().fipeCode ?? '-' }}</strong>
         </div>
         <div>
-          <span>Valor FIPE</span><strong>{{ vehicle().fipeValue ?? '-' }}</strong>
+          <span>Valor FIPE</span><strong>{{ formatCurrency(vehicle().fipeValue) }}</strong>
         </div>
         <div>
-          <span>Valor mercado</span><strong>{{ vehicle().marketValue ?? '-' }}</strong>
+          <span>Valor mercado</span><strong>{{ formatCurrency(vehicle().marketValue) }}</strong>
         </div>
         <div>
           <span>Leiloeiro</span><strong>{{ vehicle().auctioneer ?? '-' }}</strong>
@@ -207,25 +183,23 @@
           <span>Data do evento</span><strong>{{ formatDate(vehicle().eventDate) }}</strong>
         </div>
         <div>
-          <span>Cidade/UF</span
-          ><strong
-            >{{ vehicle().city ?? '-' }}{{ vehicle().state ? ' / ' + vehicle().state : '' }}</strong
-          >
+          <span>Cidade/UF</span>
+          <strong>{{ vehicle().city ?? '-' }}{{ vehicle().state ? ' / ' + vehicle().state : '' }}</strong>
         </div>
         <div>
-          <span>Lance inicial</span><strong>{{ vehicle().auctionInitialBid ?? '-' }}</strong>
+          <span>Lance inicial</span><strong>{{ formatCurrency(vehicle().auctionInitialBid) }}</strong>
         </div>
         <div>
-          <span>Lance atual</span><strong>{{ vehicle().auctionCurrentBid ?? '-' }}</strong>
+          <span>Lance atual</span><strong>{{ formatCurrency(vehicle().auctionCurrentBid) }}</strong>
         </div>
         <div>
-          <span>Preço de compra</span><strong>{{ vehicle().purchasePrice ?? '-' }}</strong>
+          <span>Preço de compra</span><strong>{{ formatCurrency(vehicle().purchasePrice) }}</strong>
         </div>
         <div>
           <span>Comprado em</span><strong>{{ formatDate(vehicle().purchasedAt) }}</strong>
         </div>
         <div>
-          <span>Preço de venda</span><strong>{{ vehicle().soldPrice ?? '-' }}</strong>
+          <span>Preço de venda</span><strong>{{ formatCurrency(vehicle().soldPrice) }}</strong>
         </div>
         <div>
           <span>Vendido em</span><strong>{{ formatDate(vehicle().soldAt) }}</strong>
@@ -252,10 +226,10 @@
           <span>Observações</span><strong>{{ vehicle().notes ?? '-' }}</strong>
         </div>
       </section>
-    }
+    </mat-tab>
 
-    @if (activeTab() === 'evaluation') {
-      <section class="expenses-tab">
+    <mat-tab label="Avaliação">
+      <section class="tab-panel expenses-tab">
         <header class="expenses-header">
           <div>
             <h2>Possíveis gastos</h2>
@@ -276,7 +250,7 @@
         <header class="expenses-summary">
           <div>
             <span>Total estimado</span>
-            <strong>{{ vehicle().evaluation?.estimatedExpenses ?? '-' }}</strong>
+            <strong>{{ formatCurrency(vehicle().evaluation?.estimatedExpenses) }}</strong>
           </div>
         </header>
 
@@ -345,52 +319,53 @@
                   <small>{{ expense.notes }}</small>
                 }
               </div>
-              <span role="cell"
-                ><span [class]="expenseCategoryClass(expense.category)">{{
+              <span role="cell">
+                <span [class]="expenseCategoryClass(expense.category)">{{
                   expenseCategoryLabel(expense.category)
-                }}</span></span
-              >
+                }}</span>
+              </span>
               <span role="cell">{{ expense.isRequired ? 'Sim' : 'Não' }}</span>
-              <strong role="cell">{{ expense.amount }}</strong>
+              <strong role="cell">{{ formatCurrency(expense.amount) }}</strong>
             </div>
           } @empty {
             <div class="expenses-empty">Nenhum gasto encontrado com os filtros selecionados.</div>
           }
         </div>
       </section>
-    }
+    </mat-tab>
 
-    @if (activeTab() === 'checklist') {
-      <section class="tab-list">
+    <mat-tab label="Checklist">
+      <section class="tab-panel tab-list">
         <p>
           Documentação, vistoria e custos de regularização serão exibidos aqui quando a avaliação
           estiver integrada.
         </p>
       </section>
-    }
+    </mat-tab>
 
-    @if (activeTab() === 'report') {
-      <section class="tab-info-grid">
+    <mat-tab label="Relatório">
+      <section class="tab-panel tab-info-grid">
         <div>
           <span>Status</span><strong>{{ statusLabel(vehicle().status) }}</strong>
         </div>
         <div>
-          <span>Valor mercado</span><strong>{{ vehicle().marketValue ?? '-' }}</strong>
+          <span>Valor mercado</span><strong>{{ formatCurrency(vehicle().marketValue) }}</strong>
         </div>
         <div>
-          <span>Lucro estimado</span
-          ><strong>{{ vehicle().evaluation?.estimatedProfit ?? '-' }}</strong>
+          <span>Lucro estimado</span>
+          <strong>{{ formatCurrency(vehicle().evaluation?.estimatedProfit) }}</strong>
         </div>
         <div>
-          <span>Gastos estimados</span
-          ><strong>{{ vehicle().evaluation?.estimatedExpenses ?? '-' }}</strong>
+          <span>Gastos estimados</span>
+          <strong>{{ formatCurrency(vehicle().evaluation?.estimatedExpenses) }}</strong>
         </div>
         <div class="wide-info">
           <span>Resumo</span><strong>{{ vehicle().notes ?? '-' }}</strong>
         </div>
       </section>
-    }
-  </section>
+    </mat-tab>
+
+  </mat-tab-group>
 
   @if (lightboxOpen()) {
     <div class="lightbox-backdrop" (click)="closeLightbox()" aria-label="Fechar visualização" role="button" tabindex="-1">

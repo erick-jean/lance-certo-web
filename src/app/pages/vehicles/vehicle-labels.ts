@@ -115,7 +115,7 @@ export function formatCurrency(value?: number | string | null): string {
   if (value === undefined || value === null || value === '') return '-';
 
   if (typeof value === 'string') {
-    return value.startsWith('R$') ? value : value;
+    return value;
   }
 
   return new Intl.NumberFormat('pt-BR', {
