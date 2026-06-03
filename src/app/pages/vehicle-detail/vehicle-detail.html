@@ -7,8 +7,7 @@
 
     <div class="detail-actions">
       <button
-        mat-stroked-button
-        class="delete-action"
+        class="topbar-btn topbar-btn--danger"
         type="button"
         [disabled]="deleting()"
         (click)="confirmDelete()"
@@ -17,9 +16,15 @@
         <mat-icon aria-hidden="true">delete</mat-icon>
         <span>{{ deleting() ? 'Excluindo...' : 'Excluir' }}</span>
       </button>
-      <button mat-stroked-button class="secondary-action" type="button">Criar avaliação</button>
-      <button mat-flat-button class="primary-action" type="button">
-        {{ primaryActionLabel() }}
+
+      <button class="topbar-btn topbar-btn--evaluate" type="button">
+        <mat-icon aria-hidden="true">analytics</mat-icon>
+        <span>Criar avaliação</span>
+      </button>
+
+      <button class="topbar-btn topbar-btn--primary" type="button">
+        <mat-icon aria-hidden="true">{{ vehicle().status === 'PURCHASED' ? 'sell' : 'gavel' }}</mat-icon>
+        <span>{{ primaryActionLabel() }}</span>
       </button>
     </div>
   </header>
