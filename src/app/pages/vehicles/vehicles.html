@@ -24,7 +24,11 @@
 
     <mat-form-field appearance="outline" subscriptSizing="dynamic" class="filter-field">
       <mat-label>Status</mat-label>
-      <mat-select [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)">
+      <mat-select
+        [ngModel]="statusFilter()"
+        (ngModelChange)="statusFilter.set($event)"
+        panelClass="vehicle-select-panel"
+      >
         <mat-option value="ALL">Todos</mat-option>
         <mat-option value="ANALYZING">Em análise</mat-option>
         <mat-option value="PURCHASED">Arrematado</mat-option>
@@ -34,7 +38,11 @@
 
     <mat-form-field appearance="outline" subscriptSizing="dynamic" class="filter-field">
       <mat-label>Tipo</mat-label>
-      <mat-select [ngModel]="typeFilter()" (ngModelChange)="typeFilter.set($event)">
+      <mat-select
+        [ngModel]="typeFilter()"
+        (ngModelChange)="typeFilter.set($event)"
+        panelClass="vehicle-select-panel"
+      >
         <mat-option value="ALL">Todos</mat-option>
         <mat-option value="CAR">Carro</mat-option>
         <mat-option value="MOTORCYCLE">Moto</mat-option>
