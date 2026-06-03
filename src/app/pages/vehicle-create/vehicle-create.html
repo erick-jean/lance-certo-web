@@ -13,6 +13,7 @@
         [vehicleTypeOptions]="vehicleTypeOptions"
         [fuelTypeOptions]="fuelTypeOptions"
         [transmissionOptions]="transmissionOptions"
+        [damageTypeOptions]="damageTypeOptions"
         (vehicleTypeChange)="getBrands($event)"
         (brandOpenedChange)="onBrandSelectOpenedChange($event)"
         (brandChange)="onBrandChange($event)"
@@ -23,8 +24,6 @@
       />
 
       <app-vehicle-auction-form [form]="form" [auctionTypeOptions]="auctionTypeOptions" />
-
-      <app-vehicle-analysis-form [form]="form" [damageTypeOptions]="damageTypeOptions" />
 
       <!-- Fotos do veículo -->
       <app-form-card

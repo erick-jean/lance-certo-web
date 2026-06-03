@@ -208,5 +208,30 @@
         }
       </mat-select>
     </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Avaria</mat-label>
+      <mat-select formControlName="damageType" panelClass="vehicle-select-panel">
+        @for (option of damageTypeOptions; track option.value) {
+          <mat-option [value]="option.value">
+            {{ option.label }}
+          </mat-option>
+        }
+      </mat-select>
+
+      @if (form.controls.damageType.hasError('required')) {
+        <mat-error>Selecione o tipo de avaria</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="wide-field textarea-field">
+      <mat-label>Observações</mat-label>
+      <textarea
+        matInput
+        formControlName="notes"
+        rows="4"
+        placeholder="Pequenos riscos no para-choque."
+      ></textarea>
+    </mat-form-field>
   </div>
 </app-form-card>

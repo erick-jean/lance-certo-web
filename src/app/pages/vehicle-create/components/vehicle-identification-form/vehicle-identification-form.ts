@@ -39,6 +39,7 @@ export class VehicleIdentificationFormComponent {
   @Input({ required: true }) vehicleTypeOptions: DropdownOption<VehicleFipeType>[] = [];
   @Input({ required: true }) fuelTypeOptions: DropdownOption[] = [];
   @Input({ required: true }) transmissionOptions: DropdownOption[] = [];
+  @Input({ required: true }) damageTypeOptions: DropdownOption[] = [];
 
   @Input({ required: true }) vm!: VehicleIdentificationVm;
 

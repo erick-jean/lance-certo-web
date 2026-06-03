@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -24,7 +18,6 @@ import { DashboardCache } from '../../core/services/dashboard-cache';
 import { VehicleFipeType } from '../../core/types/vehicle-options.type';
 import { PageLoadingOverlay } from '../../shared/components/page-loading-overlay/page-loading-overlay';
 import { FormCardComponent } from '../../shared/components/form-card/form-card';
-import { VehicleAnalysisFormComponent } from './components/vehicle-analysis-form/vehicle-analysis-form';
 import { VehicleAuctionFormComponent } from './components/vehicle-auction-form/vehicle-auction-form';
 import {
   VehicleCreateErrorDialogComponent,
@@ -55,7 +48,6 @@ const MAX_IMAGES = 10;
     VehicleCreateHeaderComponent,
     VehicleIdentificationFormComponent,
     VehicleAuctionFormComponent,
-    VehicleAnalysisFormComponent,
     VehicleFormActionsComponent,
   ],
   templateUrl: './vehicle-create.html',
@@ -255,9 +247,7 @@ export class VehicleCreate {
                 if (!images.length) return of(vehicle);
 
                 this.submitStep.set('images');
-                return this.vehiclesService
-                  .addImages(vehicle.id, images)
-                  .pipe(map(() => vehicle));
+                return this.vehiclesService.addImages(vehicle.id, images).pipe(map(() => vehicle));
               }),
             );
         }),
