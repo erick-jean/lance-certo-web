@@ -295,7 +295,8 @@ h3,
 
 .register-success-dialog-panel,
 .vehicle-create-error-dialog-panel,
-.delete-vehicle-dialog-panel {
+.delete-vehicle-dialog-panel,
+.create-evaluation-dialog-panel {
   --mdc-dialog-container-color: var(--color-surface);
 
   .mat-mdc-dialog-surface {

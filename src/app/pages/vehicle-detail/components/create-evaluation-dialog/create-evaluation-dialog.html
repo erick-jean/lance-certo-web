@@ -1,0 +1,80 @@
+<section class="evaluation-dialog">
+  <div class="evaluation-accent" aria-hidden="true"></div>
+
+  <div class="evaluation-icon" aria-hidden="true">
+    <mat-icon>analytics</mat-icon>
+  </div>
+
+  <div class="evaluation-copy">
+    <span>Avaliação não encontrada</span>
+    <h2 mat-dialog-title>Criar avaliação para {{ data.vehicleName }}</h2>
+
+    <mat-dialog-content>
+      <p>
+        Defina as margens abaixo para calcular o lance máximo recomendado,
+        lucro estimado e nível de risco.
+      </p>
+
+      <form [formGroup]="form" class="evaluation-form" (ngSubmit)="submit()">
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Margem de lucro desejada</mat-label>
+            <input
+              matInput
+              appPercentMask
+              type="text"
+              inputmode="numeric"
+              formControlName="desiredProfitMarginPercent"
+              placeholder="15"
+            />
+            <span matTextSuffix>%</span>
+            @if (form.controls.desiredProfitMarginPercent.hasError('required')) {
+              <mat-error>Informe a margem de lucro</mat-error>
+            }
+            @if (
+              form.controls.desiredProfitMarginPercent.hasError('min') ||
+              form.controls.desiredProfitMarginPercent.hasError('max')
+            ) {
+              <mat-error>Informe um valor entre 1 e 100</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Margem de segurança</mat-label>
+            <input
+              matInput
+              appPercentMask
+              type="text"
+              inputmode="numeric"
+              formControlName="safetyMarginPercent"
+              placeholder="2"
+            />
+            <span matTextSuffix>%</span>
+            @if (form.controls.safetyMarginPercent.hasError('required')) {
+              <mat-error>Informe a margem de segurança</mat-error>
+            }
+            @if (
+              form.controls.safetyMarginPercent.hasError('min') ||
+              form.controls.safetyMarginPercent.hasError('max')
+            ) {
+              <mat-error>Informe um valor entre 0 e 100</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </form>
+    </mat-dialog-content>
+  </div>
+
+  <mat-dialog-actions align="center">
+    <button mat-stroked-button class="cancel-action" mat-dialog-close>Agora não</button>
+    <button
+      mat-flat-button
+      class="confirm-action"
+      [mat-dialog-close]="result"
+      (click)="submit()"
+    >
+      <mat-icon aria-hidden="true">analytics</mat-icon>
+      Criar avaliação
+    </button>
+  </mat-dialog-actions>
+</section>

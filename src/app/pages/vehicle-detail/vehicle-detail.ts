@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit, computed, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -25,6 +26,11 @@ import {
   DeleteVehicleDialogComponent,
   DeleteVehicleDialogData,
 } from './components/delete-vehicle-dialog/delete-vehicle-dialog';
+import {
+  CreateEvaluationDialogComponent,
+  CreateEvaluationDialogData,
+  CreateEvaluationDialogResult,
+} from './components/create-evaluation-dialog/create-evaluation-dialog';
 import {
   AUCTION_TYPE_LABEL,
   EXPENSE_CATEGORY_LABEL,
@@ -55,7 +61,7 @@ const emptyVehicle: Vehicle = {
   standalone: true,
   templateUrl: './vehicle-detail.html',
   styleUrl: './vehicle-detail.scss',
-  imports: [MatButtonModule, MatIconModule, MatTabsModule, MatDialogModule, RouterLink, FormsModule, StatusBadge],
+  imports: [MatButtonModule, MatIconModule, MatTabsModule, MatDialogModule, RouterLink, FormsModule, ReactiveFormsModule, StatusBadge],
 })
 export class VehicleDetail implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -426,11 +432,42 @@ export class VehicleDetail implements OnInit {
             : vehicle,
         );
       },
-      error: () => {
+      error: (err: HttpErrorResponse) => {
         this.loadedVehicle.update((vehicle) =>
           vehicle ? { ...vehicle, evaluation: null } : vehicle,
         );
+
+        // 404 = avaliação não existe ainda → propor criação
+        if (err.status === 404) {
+          this.openCreateEvaluationDialog(vehicleId);
+        }
       },
+    });
+  }
+
+  private openCreateEvaluationDialog(vehicleId: string): void {
+    const ref = this.dialog.open<
+      CreateEvaluationDialogComponent,
+      CreateEvaluationDialogData,
+      CreateEvaluationDialogResult | null
+    >(CreateEvaluationDialogComponent, {
+      data: { vehicleName: this.vehicleTitle() || 'este veículo' },
+      panelClass: 'create-evaluation-dialog-panel',
+      disableClose: false,
+    });
+
+    ref.afterClosed().subscribe((result) => {
+      if (!result) return;
+
+      this.vehiclesService
+        .createEvaluation(vehicleId, {
+          desiredProfitMarginPercent: result.desiredProfitMarginPercent,
+          safetyMarginPercent: result.safetyMarginPercent,
+        })
+        .subscribe({
+          next: () => this.loadVehicleEvaluation(vehicleId),
+          error: (err) => console.error('Erro ao criar avaliação', err),
+        });
     });
   }
 
