@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, Inject, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -36,8 +37,7 @@ export interface CreateEvaluationDialogData {
 export class CreateEvaluationDialogComponent {
   private readonly vehiclesService = inject(VehiclesService);
   private readonly dialogRef = inject(MatDialogRef<CreateEvaluationDialogComponent>);
-
-  constructor(@Inject(MAT_DIALOG_DATA) readonly data: CreateEvaluationDialogData) {}
+  readonly data = inject<CreateEvaluationDialogData>(MAT_DIALOG_DATA);
 
   readonly loading = signal(false);
   readonly errorMessage = signal('');
