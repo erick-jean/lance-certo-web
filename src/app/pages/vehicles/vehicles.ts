@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { StatusBadge, StatusBadgeTone } from '../../shared/components/status-badge/status-badge';
 import { Vehicle } from '../../core/services/vehicles';
@@ -31,6 +32,7 @@ import {
     MatIconModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatOptionModule,
     MatButtonToggleModule,
     StatusBadge,
   ],
