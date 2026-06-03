@@ -1,9 +1,10 @@
 import { Component, HostListener, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { StatusBadge, StatusBadgeTone } from '../../shared/components/status-badge/status-badge';
 import {
   DamageType,
@@ -19,6 +20,11 @@ import {
   Vehicles as VehiclesService,
 } from '../../core/services/vehicles';
 import { VehiclesCache } from '../../core/services/vehicles-cache';
+import { DashboardCache } from '../../core/services/dashboard-cache';
+import {
+  DeleteVehicleDialogComponent,
+  DeleteVehicleDialogData,
+} from './components/delete-vehicle-dialog/delete-vehicle-dialog';
 import {
   AUCTION_TYPE_LABEL,
   EXPENSE_CATEGORY_LABEL,
@@ -49,16 +55,20 @@ const emptyVehicle: Vehicle = {
   standalone: true,
   templateUrl: './vehicle-detail.html',
   styleUrl: './vehicle-detail.scss',
-  imports: [MatButtonModule, MatIconModule, MatTabsModule, RouterLink, FormsModule, StatusBadge],
+  imports: [MatButtonModule, MatIconModule, MatTabsModule, MatDialogModule, RouterLink, FormsModule, StatusBadge],
 })
 export class VehicleDetail implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly dialog = inject(MatDialog);
   private readonly vehiclesService = inject(VehiclesService);
   private readonly vehiclesCache = inject(VehiclesCache);
+  private readonly dashboardCache = inject(DashboardCache);
 
   protected readonly loadedVehicle = signal<Vehicle | null>(null);
   protected readonly loading = signal(true);
   protected readonly loadError = signal('');
+  protected readonly deleting = signal(false);
   protected readonly activeImageIndex = signal(0);
   protected readonly expenseSearch = signal('');
   protected readonly expenseCategoryFilter = signal<'ALL' | ExpenseCategory>('ALL');
@@ -314,6 +324,38 @@ export class VehicleDetail implements OnInit {
     );
     this.expenseVersion.update((version) => version + 1);
     this.closeExpenseDrawer();
+  }
+
+  protected confirmDelete(): void {
+    const vehicle = this.vehicle();
+    if (!vehicle.id) return;
+
+    const ref = this.dialog.open<DeleteVehicleDialogComponent, DeleteVehicleDialogData, boolean>(
+      DeleteVehicleDialogComponent,
+      {
+        data: { vehicleName: this.vehicleTitle() || 'este veículo' },
+        panelClass: 'delete-vehicle-dialog-panel',
+        disableClose: true,
+      },
+    );
+
+    ref.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) return;
+
+      this.deleting.set(true);
+
+      this.vehiclesService.deleteVehicle(vehicle.id).subscribe({
+        next: () => {
+          this.vehiclesCache.invalidate();
+          this.dashboardCache.invalidate();
+          void this.router.navigate(['/veiculos']);
+        },
+        error: (err) => {
+          console.error('Erro ao excluir veículo', err);
+          this.deleting.set(false);
+        },
+      });
+    });
   }
 
   @HostListener('document:keydown', ['$event'])

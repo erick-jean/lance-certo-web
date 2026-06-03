@@ -1,0 +1,27 @@
+<section class="delete-dialog">
+  <div class="delete-accent" aria-hidden="true"></div>
+
+  <div class="delete-icon" aria-hidden="true">
+    <mat-icon>delete_forever</mat-icon>
+  </div>
+
+  <div class="delete-copy">
+    <span>Ação irreversível</span>
+    <h2 mat-dialog-title>Excluir veículo?</h2>
+
+    <mat-dialog-content>
+      <p>
+        Tem certeza que deseja excluir <strong>{{ data.vehicleName }}</strong>?<br />
+        Todos os dados, imagens e avaliações serão removidos permanentemente.
+      </p>
+    </mat-dialog-content>
+  </div>
+
+  <mat-dialog-actions align="center">
+    <button mat-stroked-button class="cancel-action" mat-dialog-close>Cancelar</button>
+    <button mat-flat-button class="confirm-delete-action" [mat-dialog-close]="true">
+      <mat-icon aria-hidden="true">delete</mat-icon>
+      Excluir
+    </button>
+  </mat-dialog-actions>
+</section>

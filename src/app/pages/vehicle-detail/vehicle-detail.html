@@ -6,6 +6,17 @@
     </a>
 
     <div class="detail-actions">
+      <button
+        mat-stroked-button
+        class="delete-action"
+        type="button"
+        [disabled]="deleting()"
+        (click)="confirmDelete()"
+        aria-label="Excluir veículo"
+      >
+        <mat-icon aria-hidden="true">delete</mat-icon>
+        <span>{{ deleting() ? 'Excluindo...' : 'Excluir' }}</span>
+      </button>
       <button mat-stroked-button class="secondary-action" type="button">Criar avaliação</button>
       <button mat-flat-button class="primary-action" type="button">
         {{ primaryActionLabel() }}
