@@ -1,7 +1,16 @@
-import { Component, inject, ChangeDetectionStrategy, computed, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
+import { map, of, switchMap, finalize } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { AUCTION_TYPE_OPTIONS } from '../../core/constants/auction-type-options';
 import { DAMAGE_TYPE_OPTIONS } from '../../core/constants/damage-type-options';
@@ -11,8 +20,10 @@ import { VEHICLE_TYPE_OPTIONS } from '../../core/constants/vehicle-type-options'
 import { YearsListResponse } from '../../core/services/fipe';
 import { Vehicles as VehiclesService } from '../../core/services/vehicles';
 import { VehiclesCache } from '../../core/services/vehicles-cache';
+import { DashboardCache } from '../../core/services/dashboard-cache';
 import { VehicleFipeType } from '../../core/types/vehicle-options.type';
 import { PageLoadingOverlay } from '../../shared/components/page-loading-overlay/page-loading-overlay';
+import { FormCardComponent } from '../../shared/components/form-card/form-card';
 import { VehicleAnalysisFormComponent } from './components/vehicle-analysis-form/vehicle-analysis-form';
 import { VehicleAuctionFormComponent } from './components/vehicle-auction-form/vehicle-auction-form';
 import {
@@ -26,9 +37,11 @@ import { createVehicleForm } from './vehicle-create.form';
 import { VehicleCreateFacade } from './vehicle-create.facade';
 import { buildCreateVehiclePayload } from './vehicle-create-payload.mapper';
 import { VehicleCreateFormService } from './vehicle-create-form.service';
-import { finalize } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
 import { VehicleIdentificationVm } from './models/vehicle-identification.vm';
+
+type SubmitStep = 'vehicle' | 'evaluation' | 'images' | null;
+
+const MAX_IMAGES = 10;
 
 @Component({
   selector: 'app-vehicle-create',
@@ -36,7 +49,9 @@ import { VehicleIdentificationVm } from './models/vehicle-identification.vm';
   imports: [
     ReactiveFormsModule,
     MatDialogModule,
+    MatIconModule,
     PageLoadingOverlay,
+    FormCardComponent,
     VehicleCreateHeaderComponent,
     VehicleIdentificationFormComponent,
     VehicleAuctionFormComponent,
@@ -53,12 +68,22 @@ export class VehicleCreate {
   private readonly formService = inject(VehicleCreateFormService);
   private readonly router = inject(Router);
   private readonly vehiclesCache = inject(VehiclesCache);
+  private readonly dashboardCache = inject(DashboardCache);
   private readonly dialog = inject(MatDialog);
   private readonly vehiclesService = inject(VehiclesService);
 
   readonly form = createVehicleForm();
   readonly submitLoading = signal(false);
   readonly submitError = signal('');
+  readonly submitStep = signal<SubmitStep>(null);
+
+  /** Files selected by the user for upload. */
+  readonly selectedImages = signal<File[]>([]);
+
+  /** Object-URL previews derived from the selected files. */
+  readonly imagePreviews = computed(() =>
+    this.selectedImages().map((file) => URL.createObjectURL(file)),
+  );
 
   readonly vehicleTypeOptions = VEHICLE_TYPE_OPTIONS;
   readonly fuelTypeOptions = FUEL_TYPE_OPTIONS;
@@ -66,33 +91,76 @@ export class VehicleCreate {
   readonly auctionTypeOptions = AUCTION_TYPE_OPTIONS;
   readonly damageTypeOptions = DAMAGE_TYPE_OPTIONS;
 
-  /**
-   * Reinicia a cadeia FIPE ao alterar o tipo do veículo.
-   */
+  readonly isPageLoading = computed(
+    () => this.identificationVm.fipeInfo.loading() || this.submitLoading(),
+  );
+
+  readonly loadingTitle = computed(() => {
+    switch (this.submitStep()) {
+      case 'vehicle':
+        return 'Cadastrando veículo';
+      case 'evaluation':
+        return 'Criando avaliação';
+      case 'images':
+        return 'Enviando fotos';
+      default:
+        return 'Buscando dados FIPE';
+    }
+  });
+
+  readonly loadingDescription = computed(() => {
+    switch (this.submitStep()) {
+      case 'vehicle':
+        return 'Aguarde enquanto salvamos o veículo no banco de dados.';
+      case 'evaluation':
+        return 'Calculando o lance máximo recomendado com base nas suas margens.';
+      case 'images':
+        return `Enviando ${this.selectedImages().length} foto(s) do veículo.`;
+      default:
+        return 'Aguarde enquanto carregamos o código e o valor FIPE.';
+    }
+  });
+
+  // ---------------------------------------------------------------------------
+  // Image upload
+  // ---------------------------------------------------------------------------
+
+  onImagesSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
+
+    const newFiles = Array.from(input.files);
+    const current = this.selectedImages();
+    const available = MAX_IMAGES - current.length;
+
+    if (available > 0) {
+      this.selectedImages.set([...current, ...newFiles.slice(0, available)]);
+    }
+
+    // Reset so the same file can be picked again after removal
+    input.value = '';
+  }
+
+  removeImage(index: number): void {
+    this.selectedImages.update((images) => images.filter((_, i) => i !== index));
+  }
+
+  // ---------------------------------------------------------------------------
+  // FIPE cascade
+  // ---------------------------------------------------------------------------
+
   getBrands(vehicleType: VehicleFipeType | ''): void {
     this.formService.resetDependentFipeControls(this.form, 'brand');
     this.formService.resetFipeFields(this.form);
-
     this.facade.getBrands(vehicleType);
 
-    if (vehicleType) {
-      this.form.controls.brand.enable();
-    }
+    if (vehicleType) this.form.controls.brand.enable();
   }
 
-  /**
-   * Limpa o campo de busca de marca quando a dropdown de seleção de marca é fechada,
-   * garantindo que a lista de marcas seja exibida completa na próxima abertura.
-   */
   onBrandSelectOpenedChange(opened: boolean): void {
-    if (!opened) {
-      this.identificationVm.brands.search.set('');
-    }
+    if (!opened) this.identificationVm.brands.search.set('');
   }
 
-  /**
-   * Reinicia modelo, ano e dados FIPE ao alterar a marca.
-   */
   onBrandChange(brandCode: string): void {
     this.formService.resetDependentFipeControls(this.form, 'model');
     this.formService.resetFipeFields(this.form);
@@ -100,23 +168,13 @@ export class VehicleCreate {
     const vehicleType = this.form.controls.vehicleType.value;
     this.facade.getModels(vehicleType, brandCode);
 
-    if (vehicleType && brandCode) {
-      this.form.controls.model.enable();
-    }
+    if (vehicleType && brandCode) this.form.controls.model.enable();
   }
 
-  /**
-   * Limpa o campo de busca de modelo quando a dropdown de seleção de modelo é fechada,
-   */
   onModelSelectOpenedChange(opened: boolean): void {
-    if (!opened) {
-      this.identificationVm.models.search.set('');
-    }
+    if (!opened) this.identificationVm.models.search.set('');
   }
 
-  /**
-   * Reinicia ano e dados FIPE ao alterar o modelo.
-   */
   onModelChange(modelCode: string): void {
     this.formService.resetDependentFipeControls(this.form, 'year');
     this.formService.resetFipeFields(this.form);
@@ -125,24 +183,13 @@ export class VehicleCreate {
     const brandCode = this.form.controls.brand.value;
     this.facade.getYears(vehicleType, brandCode, modelCode);
 
-    if (vehicleType && brandCode && modelCode) {
-      this.form.controls.yearModel.enable();
-    }
+    if (vehicleType && brandCode && modelCode) this.form.controls.yearModel.enable();
   }
 
-  /**
-   * Limpa o campo de busca de ano quando a dropdown de seleção de ano é fechada,
-   * garantindo que a lista de anos seja exibida completa na próxima abertura.
-   */
   onYearSelectOpenedChange(opened: boolean): void {
-    if (!opened) {
-      this.identificationVm.years.search.set('');
-    }
+    if (!opened) this.identificationVm.years.search.set('');
   }
 
-  /**
-   * Busca os dados FIPE e tenta inferir o combustível pelo ano selecionado.
-   */
   onYearChange(yearCode: string): void {
     this.formService.selectFuelTypeFromFipeYear(this.form, yearCode);
 
@@ -157,26 +204,15 @@ export class VehicleCreate {
 
   readonly getYearLabel = (year: YearsListResponse): string => this.facade.getYearLabel(year);
 
-  readonly isPageLoading = computed(
-    () => this.identificationVm.fipeInfo.loading() || this.submitLoading(),
-  );
-
-  readonly loadingTitle = computed(() =>
-    this.submitLoading() ? 'Cadastrando veículo' : 'Buscando dados FIPE',
-  );
-
-  readonly loadingDescription = computed(() => {
-    return this.submitLoading()
-      ? 'Aguarde enquanto salvamos o veículo no banco de dados.'
-      : 'Aguarde enquanto carregamos o código e o valor FIPE.';
-  });
+  // ---------------------------------------------------------------------------
+  // Submit — sequential chain: createVehicle → createEvaluation → addImages
+  // Any failure stops the chain and shows the error dialog.
+  // ---------------------------------------------------------------------------
 
   submit(): void {
     this.submitError.set('');
 
-    if (this.submitLoading()) {
-      return;
-    }
+    if (this.submitLoading()) return;
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -195,30 +231,59 @@ export class VehicleCreate {
       return;
     }
 
+    const formValue = this.form.getRawValue();
+    const images = this.selectedImages();
+
     this.submitLoading.set(true);
+    this.submitStep.set('vehicle');
 
     this.vehiclesService
       .createVehicle(payload)
-      .pipe(finalize(() => this.submitLoading.set(false)))
+      .pipe(
+        // Step 2: create evaluation (always required — has desiredProfitMargin + safetyMargin)
+        switchMap((vehicle) => {
+          this.submitStep.set('evaluation');
+
+          return this.vehiclesService
+            .createEvaluation(vehicle.id, {
+              desiredProfitMarginPercent: formValue.desiredProfitMarginPercent,
+              safetyMarginPercent: formValue.safetyMarginPercent,
+            })
+            .pipe(
+              // Step 3: upload images (only if the user selected any)
+              switchMap(() => {
+                if (!images.length) return of(vehicle);
+
+                this.submitStep.set('images');
+                return this.vehiclesService
+                  .addImages(vehicle.id, images)
+                  .pipe(map(() => vehicle));
+              }),
+            );
+        }),
+        finalize(() => {
+          this.submitLoading.set(false);
+          this.submitStep.set(null);
+        }),
+      )
       .subscribe({
         next: (vehicle) => {
-          this.vehiclesCache.invalidate(); // force fresh list on next visit
+          this.vehiclesCache.invalidate();
+          this.dashboardCache.invalidate();
           void this.router.navigate(['/veiculos', vehicle.id]);
         },
         error: (error: HttpErrorResponse) => {
           const dialogData = this.buildCreateVehicleErrorDialog(error);
-
           this.submitError.set(dialogData.message);
           this.openCreateVehicleErrorDialog(dialogData);
         },
       });
   }
 
-  /**
-   * Retorna mensagens de erro específicas para falhas no cadastro de veículo, com base no status HTTP da resposta.
-   * Isso permite fornecer feedback mais claro e direcionado ao usuário, ajudando-o a entender o motivo da falha e como corrigi-la.
-   * Se o status não for reconhecido, uma mensagem genérica de erro é retornada.
-   */
+  // ---------------------------------------------------------------------------
+  // Error handling
+  // ---------------------------------------------------------------------------
+
   private getCreateVehicleErrorMessage(status?: number): string {
     const messageByStatus: Record<number, string> = {
       400: 'Dados do veículo inválidos. Revise os campos preenchidos.',
@@ -255,7 +320,7 @@ export class VehicleCreate {
     }
 
     return {
-      title: 'Não foi possível cadastrar o veículo',
+      title: 'Não foi possível concluir o cadastro',
       message,
       icon: 'error_outline',
     };
@@ -265,9 +330,7 @@ export class VehicleCreate {
     const responseError = error.error as { message?: unknown } | null;
     const message = responseError?.message;
 
-    if (typeof message === 'string') {
-      return message;
-    }
+    if (typeof message === 'string') return message;
 
     if (Array.isArray(message)) {
       return message.filter((item): item is string => typeof item === 'string').join(' ');
@@ -276,7 +339,10 @@ export class VehicleCreate {
     return '';
   }
 
-  // VM para gerenciamento do estado da identificação do veículo e dados FIPE.
+  // ---------------------------------------------------------------------------
+  // VM for identification form
+  // ---------------------------------------------------------------------------
+
   readonly identificationVm: VehicleIdentificationVm = {
     brands: {
       items: this.facade.filteredBrands,
@@ -284,14 +350,12 @@ export class VehicleCreate {
       error: this.facade.brandsError,
       search: this.facade.brandSearch,
     },
-
     models: {
       items: this.facade.filteredModels,
       loading: this.facade.modelsLoading,
       error: this.facade.modelsError,
       search: this.facade.modelSearch,
     },
-
     years: {
       items: this.facade.filteredYears,
       loading: this.facade.yearsLoading,
@@ -299,7 +363,6 @@ export class VehicleCreate {
       search: this.facade.yearSearch,
       optionLabelFn: (year) => this.facade.getYearLabel(year),
     },
-
     fipeInfo: {
       loading: this.facade.fipeInfoLoading,
       error: this.facade.fipeInfoError,

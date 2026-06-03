@@ -26,6 +26,53 @@
 
       <app-vehicle-analysis-form [form]="form" [damageTypeOptions]="damageTypeOptions" />
 
+      <!-- Fotos do veículo -->
+      <app-form-card
+        icon="photo_camera"
+        title="Fotos do veículo"
+        description="Adicione fotos para identificação e análise. JPG, PNG ou WEBP — máximo de 10 fotos."
+      >
+        <div class="images-upload">
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            multiple
+            #fileInput
+            (change)="onImagesSelected($event)"
+            hidden
+          />
+
+          <div class="images-grid">
+            @for (preview of imagePreviews(); track preview; let i = $index) {
+              <div class="image-thumb">
+                <img [src]="preview" [alt]="'Foto ' + (i + 1)" />
+                <button
+                  type="button"
+                  class="remove-thumb"
+                  (click)="removeImage(i)"
+                  [attr.aria-label]="'Remover foto ' + (i + 1)"
+                >
+                  <mat-icon aria-hidden="true">close</mat-icon>
+                </button>
+              </div>
+            }
+
+            @if (selectedImages().length < 10) {
+              <button type="button" class="add-photo-btn" (click)="fileInput.click()">
+                <mat-icon aria-hidden="true">add_photo_alternate</mat-icon>
+                <span>Adicionar foto</span>
+              </button>
+            }
+          </div>
+
+          @if (selectedImages().length > 0) {
+            <p class="images-hint">
+              {{ selectedImages().length }} de 10 foto(s) selecionada(s)
+            </p>
+          }
+        </div>
+      </app-form-card>
+
       <app-vehicle-form-actions
         [submitLoading]="submitLoading()"
         [submitError]="submitError()"
