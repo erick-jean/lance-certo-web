@@ -1,12 +1,11 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { finalize } from 'rxjs';
+import { Component, OnInit, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+
+import { DashboardCache } from '../../core/services/dashboard-cache';
+import { VehiclesCache } from '../../core/services/vehicles-cache';
 import { VehicleStatus } from '../vehicles/vehicles-data';
 import { VEHICLE_STATUS_LABEL } from '../vehicles/vehicle-labels';
-
-import { Dashboard, DashboardSummary } from '../../core/services/dashboard';
-import { PaginationMeta, Vehicle, Vehicles } from '../../core/services/vehicles';
 import { formatDate, formatPlate } from '../../core/utils/helpers';
 
 type SummaryCard = {
@@ -35,54 +34,21 @@ type RecentVehicle = {
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
-export class Home {
-  private readonly dashboardService = inject(Dashboard);
-  private readonly vehiclesService = inject(Vehicles);
+export class Home implements OnInit {
+  private readonly dashboardCache = inject(DashboardCache);
+  private readonly vehiclesCache = inject(VehiclesCache);
 
-  summary = signal<DashboardSummary | null>(null);
-  summaryLoading = signal(false);
-  recentVehiclesLoading = signal(true);
-  errorMessage = signal('');
-  // Keep the skeleton aligned with the dashboard's recent-vehicles fetch size.
+  // Delegate state to caches
+  protected readonly summaryLoading = this.dashboardCache.loading;
+  protected readonly recentVehiclesLoading = this.vehiclesCache.loading;
+  protected readonly errorMessage = this.dashboardCache.error;
+
+  // Keep the skeleton aligned with the recent-vehicles list size
   protected readonly loadingRows = [0, 1, 2, 3, 4];
 
-  ngOnInit(): void {
-    this.loadSummary();
-    this.searchRecentVehicles();
-  }
-
-  loadSummary(): void {
-    this.summaryLoading.set(true);
-    this.errorMessage.set('');
-
-    this.dashboardService
-      .getSummary()
-      .pipe(
-        finalize(() => {
-          this.summaryLoading.set(false);
-        }),
-      )
-      .subscribe({
-        next: (summary) => {
-          this.summary.set(summary);
-        },
-        error: (err) => {
-          if (err.status === 401) {
-            this.errorMessage.set('Sessão expirada. Faça login novamente.');
-            return;
-          }
-
-          this.errorMessage.set('Erro ao carregar o dashboard.');
-        },
-      });
-  }
-
   protected readonly summaryCards = computed<SummaryCard[]>(() => {
-    const data = this.summary();
-
-    if (!data) {
-      return [];
-    }
+    const data = this.dashboardCache.summary();
+    if (!data) return [];
 
     return [
       {
@@ -118,52 +84,38 @@ export class Home {
     ];
   });
 
-  recentVehicles = signal<RecentVehicle[]>([]);
-  pagination = signal<PaginationMeta | null>(null);
+  /**
+   * Derived from VehiclesCache — no extra HTTP request needed.
+   * Sorted by most recent activity, limited to 5 items.
+   */
+  protected readonly recentVehicles = computed<RecentVehicle[]>(() => {
+    const allowedStatus: VehicleStatus[] = ['ANALYZING', 'PURCHASED'];
 
-  searchRecentVehicles(): void {
-    this.recentVehiclesLoading.set(true);
+    return this.vehiclesCache
+      .vehicles()
+      .filter((v) => allowedStatus.includes(v.status))
+      .slice(0, 5)
+      .map((vehicle) => ({
+        id: vehicle.id,
+        name: [vehicle.brand, vehicle.model].filter(Boolean).join(' ') || 'Veiculo sem nome',
+        year: [vehicle.yearManufacture, vehicle.yearModel].filter(Boolean).join('/') || '-',
+        plate: formatPlate(vehicle.plate ?? ''),
+        status: vehicle.status as RecentVehicle['status'],
+        date:
+          vehicle.status === 'ANALYZING'
+            ? formatDate(vehicle.createdAt ?? new Date())
+            : formatDate(vehicle.purchasedAt || vehicle.createdAt || new Date()),
+        link: `/veiculos/${vehicle.id}`,
+      }));
+  });
 
-    this.vehiclesService
-      .getVehicles({
-        page: 1,
-        limit: 5,
-      })
-      .pipe(
-        finalize(() => {
-          this.recentVehiclesLoading.set(false);
-        }),
-      )
-      .subscribe({
-        next: (response) => {
-          const allowedStatus: VehicleStatus[] = ['ANALYZING', 'PURCHASED'];
+  ngOnInit(): void {
+    this.dashboardCache.fetch();
+    this.vehiclesCache.fetch();
+  }
 
-          const vehicles: RecentVehicle[] = response.data
-            .filter((vehicle) => allowedStatus.includes(vehicle.status))
-            .map((vehicle) => ({
-              id: vehicle.id,
-              name: [vehicle.brand, vehicle.model].filter(Boolean).join(' ') || 'Veiculo sem nome',
-              year: [vehicle.yearManufacture, vehicle.yearModel].filter(Boolean).join('/') || '-',
-              plate: formatPlate(vehicle.plate ?? ''),
-              status: vehicle.status,
-              date:
-                vehicle.status === 'ANALYZING'
-                  ? formatDate(vehicle.createdAt ?? new Date())
-                  : formatDate(vehicle.purchasedAt || vehicle.createdAt || new Date()),
-              link: `/veiculos/${vehicle.id}`,
-            }));
-
-          this.recentVehicles.set(vehicles);
-        },
-        error: (err) => {
-          if (err.status === 401) {
-            this.errorMessage.set('Sessão expirada. Faça login novamente.');
-            return;
-          }
-
-          this.errorMessage.set('Erro ao carregar os veículos recentes.');
-        },
-      });
+  protected loadSummary(): void {
+    this.dashboardCache.fetch(true);
   }
 
   protected statusLabel(status: RecentVehicle['status']): string {
