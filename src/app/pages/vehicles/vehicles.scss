@@ -94,10 +94,37 @@
   }
 }
 
-// Wrapper transparente ao layout — cada mat-form-field fica como item direto do grid,
-// mas a classe .form-grid mantém os seletores de _material-overrides.scss funcionando.
+// Wrapper transparente ao layout: mat-form-fields ficam como itens diretos do grid,
+// mas .form-grid ativa os seletores de _material-overrides.scss.
 .filters-form-grid {
   display: contents;
+}
+
+// Sobrescreve a altura 3.5rem do _material-overrides para caber no filters-bar
+:host ::ng-deep .filters-form-grid {
+  .mat-mdc-form-field {
+    --mat-form-field-container-height: var(--control-height);
+  }
+
+  .mat-mdc-text-field-wrapper {
+    height: var(--control-height);
+  }
+
+  .mat-mdc-form-field-flex,
+  .mat-mdc-form-field-infix,
+  .mat-mdc-select-trigger {
+    min-height: var(--control-height);
+  }
+
+  .mat-mdc-form-field-infix {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  // Remove espaço reservado para mensagens de erro/hint
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
 }
 
 // mat-button-toggle-group para grade/lista
