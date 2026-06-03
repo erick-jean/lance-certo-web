@@ -88,6 +88,7 @@ export class Vehicles implements OnInit {
       next: (response) => {
         this.vehicles.set(response.data);
         this.loading.set(false);
+        this.loadCoverImages(response.data);
       },
       error: (error) => {
         console.error('Erro ao carregar veículos', error);
@@ -95,6 +96,20 @@ export class Vehicles implements OnInit {
         this.loading.set(false);
         this.error.set('Não foi possível carregar seus veículos agora.');
       },
+    });
+  }
+
+  private loadCoverImages(vehicles: Vehicle[]): void {
+    vehicles.forEach((vehicle) => {
+      this.vehiclesService.getImages(vehicle.id).subscribe({
+        next: (images) => {
+          if (!images.length) return;
+          this.vehicles.update((list) =>
+            list.map((v) => (v.id === vehicle.id ? { ...v, images } : v)),
+          );
+        },
+        error: () => {},
+      });
     });
   }
 

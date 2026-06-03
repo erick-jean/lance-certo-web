@@ -213,16 +213,16 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
 
   .metric-card {
-    border: 1px solid #d8dde6;
+    border: 1px solid var(--color-border);
     border-left: 0.375rem solid #64748b;
     border-radius: var(--radius-md);
-    background: #ffffff;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-surface);
     padding: 1rem;
   }
 }
 
 .metrics-grid .fipe-card {
-  border-color: #bfdbfe;
   border-left-color: #2563eb;
 
   span {
@@ -231,7 +231,6 @@
 }
 
 .metrics-grid .bid-card {
-  border-color: #fde68a;
   border-left-color: #d97706;
 
   span {
@@ -240,7 +239,6 @@
 }
 
 .metrics-grid .profit-card {
-  border-color: #9bd9c3;
   border-left-color: #007a58;
 
   span {
@@ -249,7 +247,6 @@
 }
 
 .metrics-grid .expense-card {
-  border-color: #fecaca;
   border-left-color: #dc2626;
 
   span {
