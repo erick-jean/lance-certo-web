@@ -92,11 +92,10 @@
     >
       @if (loading()) {
         <mat-spinner diameter="16" />
-        <span>Criando...</span>
       } @else {
         <mat-icon aria-hidden="true">analytics</mat-icon>
-        <span>Criar avaliação</span>
       }
+      <span>{{ loading() ? 'Criando...' : 'Criar avaliação' }}</span>
     </button>
   </mat-dialog-actions>
 </section>
