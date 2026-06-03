@@ -1,0 +1,51 @@
+<section class="info-dialog">
+  <div class="info-accent" aria-hidden="true"></div>
+
+  <div class="info-icon" aria-hidden="true">
+    <mat-icon>tips_and_updates</mat-icon>
+  </div>
+
+  <div class="info-copy">
+    <span>Dica importante</span>
+    <h2 mat-dialog-title>Para uma análise mais precisa</h2>
+
+    <mat-dialog-content>
+      <p>
+        Quanto mais completo for o cadastro, mais próxima da realidade será a
+        <strong>sugestão de lance</strong>, o <strong>lucro estimado</strong> e
+        o <strong>nível de risco</strong> calculados pelo sistema.
+      </p>
+
+      <ul class="info-list">
+        <li>
+          <mat-icon aria-hidden="true">check_circle</mat-icon>
+          Preencha o <strong>valor FIPE</strong> e o <strong>valor de mercado</strong>
+        </li>
+        <li>
+          <mat-icon aria-hidden="true">check_circle</mat-icon>
+          Informe os <strong>lances iniciais</strong> e a <strong>data do evento</strong>
+        </li>
+        <li>
+          <mat-icon aria-hidden="true">check_circle</mat-icon>
+          Indique corretamente o <strong>tipo de avaria</strong>
+        </li>
+      </ul>
+    </mat-dialog-content>
+  </div>
+
+  <mat-dialog-actions>
+    <label class="dont-show-label">
+      <mat-checkbox
+        [checked]="dontShowAgain()"
+        (change)="dontShowAgain.set($event.checked)"
+        color="primary"
+      >
+        Não mostrar novamente
+      </mat-checkbox>
+    </label>
+
+    <button mat-flat-button class="ok-action" type="button" (click)="confirm()">
+      Entendido
+    </button>
+  </mat-dialog-actions>
+</section>

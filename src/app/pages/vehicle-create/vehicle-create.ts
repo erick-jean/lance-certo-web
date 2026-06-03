@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,6 +25,10 @@ import {
 } from './components/vehicle-create-error-dialog/vehicle-create-error-dialog';
 import { VehicleCreateHeaderComponent } from './components/vehicle-create-header/vehicle-create-header.component';
 import { VehicleFormActionsComponent } from './components/vehicle-form-actions/vehicle-form-actions';
+import {
+  VehicleCreateInfoDialogComponent,
+  VEHICLE_CREATE_INFO_DISMISSED_KEY,
+} from './components/vehicle-create-info-dialog/vehicle-create-info-dialog';
 import { VehicleIdentificationFormComponent } from './components/vehicle-identification-form/vehicle-identification-form';
 import { createVehicleForm } from './vehicle-create.form';
 import { VehicleCreateFacade } from './vehicle-create.facade';
@@ -55,7 +59,7 @@ const MAX_IMAGES = 10;
   providers: [VehicleCreateFacade, VehicleCreateFormService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VehicleCreate {
+export class VehicleCreate implements OnInit {
   readonly facade = inject(VehicleCreateFacade);
   private readonly formService = inject(VehicleCreateFormService);
   private readonly router = inject(Router);
@@ -108,6 +112,20 @@ export class VehicleCreate {
         return 'Aguarde enquanto carregamos o código e o valor FIPE.';
     }
   });
+
+  // ---------------------------------------------------------------------------
+  // Lifecycle
+  // ---------------------------------------------------------------------------
+
+  ngOnInit(): void {
+    const dismissed = localStorage.getItem(VEHICLE_CREATE_INFO_DISMISSED_KEY);
+    if (!dismissed) {
+      this.dialog.open(VehicleCreateInfoDialogComponent, {
+        panelClass: 'vehicle-create-info-dialog-panel',
+        disableClose: true,
+      });
+    }
+  }
 
   // ---------------------------------------------------------------------------
   // Image upload
