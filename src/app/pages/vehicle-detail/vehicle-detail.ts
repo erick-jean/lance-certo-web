@@ -18,6 +18,7 @@ import {
   Vehicle,
   Vehicles as VehiclesService,
 } from '../../core/services/vehicles';
+import { VehiclesCache } from '../../core/services/vehicles-cache';
 import {
   AUCTION_TYPE_LABEL,
   EXPENSE_CATEGORY_LABEL,
@@ -53,6 +54,7 @@ const emptyVehicle: Vehicle = {
 export class VehicleDetail implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly vehiclesService = inject(VehiclesService);
+  private readonly vehiclesCache = inject(VehiclesCache);
 
   protected readonly loadedVehicle = signal<Vehicle | null>(null);
   protected readonly loading = signal(true);
@@ -108,33 +110,52 @@ export class VehicleDetail implements OnInit {
   );
 
   ngOnInit(): void {
-    this.loadVehicle();
-  }
-
-  protected loadVehicle(): void {
     const vehicleId = this.route.snapshot.paramMap.get('id');
 
     if (!vehicleId) {
       this.loading.set(false);
-      this.loadError.set('Veiculo nao encontrado.');
+      this.loadError.set('Veículo não encontrado.');
       return;
     }
 
-    this.loading.set(true);
+    // Pre-populate from list cache → render instantâneo quando vem da listagem
+    const cached = this.vehiclesCache.getById(vehicleId);
+    if (cached) {
+      this.loadedVehicle.set(cached);
+      this.loading.set(false);
+    }
+
+    // Sempre busca dados frescos (silencioso se já há cache, spinner se não)
+    this.loadVehicle(vehicleId);
+  }
+
+  protected loadVehicle(vehicleId?: string): void {
+    const id = vehicleId ?? this.route.snapshot.paramMap.get('id');
+
+    if (!id) {
+      this.loading.set(false);
+      this.loadError.set('Veículo não encontrado.');
+      return;
+    }
+
+    // Mostra spinner só quando não há nada para exibir ainda
+    if (!this.loadedVehicle()) this.loading.set(true);
     this.loadError.set('');
 
-    this.vehiclesService.getVehicle(vehicleId).subscribe({
+    this.vehiclesService.getVehicle(id).subscribe({
       next: (vehicle) => {
         this.loadedVehicle.set(vehicle);
         this.loading.set(false);
-        this.loadVehicleImages(vehicle.id);
-        this.loadVehicleEvaluation(vehicle.id);
+        this.loadVehicleImages(id);
+        this.loadVehicleEvaluation(id);
       },
       error: (error) => {
         console.error('Erro ao carregar veículo', error);
-        this.loadedVehicle.set(null);
         this.loading.set(false);
-        this.loadError.set('Não foi possível carregar os dados do veículo.');
+        // Só mostra erro se não há nenhum dado para exibir
+        if (!this.loadedVehicle()) {
+          this.loadError.set('Não foi possível carregar os dados do veículo.');
+        }
       },
     });
   }

@@ -77,6 +77,11 @@ export class VehiclesCache {
     });
   }
 
+  /** Look up a single vehicle from the in-memory list (no HTTP call). */
+  getById(id: string): Vehicle | null {
+    return this._vehicles().find((v) => v.id === id) ?? null;
+  }
+
   /** Force-invalidate cache (e.g. after creating or deleting a vehicle). */
   invalidate(): void {
     this.fetchedAt = null;
