@@ -3,9 +3,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatOptionModule } from '@angular/material/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { CurrencyMaskDirective } from '../../shared/directives/currency-mask.directive';
 import { StatusBadge, StatusBadgeTone } from '../../shared/components/status-badge/status-badge';
 import {
   DamageType,
@@ -30,6 +38,7 @@ import {
   CreateEvaluationDialogComponent,
   CreateEvaluationDialogData,
 } from './components/create-evaluation-dialog/create-evaluation-dialog';
+import { formatCurrencyBRL } from '../../core/utils/form-formatters';
 import {
   AUCTION_TYPE_LABEL,
   EXPENSE_CATEGORY_LABEL,
@@ -60,12 +69,30 @@ const emptyVehicle: Vehicle = {
   standalone: true,
   templateUrl: './vehicle-detail.html',
   styleUrl: './vehicle-detail.scss',
-  imports: [MatButtonModule, MatIconModule, MatTabsModule, MatDialogModule, RouterLink, FormsModule, ReactiveFormsModule, StatusBadge],
+  imports: [
+    CurrencyMaskDirective,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatOptionModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatSnackBarModule,
+    MatTabsModule,
+    MatDialogModule,
+    RouterLink,
+    FormsModule,
+    ReactiveFormsModule,
+    StatusBadge,
+  ],
 })
 export class VehicleDetail implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
+  private readonly snackBar = inject(MatSnackBar);
   private readonly vehiclesService = inject(VehiclesService);
   private readonly vehiclesCache = inject(VehiclesCache);
   private readonly dashboardCache = inject(DashboardCache);
@@ -87,6 +114,7 @@ export class VehicleDetail implements OnInit {
   protected readonly expenseAmount = signal('');
   protected readonly expenseNotes = signal('');
   protected readonly expenseIsRequired = signal(false);
+  protected readonly savingExpense = signal(false);
 
   protected readonly vehicle = computed(() => this.loadedVehicle() ?? emptyVehicle);
 
@@ -266,7 +294,7 @@ export class VehicleDetail implements OnInit {
     this.selectedExpenseId.set(expense.id);
     this.expenseName.set(expense.name);
     this.expenseCategory.set(expense.category);
-    this.expenseAmount.set(String(expense.amount));
+    this.expenseAmount.set(expense.amount > 0 ? formatCurrencyBRL(expense.amount) : '');
     this.expenseNotes.set(expense.notes ?? '');
     this.expenseIsRequired.set(expense.isRequired);
     this.isExpenseDrawerOpen.set(true);
@@ -278,12 +306,8 @@ export class VehicleDetail implements OnInit {
 
   protected saveExpense(): void {
     const evaluation = this.vehicle().evaluation;
-    if (!evaluation) {
-      this.closeExpenseDrawer();
-      return;
-    }
+    if (!evaluation || this.savingExpense()) return;
 
-    const now = new Date().toISOString();
     const selectedExpenseId = this.selectedExpenseId();
     const expenses = evaluation.expenses ?? [];
     const expenseData = {
@@ -292,43 +316,96 @@ export class VehicleDetail implements OnInit {
       amount: this.formatExpenseAmount(this.expenseAmount()),
       isRequired: this.expenseIsRequired(),
       notes: this.expenseNotes() || undefined,
-      updatedAt: now,
     };
 
-    if (selectedExpenseId) {
-      const expense = expenses.find((item) => item.id === selectedExpenseId);
+    this.savingExpense.set(true);
 
-      if (expense) {
-        Object.assign(expense, expenseData);
-      }
-    } else {
-      evaluation.expenses = expenses;
-      expenses.unshift({
-        id: `expense-${Date.now()}`,
-        evaluationId: `evaluation-${this.vehicle().id}`,
-        source: 'USER',
-        createdAt: now,
-        ...expenseData,
+    if (selectedExpenseId) {
+      this.vehiclesService.updateEvaluationExpense(this.vehicle().id, selectedExpenseId, expenseData).subscribe({
+        next: (updatedExpense) => {
+          const expense = expenses.find((item) => item.id === selectedExpenseId);
+          if (expense) Object.assign(expense, updatedExpense);
+          this.expenseVersion.update((v) => v + 1);
+          this.savingExpense.set(false);
+          this.closeExpenseDrawer();
+          this.snackBar.open('Gasto atualizado com sucesso!', undefined, {
+            duration: 3000,
+            horizontalPosition: 'right',
+            verticalPosition: 'bottom',
+            panelClass: ['snack-success'],
+          });
+        },
+        error: () => {
+          this.savingExpense.set(false);
+          this.snackBar.open('Erro ao atualizar o gasto. Tente novamente.', 'Fechar', {
+            duration: 5000,
+            horizontalPosition: 'right',
+            verticalPosition: 'bottom',
+            panelClass: ['snack-error'],
+          });
+        },
       });
+      return;
     }
 
-    this.expenseVersion.update((version) => version + 1);
-    this.closeExpenseDrawer();
+    this.vehiclesService.createEvaluationExpense(this.vehicle().id, expenseData).subscribe({
+      next: (createdExpense) => {
+        evaluation.expenses = expenses;
+        expenses.unshift(createdExpense);
+        this.expenseVersion.update((v) => v + 1);
+        this.savingExpense.set(false);
+        this.closeExpenseDrawer();
+        this.snackBar.open('Gasto adicionado com sucesso!', undefined, {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'bottom',
+          panelClass: ['snack-success'],
+        });
+      },
+      error: () => {
+        this.savingExpense.set(false);
+        this.snackBar.open('Erro ao salvar o gasto. Tente novamente.', 'Fechar', {
+          duration: 5000,
+          horizontalPosition: 'right',
+          verticalPosition: 'bottom',
+          panelClass: ['snack-error'],
+        });
+      },
+    });
   }
 
   protected deleteExpense(): void {
     const evaluation = this.vehicle().evaluation;
     const selectedExpenseId = this.selectedExpenseId();
 
-    if (!evaluation || !selectedExpenseId) {
-      return;
-    }
+    if (!evaluation || !selectedExpenseId || this.savingExpense()) return;
 
-    evaluation.expenses = (evaluation.expenses ?? []).filter(
-      (expense) => expense.id !== selectedExpenseId,
-    );
-    this.expenseVersion.update((version) => version + 1);
-    this.closeExpenseDrawer();
+    this.savingExpense.set(true);
+
+    this.vehiclesService.deleteEvaluationExpense(this.vehicle().id, selectedExpenseId).subscribe({
+      next: () => {
+        evaluation.expenses = (evaluation.expenses ?? []).filter(
+          (expense) => expense.id !== selectedExpenseId,
+        );
+        this.expenseVersion.update((v) => v + 1);
+        this.savingExpense.set(false);
+        this.closeExpenseDrawer();
+        this.snackBar.open('Gasto excluído.', undefined, {
+          duration: 2500,
+          horizontalPosition: 'right',
+          verticalPosition: 'bottom',
+        });
+      },
+      error: () => {
+        this.savingExpense.set(false);
+        this.snackBar.open('Erro ao excluir o gasto. Tente novamente.', 'Fechar', {
+          duration: 5000,
+          horizontalPosition: 'right',
+          verticalPosition: 'bottom',
+          panelClass: ['snack-error'],
+        });
+      },
+    });
   }
 
   protected confirmDelete(): void {

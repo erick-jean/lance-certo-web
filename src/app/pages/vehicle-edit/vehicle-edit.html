@@ -110,12 +110,12 @@
 
           <label>
             <span>Valor FIPE</span>
-            <input type="text" inputmode="decimal" [value]="vehicle().fipeValue ?? ''" />
+            <input type="text" inputmode="decimal" appCurrencyMask [value]="formatCurrencyInput(vehicle().fipeValue)" />
           </label>
 
           <label>
             <span>Valor de mercado</span>
-            <input type="text" inputmode="decimal" [value]="vehicle().marketValue ?? ''" />
+            <input type="text" inputmode="decimal" appCurrencyMask [value]="formatCurrencyInput(vehicle().marketValue)" />
           </label>
         </div>
       </section>
@@ -171,12 +171,12 @@
 
           <label>
             <span>Lance inicial</span>
-            <input type="text" inputmode="decimal" [value]="vehicle().auctionInitialBid ?? ''" />
+            <input type="text" inputmode="decimal" appCurrencyMask [value]="formatCurrencyInput(vehicle().auctionInitialBid)" />
           </label>
 
           <label>
             <span>Lance atual</span>
-            <input type="text" inputmode="decimal" [value]="vehicle().auctionCurrentBid ?? ''" />
+            <input type="text" inputmode="decimal" appCurrencyMask [value]="formatCurrencyInput(vehicle().auctionCurrentBid)" />
           </label>
 
           <label class="wide-field">
@@ -216,7 +216,8 @@
             <input
               type="text"
               inputmode="decimal"
-              [value]="vehicle().evaluation?.suggestedBid ?? ''"
+              appCurrencyMask
+              [value]="formatCurrencyInput(vehicle().evaluation?.suggestedBid)"
             />
           </label>
 
@@ -225,7 +226,8 @@
             <input
               type="text"
               inputmode="decimal"
-              [value]="vehicle().evaluation?.estimatedProfit ?? ''"
+              appCurrencyMask
+              [value]="formatCurrencyInput(vehicle().evaluation?.estimatedProfit)"
             />
           </label>
 
@@ -234,7 +236,8 @@
             <input
               type="text"
               inputmode="decimal"
-              [value]="vehicle().evaluation?.estimatedExpenses ?? ''"
+              appCurrencyMask
+              [value]="formatCurrencyInput(vehicle().evaluation?.estimatedExpenses)"
             />
           </label>
 

@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { formatCurrencyBRL } from '../../core/utils/form-formatters';
+import { CurrencyMaskDirective } from '../../shared/directives/currency-mask.directive';
 import {
   AuctionType,
   FuelType,
@@ -24,7 +26,7 @@ import {
 @Component({
   selector: 'app-vehicle-edit',
   standalone: true,
-  imports: [FormsModule, MatButtonModule, MatIconModule, RouterLink],
+  imports: [CurrencyMaskDirective, FormsModule, MatButtonModule, MatIconModule, RouterLink],
   templateUrl: './vehicle-edit.html',
   styleUrl: '../vehicle-create/vehicle-create.scss',
 })
@@ -76,5 +78,11 @@ export class VehicleEdit {
     if (!date) return '';
 
     return date.slice(0, 10);
+  }
+
+  protected formatCurrencyInput(value?: number | string | null): string {
+    if (value === undefined || value === null || value === '') return '';
+    const num = typeof value === 'string' ? Number(value.replace(',', '.')) : value;
+    return Number.isFinite(num) && num > 0 ? formatCurrencyBRL(num) : '';
   }
 }

@@ -293,6 +293,30 @@ h3,
   animation: auth-form-enter 320ms var(--ease-out) both;
 }
 
+.snack-success .mdc-snackbar__surface {
+  background: #ecfdf5 !important;
+  border: 1px solid #6ee7b7;
+
+  .mdc-snackbar__label {
+    color: #065f46 !important;
+    font-weight: var(--font-weight-medium);
+  }
+}
+
+.snack-error .mdc-snackbar__surface {
+  background: #fff1f2 !important;
+  border: 1px solid #fecaca;
+
+  .mdc-snackbar__label {
+    color: #991b1b !important;
+    font-weight: var(--font-weight-medium);
+  }
+
+  .mat-mdc-snack-bar-action {
+    color: #b91c1c !important;
+  }
+}
+
 .register-success-dialog-panel,
 .vehicle-create-error-dialog-panel,
 .vehicle-create-info-dialog-panel,

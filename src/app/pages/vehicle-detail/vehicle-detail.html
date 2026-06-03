@@ -272,47 +272,51 @@
           </div>
         </header>
 
-        <div class="expenses-filters" aria-label="Filtros dos gastos">
-          <label>
-            <span>Gasto</span>
+        <div class="expenses-filters form-grid" aria-label="Filtros dos gastos">
+          <mat-form-field appearance="outline" class="expense-filter-field">
+            <mat-label>Gasto</mat-label>
+            <mat-icon matPrefix aria-hidden="true">search</mat-icon>
             <input
+              matInput
               type="search"
-              placeholder="Filtrar por nome..."
+              placeholder="Filtrar por nome"
               [ngModel]="expenseSearch()"
               (ngModelChange)="expenseSearch.set($event)"
             />
-          </label>
+          </mat-form-field>
 
-          <label>
-            <span>Categoria</span>
-            <select
+          <mat-form-field appearance="outline" class="expense-filter-field">
+            <mat-label>Categoria</mat-label>
+            <mat-select
+              panelClass="vehicle-select-panel"
               [ngModel]="expenseCategoryFilter()"
               (ngModelChange)="expenseCategoryFilter.set($event)"
             >
-              <option value="ALL">Todas</option>
-              <option value="DOCUMENTATION">Documentação</option>
-              <option value="REPAIR">Mecânica</option>
-              <option value="AUCTION_FEE">Taxa de leilão</option>
-              <option value="TRANSPORT">Transporte</option>
-              <option value="INSPECTION">Vistoria</option>
-              <option value="DEBT">Débitos</option>
-              <option value="REGULARIZATION">Regularização</option>
-              <option value="PREPARATION_SALE">Estética</option>
-              <option value="OTHER">Outro</option>
-            </select>
-          </label>
+              <mat-option value="ALL">Todas</mat-option>
+              <mat-option value="DOCUMENTATION">Documentação</mat-option>
+              <mat-option value="REPAIR">Mecânica</mat-option>
+              <mat-option value="AUCTION_FEE">Taxa de leilão</mat-option>
+              <mat-option value="TRANSPORT">Transporte</mat-option>
+              <mat-option value="INSPECTION">Vistoria</mat-option>
+              <mat-option value="DEBT">Débitos</mat-option>
+              <mat-option value="REGULARIZATION">Regularização</mat-option>
+              <mat-option value="PREPARATION_SALE">Estética</mat-option>
+              <mat-option value="OTHER">Outro</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-          <label>
-            <span>Obrigatório</span>
-            <select
+          <mat-form-field appearance="outline" class="expense-filter-field">
+            <mat-label>Obrigatório</mat-label>
+            <mat-select
+              panelClass="vehicle-select-panel"
               [ngModel]="expenseRequiredFilter()"
               (ngModelChange)="expenseRequiredFilter.set($event)"
             >
-              <option value="ALL">Todos</option>
-              <option value="REQUIRED">Sim</option>
-              <option value="OPTIONAL">Não</option>
-            </select>
-          </label>
+              <mat-option value="ALL">Todos</mat-option>
+              <mat-option value="REQUIRED">Sim</mat-option>
+              <mat-option value="OPTIONAL">Não</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
 
         <div class="expenses-list" role="table" aria-label="Possíveis gastos do veículo">
@@ -436,42 +440,47 @@
         </button>
       </header>
 
-      <form class="expense-form" (ngSubmit)="saveExpense()">
-        <label class="full-field">
-          <span>Descrição da Despesa</span>
+      <form class="expense-form form-grid" (ngSubmit)="saveExpense()">
+        <mat-form-field appearance="outline" class="full-field">
+          <mat-label>Descrição da despesa</mat-label>
           <input
+            matInput
             type="text"
             placeholder="Ex: Pintura lateral esquerda"
             [ngModel]="expenseName()"
             (ngModelChange)="expenseName.set($event)"
             name="expenseName"
           />
-        </label>
+        </mat-form-field>
 
         <div class="form-row">
-          <label>
-            <span>Categoria</span>
-            <select
+          <mat-form-field appearance="outline">
+            <mat-label>Categoria</mat-label>
+            <mat-select
+              panelClass="vehicle-select-panel"
               [ngModel]="expenseCategory()"
               (ngModelChange)="expenseCategory.set($event)"
               name="expenseCategory"
             >
-              <option value="">Selecionar</option>
-              <option value="DOCUMENTATION">Documentação</option>
-              <option value="REPAIR">Mecânica</option>
-              <option value="AUCTION_FEE">Taxa de leilão</option>
-              <option value="TRANSPORT">Transporte</option>
-              <option value="INSPECTION">Vistoria</option>
-              <option value="DEBT">Débitos</option>
-              <option value="REGULARIZATION">Regularização</option>
-              <option value="PREPARATION_SALE">Estética</option>
-              <option value="OTHER">Outro</option>
-            </select>
-          </label>
+              <mat-option value="">Selecionar</mat-option>
+              <mat-option value="DOCUMENTATION">Documentação</mat-option>
+              <mat-option value="REPAIR">Mecânica</mat-option>
+              <mat-option value="AUCTION_FEE">Taxa de leilão</mat-option>
+              <mat-option value="TRANSPORT">Transporte</mat-option>
+              <mat-option value="INSPECTION">Vistoria</mat-option>
+              <mat-option value="DEBT">Débitos</mat-option>
+              <mat-option value="REGULARIZATION">Regularização</mat-option>
+              <mat-option value="PREPARATION_SALE">Estética</mat-option>
+              <mat-option value="OTHER">Outro</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-          <label>
-            <span>Valor (R$)</span>
+          <mat-form-field appearance="outline">
+            <mat-label>Valor</mat-label>
+            <span matTextPrefix>R$&nbsp;</span>
             <input
+              matInput
+              appCurrencyMask
               type="text"
               inputmode="decimal"
               placeholder="0,00"
@@ -479,34 +488,34 @@
               (ngModelChange)="expenseAmount.set($event)"
               name="expenseAmount"
             />
-          </label>
+          </mat-form-field>
         </div>
 
-        <label class="full-field">
-          <span>Veículo Associado</span>
-          <input type="text" [value]="vehicleTitle()" readonly />
-        </label>
+        <mat-form-field appearance="outline" class="full-field">
+          <mat-label>Veículo associado</mat-label>
+          <input matInput type="text" [value]="vehicleTitle()" readonly />
+        </mat-form-field>
 
-        <label class="full-field">
-          <span>Observações</span>
+        <mat-form-field appearance="outline" class="full-field textarea-field">
+          <mat-label>Observações</mat-label>
           <textarea
+            matInput
             rows="4"
             placeholder="Detalhes importantes sobre esse gasto"
             [ngModel]="expenseNotes()"
             (ngModelChange)="expenseNotes.set($event)"
             name="expenseNotes"
           ></textarea>
-        </label>
+        </mat-form-field>
 
-        <label class="required-check">
-          <input
-            type="checkbox"
-            [ngModel]="expenseIsRequired()"
-            (ngModelChange)="expenseIsRequired.set($event)"
-            name="expenseIsRequired"
-          />
-          <span>Marcar como gasto obrigatório</span>
-        </label>
+        <mat-checkbox
+          class="required-check"
+          [ngModel]="expenseIsRequired()"
+          (ngModelChange)="expenseIsRequired.set($event)"
+          name="expenseIsRequired"
+        >
+          Marcar como gasto obrigatório
+        </mat-checkbox>
 
         <footer class="expense-drawer-actions">
           @if (isEditingExpense()) {
@@ -514,8 +523,12 @@
               mat-stroked-button
               class="danger-action"
               type="button"
+              [disabled]="savingExpense()"
               (click)="deleteExpense()"
             >
+              @if (savingExpense()) {
+                <mat-spinner diameter="16" aria-hidden="true" />
+              }
               Excluir
             </button>
           }
@@ -523,12 +536,18 @@
             mat-stroked-button
             class="secondary-action"
             type="button"
+            [disabled]="savingExpense()"
             (click)="closeExpenseDrawer()"
           >
             Cancelar
           </button>
-          <button mat-flat-button class="primary-action" type="submit">
-            {{ isEditingExpense() ? 'Salvar Alterações' : 'Salvar Gasto' }}
+          <button mat-flat-button class="primary-action" type="submit" [disabled]="savingExpense()">
+            @if (savingExpense()) {
+              <mat-spinner diameter="18" aria-hidden="true" />
+              {{ isEditingExpense() ? 'Salvando...' : 'Salvando...' }}
+            } @else {
+              {{ isEditingExpense() ? 'Salvar Alterações' : 'Salvar Gasto' }}
+            }
           </button>
         </footer>
       </form>
