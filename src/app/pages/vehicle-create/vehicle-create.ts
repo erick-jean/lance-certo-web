@@ -32,7 +32,7 @@ import { buildCreateVehiclePayload } from './vehicle-create-payload.mapper';
 import { VehicleCreateFormService } from './vehicle-create-form.service';
 import { VehicleIdentificationVm } from './models/vehicle-identification.vm';
 
-type SubmitStep = 'vehicle' | 'evaluation' | 'images' | null;
+type SubmitStep = 'vehicle' | 'images' | null;
 
 const MAX_IMAGES = 10;
 
@@ -91,8 +91,6 @@ export class VehicleCreate {
     switch (this.submitStep()) {
       case 'vehicle':
         return 'Cadastrando veículo';
-      case 'evaluation':
-        return 'Criando avaliação';
       case 'images':
         return 'Enviando fotos';
       default:
@@ -104,8 +102,6 @@ export class VehicleCreate {
     switch (this.submitStep()) {
       case 'vehicle':
         return 'Aguarde enquanto salvamos o veículo no banco de dados.';
-      case 'evaluation':
-        return 'Calculando o lance máximo recomendado com base nas suas margens.';
       case 'images':
         return `Enviando ${this.selectedImages().length} foto(s) do veículo.`;
       default:
@@ -223,7 +219,6 @@ export class VehicleCreate {
       return;
     }
 
-    const formValue = this.form.getRawValue();
     const images = this.selectedImages();
 
     this.submitLoading.set(true);
@@ -232,24 +227,12 @@ export class VehicleCreate {
     this.vehiclesService
       .createVehicle(payload)
       .pipe(
-        // Step 2: create evaluation (always required — has desiredProfitMargin + safetyMargin)
+        // Step 2: upload images (only if the user selected any)
         switchMap((vehicle) => {
-          this.submitStep.set('evaluation');
+          if (!images.length) return of(vehicle);
 
-          return this.vehiclesService
-            .createEvaluation(vehicle.id, {
-              desiredProfitMarginPercent: formValue.desiredProfitMarginPercent,
-              safetyMarginPercent: formValue.safetyMarginPercent,
-            })
-            .pipe(
-              // Step 3: upload images (only if the user selected any)
-              switchMap(() => {
-                if (!images.length) return of(vehicle);
-
-                this.submitStep.set('images');
-                return this.vehiclesService.addImages(vehicle.id, images).pipe(map(() => vehicle));
-              }),
-            );
+          this.submitStep.set('images');
+          return this.vehiclesService.addImages(vehicle.id, images).pipe(map(() => vehicle));
         }),
         finalize(() => {
           this.submitLoading.set(false);
