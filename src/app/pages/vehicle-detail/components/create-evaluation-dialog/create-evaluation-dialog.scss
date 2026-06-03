@@ -69,6 +69,28 @@ mat-dialog-content {
   overflow: visible;
 }
 
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-md);
+  background: #fff1f2;
+  color: #b91c1c;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  padding: 0.625rem 0.875rem;
+  text-align: left;
+
+  mat-icon {
+    flex-shrink: 0;
+    width: 1.125rem;
+    height: 1.125rem;
+    font-size: 1.125rem;
+  }
+}
+
 .evaluation-form {
   width: 100%;
   text-align: left;

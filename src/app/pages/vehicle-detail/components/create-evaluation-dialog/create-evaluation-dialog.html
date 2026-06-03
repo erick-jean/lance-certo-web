@@ -7,12 +7,12 @@
 
   <div class="evaluation-copy">
     <span>Avaliação não encontrada</span>
-    <h2 mat-dialog-title>Criar avaliação para {{ data.vehicleName }}</h2>
+    <h2 mat-dialog-title>Criar avaliação</h2>
 
     <mat-dialog-content>
       <p>
-        Defina as margens abaixo para calcular o lance máximo recomendado,
-        lucro estimado e nível de risco.
+        Defina as margens para <strong>{{ data.vehicleName }}</strong> e calcule
+        o lance máximo recomendado, lucro estimado e nível de risco.
       </p>
 
       <form [formGroup]="form" class="evaluation-form" (ngSubmit)="submit()">
@@ -61,20 +61,42 @@
             }
           </mat-form-field>
         </div>
+
+        @if (errorMessage()) {
+          <div class="error-banner" role="alert">
+            <mat-icon aria-hidden="true">error_outline</mat-icon>
+            <span>{{ errorMessage() }}</span>
+          </div>
+        }
       </form>
     </mat-dialog-content>
   </div>
 
   <mat-dialog-actions align="center">
-    <button mat-stroked-button class="cancel-action" mat-dialog-close>Agora não</button>
+    <button
+      mat-stroked-button
+      class="cancel-action"
+      type="button"
+      [disabled]="loading()"
+      mat-dialog-close
+    >
+      Agora não
+    </button>
+
     <button
       mat-flat-button
       class="confirm-action"
-      [mat-dialog-close]="result"
+      type="button"
+      [disabled]="loading()"
       (click)="submit()"
     >
-      <mat-icon aria-hidden="true">analytics</mat-icon>
-      Criar avaliação
+      @if (loading()) {
+        <mat-spinner diameter="16" />
+        <span>Criando...</span>
+      } @else {
+        <mat-icon aria-hidden="true">analytics</mat-icon>
+        <span>Criar avaliação</span>
+      }
     </button>
   </mat-dialog-actions>
 </section>

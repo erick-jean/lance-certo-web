@@ -29,7 +29,6 @@ import {
 import {
   CreateEvaluationDialogComponent,
   CreateEvaluationDialogData,
-  CreateEvaluationDialogResult,
 } from './components/create-evaluation-dialog/create-evaluation-dialog';
 import {
   AUCTION_TYPE_LABEL,
@@ -446,28 +445,21 @@ export class VehicleDetail implements OnInit {
   }
 
   private openCreateEvaluationDialog(vehicleId: string): void {
-    const ref = this.dialog.open<
+    const ref = this.dialog.open<CreateEvaluationDialogComponent, CreateEvaluationDialogData, boolean>(
       CreateEvaluationDialogComponent,
-      CreateEvaluationDialogData,
-      CreateEvaluationDialogResult | null
-    >(CreateEvaluationDialogComponent, {
-      data: { vehicleName: this.vehicleTitle() || 'este veículo' },
-      panelClass: 'create-evaluation-dialog-panel',
-      disableClose: false,
-    });
+      {
+        data: {
+          vehicleId,
+          vehicleName: this.vehicleTitle() || 'este veículo',
+        },
+        panelClass: 'create-evaluation-dialog-panel',
+        disableClose: false,
+      },
+    );
 
-    ref.afterClosed().subscribe((result) => {
-      if (!result) return;
-
-      this.vehiclesService
-        .createEvaluation(vehicleId, {
-          desiredProfitMarginPercent: result.desiredProfitMarginPercent,
-          safetyMarginPercent: result.safetyMarginPercent,
-        })
-        .subscribe({
-          next: () => this.loadVehicleEvaluation(vehicleId),
-          error: (err) => console.error('Erro ao criar avaliação', err),
-        });
+    // O dialog chama a API internamente e fecha com true em caso de sucesso
+    ref.afterClosed().subscribe((success) => {
+      if (success) this.loadVehicleEvaluation(vehicleId);
     });
   }
 
