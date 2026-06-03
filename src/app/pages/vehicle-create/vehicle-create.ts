@@ -10,6 +10,7 @@ import { TRANSMISSION_OPTIONS } from '../../core/constants/transmission-options'
 import { VEHICLE_TYPE_OPTIONS } from '../../core/constants/vehicle-type-options';
 import { YearsListResponse } from '../../core/services/fipe';
 import { Vehicles as VehiclesService } from '../../core/services/vehicles';
+import { VehiclesCache } from '../../core/services/vehicles-cache';
 import { VehicleFipeType } from '../../core/types/vehicle-options.type';
 import { PageLoadingOverlay } from '../../shared/components/page-loading-overlay/page-loading-overlay';
 import { VehicleAnalysisFormComponent } from './components/vehicle-analysis-form/vehicle-analysis-form';
@@ -51,6 +52,7 @@ export class VehicleCreate {
   readonly facade = inject(VehicleCreateFacade);
   private readonly formService = inject(VehicleCreateFormService);
   private readonly router = inject(Router);
+  private readonly vehiclesCache = inject(VehiclesCache);
   private readonly dialog = inject(MatDialog);
   private readonly vehiclesService = inject(VehiclesService);
 
@@ -200,6 +202,7 @@ export class VehicleCreate {
       .pipe(finalize(() => this.submitLoading.set(false)))
       .subscribe({
         next: (vehicle) => {
+          this.vehiclesCache.invalidate(); // force fresh list on next visit
           void this.router.navigate(['/veiculos', vehicle.id]);
         },
         error: (error: HttpErrorResponse) => {

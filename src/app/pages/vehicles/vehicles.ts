@@ -6,7 +6,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { StatusBadge, StatusBadgeTone } from '../../shared/components/status-badge/status-badge';
-import { Vehicle, Vehicles as VehiclesService } from '../../core/services/vehicles';
+import { Vehicle } from '../../core/services/vehicles';
+import { VehiclesCache } from '../../core/services/vehicles-cache';
 import {
   FUEL_TYPE_LABEL,
   TRANSMISSION_LABEL,
@@ -37,11 +38,12 @@ import {
   styleUrl: './vehicles.scss',
 })
 export class Vehicles implements OnInit {
-  private readonly vehiclesService = inject(VehiclesService);
+  private readonly vehiclesCache = inject(VehiclesCache);
 
-  protected readonly vehicles = signal<Vehicle[]>([]);
-  protected readonly loading = signal(true);
-  protected readonly error = signal('');
+  // Delegate loading/error state to the cache service
+  protected readonly loading = this.vehiclesCache.loading;
+  protected readonly error = this.vehiclesCache.error;
+
   protected readonly viewMode = signal<'grid' | 'list'>('grid');
   protected readonly vehicleSearch = signal('');
   protected readonly statusFilter = signal<'ALL' | Vehicle['status']>('ALL');
@@ -52,7 +54,7 @@ export class Vehicles implements OnInit {
     const status = this.statusFilter();
     const type = this.typeFilter();
 
-    return this.vehicles().filter((vehicle) => {
+    return this.vehiclesCache.vehicles().filter((vehicle) => {
       const searchableText = [
         vehicle.brand,
         vehicle.model,
@@ -74,40 +76,12 @@ export class Vehicles implements OnInit {
   });
 
   ngOnInit(): void {
-    this.loadVehicles();
+    this.vehiclesCache.fetch();
   }
 
+  /** Called by the "Tentar novamente" button — forces a fresh fetch. */
   protected loadVehicles(): void {
-    this.loading.set(true);
-    this.error.set('');
-
-    this.vehiclesService.getVehicles({ limit: 100 }).subscribe({
-      next: (response) => {
-        this.vehicles.set(response.data);
-        this.loading.set(false);
-        this.loadCoverImages(response.data);
-      },
-      error: (error) => {
-        console.error('Erro ao carregar veículos', error);
-        this.vehicles.set([]);
-        this.loading.set(false);
-        this.error.set('Não foi possível carregar seus veículos agora.');
-      },
-    });
-  }
-
-  private loadCoverImages(vehicles: Vehicle[]): void {
-    vehicles.forEach((vehicle) => {
-      this.vehiclesService.getImages(vehicle.id).subscribe({
-        next: (images) => {
-          if (!images.length) return;
-          this.vehicles.update((list) =>
-            list.map((v) => (v.id === vehicle.id ? { ...v, images } : v)),
-          );
-        },
-        error: () => {},
-      });
-    });
+    this.vehiclesCache.fetch(true);
   }
 
   protected setViewMode(mode: 'grid' | 'list'): void {
