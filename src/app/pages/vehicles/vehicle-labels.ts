@@ -17,6 +17,29 @@ export const VEHICLE_STATUS_LABEL: Record<VehicleStatus, string> = {
   SOLD: 'Vendido',
 };
 
+export const VEHICLE_TYPE_LABEL: Record<VehicleType, string> = {
+  CAR: 'Carro',
+  MOTORCYCLE: 'Moto',
+};
+
+/** Opções para o filtro de status (inclui "Todos" como primeira opção). */
+export const VEHICLE_STATUS_FILTER_OPTIONS = [
+  { value: 'ALL' as const, label: 'Todos' },
+  ...Object.entries(VEHICLE_STATUS_LABEL).map(([value, label]) => ({
+    value: value as VehicleStatus,
+    label,
+  })),
+];
+
+/** Opções para o filtro de tipo (inclui "Todos" como primeira opção). */
+export const VEHICLE_TYPE_FILTER_OPTIONS = [
+  { value: 'ALL' as const, label: 'Todos' },
+  ...Object.entries(VEHICLE_TYPE_LABEL).map(([value, label]) => ({
+    value: value as VehicleType,
+    label,
+  })),
+];
+
 export const VEHICLE_DAMAGE_LABEL: Record<string, string> = {
   NONE: 'Sem avaria',
   LIGHT: 'Avaria leve',
@@ -27,11 +50,6 @@ export const VEHICLE_DAMAGE_LABEL: Record<string, string> = {
   HIGH_DAMAGE: 'Avaria grave',
   FLOOD: 'Alagamento',
   OTHER: 'Outra avaria',
-};
-
-export const VEHICLE_TYPE_LABEL: Record<VehicleType, string> = {
-  CAR: 'Carro',
-  MOTORCYCLE: 'Moto',
 };
 
 export const FUEL_TYPE_LABEL: Record<FuelType, string> = {

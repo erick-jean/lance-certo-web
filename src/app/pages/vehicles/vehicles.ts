@@ -14,7 +14,9 @@ import {
   TRANSMISSION_LABEL,
   VEHICLE_DAMAGE_LABEL,
   VEHICLE_STATUS_LABEL,
+  VEHICLE_STATUS_FILTER_OPTIONS,
   VEHICLE_TYPE_LABEL,
+  VEHICLE_TYPE_FILTER_OPTIONS,
   formatCurrency,
   formatDate,
   formatMileage,
@@ -45,6 +47,9 @@ export class Vehicles implements OnInit {
   // Delegate loading/error state to the cache service
   protected readonly loading = this.vehiclesCache.loading;
   protected readonly error = this.vehiclesCache.error;
+
+  protected readonly statusFilterOptions = VEHICLE_STATUS_FILTER_OPTIONS;
+  protected readonly typeFilterOptions = VEHICLE_TYPE_FILTER_OPTIONS;
 
   protected readonly viewMode = signal<'grid' | 'list'>('grid');
   protected readonly vehicleSearch = signal('');

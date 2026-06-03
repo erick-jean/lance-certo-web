@@ -32,10 +32,9 @@
           (ngModelChange)="statusFilter.set($event)"
           panelClass="vehicle-select-panel"
         >
-          <mat-option value="ALL">Todos</mat-option>
-          <mat-option value="ANALYZING">Em análise</mat-option>
-          <mat-option value="PURCHASED">Arrematado</mat-option>
-          <mat-option value="SOLD">Vendido</mat-option>
+          @for (opt of statusFilterOptions; track opt.value) {
+            <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+          }
         </mat-select>
       </mat-form-field>
 
@@ -46,9 +45,9 @@
           (ngModelChange)="typeFilter.set($event)"
           panelClass="vehicle-select-panel"
         >
-          <mat-option value="ALL">Todos</mat-option>
-          <mat-option value="CAR">Carro</mat-option>
-          <mat-option value="MOTORCYCLE">Moto</mat-option>
+          @for (opt of typeFilterOptions; track opt.value) {
+            <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </div>
